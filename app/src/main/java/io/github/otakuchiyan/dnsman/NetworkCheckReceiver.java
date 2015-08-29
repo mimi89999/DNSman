@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -23,18 +24,23 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     private void setDNS(Context context, boolean isMobile) {
         DNSManager dns = new DNSManager();
 
-        SharedPreferences sp = context.getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
-        String[] dnss = new String[4];
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+
+        String[] dnss = new String[3];
 
         Boolean use_su = sp.getBoolean("use_su", false);
         //Mobile network
         if(isMobile){
-            for(int i = 1; i != 4; i++) {
-                dnss[i] = sp.getString("mDNS" + i, null);
+            for(int i = 1; i != 3; i++) {
+                if(sp.getBoolean("same_dns", false)) {
+                    dnss[i] = sp.getString("wdns" + i, null);
+                } else {
+                    dnss[i] = sp.getString("mdns" + i, null);
+                }
             }
         }else{
-            for(int i = 1; i != 4; i++) {
-                dnss[i] = sp.getString("wDNS" + i, null);
+            for(int i = 1; i != 3; i++) {
+                dnss[i] = sp.getString("wdns" + i, "");
             }
         }
 

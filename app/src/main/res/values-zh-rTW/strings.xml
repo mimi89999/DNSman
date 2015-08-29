@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="set_succeed">設定 DNS 成功。</string>
-    <string name="action_samedns">統一 DNS</string>
-    <string name="action_save">儲存</string>
-    <string name="mobile_hint">行動網路</string>
-    <string name="saved_toast">設定已儲存。</string>
     <string name="set_failed">設定 DNS 失敗。</string>
-    <string name="su_chk_hint">使用超級使用者權限。如果正使用 CM, 也許可以不使用超級使用者權限。</string>
-    <string name="toggle_hint">不要忘記開關一次網路。</string>
+    <string name="toggle_hint">不要忘記開關一次網路</string>
+    <string name="su_chk">使用超級使用者權限</string>
+    <string name="opensource">程式碼</string>
+    <string name="su_chk_summary">如果使用 CM ROM, 也許不需要勾選</string>
+    <string name="samedns_chk">將 Wi-Fi DNS 作爲移動網路的 DNS</string>
 </resources>

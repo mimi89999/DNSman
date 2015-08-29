@@ -1,11 +1,10 @@
 <resources>
     <string name="set_succeed">Setting DNS succeed.</string>
     <string name="set_failed">Setting DNS failed.</string>
-    <string name="action_save">SAVE</string>
-    <string name="action_samedns">SAME DNS</string>
-    <string name="mobile_hint">Mobile network</string>
-    <string name="su_chk_hint">Use root permissions. if you are using CM, may needn\'t toggle it.</string>
+    <string name="samedns_chk">Use Wi-Fi DNS as mobile DNS</string>
+    <string name="su_chk">Use root permissions</string>
+    <string name="su_chk_summary">If you are using CM, may needn\'t toggle it</string>
     <string name="toggle_hint">Don\'t forget to toggle network.</string>
-
-    <string name="saved_toast">Saved.</string>
+    <string name="opensource">Source</string>
+    <string name="opensource_hint" translatable="false">Author: otakuchiyan Licence: GNU GPLv3</string>
 </resources>

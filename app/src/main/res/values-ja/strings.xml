@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_samedns">同じの DNS</string>
-    <string name="action_save">セーフ</string>
-    <string name="mobile_hint">モバイルネットワーク</string>
-    <string name="saved_toast">設定は保存された。</string>
     <string name="set_failed">DNS 設定失敗。</string>
     <string name="set_succeed">DNS 設定完了。</string>
-    <string name="su_chk_hint">スーパユーザーを使う。</string>
-    <string name="toggle_hint">ネットワークをトグルの忘れないで。</string>
+    <string name="toggle_hint">ネットワークをトグルの忘れないで</string>
+    <string name="opensource">ソースコード</string>
+    <string name="samedns_chk">Wi-Fi DNS に Mobile DNS として</string>
+    <string name="su_chk">スーパユーザーを使う</string>
+    <string name="su_chk_summary">CM が使いの場合、スーパユーザーを使うのかもしれない</string>
 </resources>
