@@ -1,48 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:title="Wi-Fi DNS1"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:digits="0123456789.[]"
-        android:singleLine="true"
-        android:key="wdns1"/>
-    <EditTextPreference android:title="Wi-Fi DNS2"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:digits="0123456789.[]"
-        android:singleLine="true"
-        android:key="wdns2"/>
-
-    <EditTextPreference android:title="Mobile DNS1"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:digits="0123456789.[]"
-        android:singleLine="true"
-        android:key="mdns1"/>
-    <EditTextPreference android:title="Mobile DNS2"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:digits="0123456789.[]"
-        android:singleLine="true"
-
-        android:key="mdns2"/>
-
-    <CheckBoxPreference android:title="@string/su_chk"
-        android:summary="@string/su_chk_summary"
-        android:defaultValue="false"
-        android:key="use_su"/>
-
-    <CheckBoxPreference android:title="@string/samedns_chk"
-        android:defaultValue="false"
-        android:key="same_dns"/>
-
-    <PreferenceScreen android:title="@string/opensource"
-        android:summary="@string/opensource_hint">
-        <intent android:action="android.intent.action.VIEW"
+	<CheckBoxPreference android:title="@string/su_chk"
+	android:summary="@string/su_chk_summary"
+	android:defaultValue="false"
+	android:key="use_su"/>
+<CheckBoxPreference android:title="@string/samedns_chk"
+	android:summary="@string/samedns_chk_summary"
+			android:defaultValue="true"
+			android:key="samedns"/>
+		<PreferenceScreen android:title="@string/opensource"
+			android:summary="@string/opensource_hint">
+			<intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/otakuchiyan/DNSman"
             />
-    </PreferenceScreen>
-
-    <PreferenceScreen android:title="@string/toggle_hint"/>
-
-</PreferenceScreen>
+	</PreferenceScreen>
+	</PreferenceScreen>

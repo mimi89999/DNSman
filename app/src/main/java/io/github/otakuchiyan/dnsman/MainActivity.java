@@ -2,41 +2,167 @@ package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.TextView.BufferType;
+import android.app.*;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
+import io.github.otakuchiyan.dnsman.SettingsActivity;
+import io.github.otakuchiyan.dnsman.IPChecker;
+import io.github.otakuchiyan.dnsman.SystemDNSActivity;
 
-import io.github.otakuchiyan.dnsman.DNSManager;
-
-public class MainActivity extends PreferenceActivity {
+public class MainActivity extends Activity {
+	private SharedPreferences dnssp;
+	private SharedPreferences.Editor dnssped;
+	private SharedPreferences appsp;
+	
+	private EditText wdns1;
+	private EditText wdns2;
+	private EditText mdns1;
+	private EditText mdns2;
+	private TextView wifi_category;
+	private TextView mobile_category;	
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new DNSPref()).commit();
-    }
+		dnssp = this.getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
+		dnssped = dnssp.edit();
+		appsp = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if(!dnssp.getBoolean("firstboot", false)){
+			showWelcomeDialog();
+			dnssped.putBoolean("firstboot", true);
+			dnssped.commit();
+		}
+	
+		setContentView(R.layout.main_activity);
+		
+		wdns1 = (EditText) findViewById(R.id.wdns1);
+		wdns2 = (EditText) findViewById(R.id.wdns2);
+		mdns1 = (EditText) findViewById(R.id.mdns1);
+		mdns2 = (EditText) findViewById(R.id.mdns2);
+		wifi_category = (TextView) findViewById(R.id.wifi_category);
+		mobile_category = (TextView) findViewById(R.id.mobile_category);
+		
+		wdns1.setText(dnssp.getString("wdns1", ""));
+		wdns2.setText(dnssp.getString("wdns2", ""));
+		
+		if(!appsp.getBoolean("samedns", false)){
+		mdns1.setText(dnssp.getString("mdns1", ""));
+		mdns2.setText(dnssp.getString("mdns2", ""));
+		
+		
+			mdns1.setOnFocusChangeListener(new OnFocusChangeListener(){
+					@Override
+					public void onFocusChange(View v, boolean hasFocus){
+						String s = mdns1.getText().toString();
+						if(!hasFocus){
+							if(IPChecker.IPv4Checker(s)){
+								dnssped.putString("mdns1", s);
+								dnssped.commit();
+							}else{
+								showInvaildDNSDialog();
+							}
+						}
+					}
+				});
 
-    public static class DNSPref extends PreferenceFragment{
-        @Override
-        public void onCreate(final Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref);
+			mdns2.setOnFocusChangeListener(new OnFocusChangeListener(){
+					@Override
+					public void onFocusChange(View v, boolean hasFocus){
+						String s = mdns2.getText().toString();
+						if(!hasFocus){
+							if(IPChecker.IPv4Checker(s)){
+								dnssped.putString("mdns2", s);
+								dnssped.commit();
+							}else{
+								showInvaildDNSDialog();
+							}
+						}
+					}
+				});
+			
+		}else{
+			mdns1.setAlpha(0.0f);
+			mdns2.setAlpha(0.0f);
+			mobile_category.setText("");
+			wifi_category.setText("");
+		}
+		
+		wdns1.setOnFocusChangeListener(new OnFocusChangeListener(){
+			@Override
+			public void onFocusChange(View v, boolean hasFocus){
+				String s = wdns1.getText().toString();
+				if(!hasFocus){
+					if(IPChecker.IPv4Checker(s)){
+						dnssped.putString("wdns1", s);
+						dnssped.commit();
+					}else{
+						showInvaildDNSDialog();
+					}
+				}
+			}
+		});
+		
+		wdns2.setOnFocusChangeListener(new OnFocusChangeListener(){
+				@Override
+				public void onFocusChange(View v, boolean hasFocus){
+					String s = wdns2.getText().toString();
+					if(!hasFocus){
+						if(IPChecker.IPv4Checker(s)){
+							dnssped.putString("wdns2", s);
+							dnssped.commit();
+						}else{
+							showInvaildDNSDialog();
+						}
+					}
+				}
+			});
+			
+		    }
 
-        }
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch(item.getItemId()){
+			case R.id.resolv_edit:
+				startActivity(new Intent(this, SystemDNSActivity.class));
+				break;
+			case R.id.settings:
+				startActivity(new Intent(this, SettingsActivity.class));
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+		
+	}
+	
+	private void showInvaildDNSDialog(){
+		AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		adb.setTitle(R.string.badip)
+			.setMessage(R.string.badip_msg)
+			.setPositiveButton(android.R.string.ok, null);
+		adb.create().show();
+	}
+	
+	private void showWelcomeDialog(){
+		AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		adb.setTitle(R.string.welcome)
+			.setMessage(R.string.welcome_msg)
+			.setPositiveButton(android.R.string.ok, null);
+		adb.create().show();
+	}
 }

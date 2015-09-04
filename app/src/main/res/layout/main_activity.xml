@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/wifi_category"
+		android:layout_height="wrap_content"
+		android:text="@string/wifi_category"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="wrap_content"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:digits="0123456789.[]:"
+		android:maxLength="39"
+		android:singleLine="true"
+		android:id="@+id/wdns1"
+		android:layout_width="match_parent"
+		android:hint="DNS1"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:digits="0123456789.[]:"
+		android:maxLength="39"
+		
+		android:singleLine="true"
+		android:id="@+id/wdns2"
+		android:layout_width="match_parent"
+		android:hint="DNS2"/>
+
+	<TextView
+		android:id="@+id/mobile_category"
+		android:layout_height="wrap_content"
+		android:text="@string/mobile_category"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="wrap_content"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:digits="0123456789.[]:"
+		android:maxLength="39"
+		
+		android:singleLine="true"
+		android:id="@+id/mdns1"
+		android:layout_width="match_parent"
+		android:hint="DNS1"/>
+
+	<EditText
+		android:layout_height="wrap_content"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:digits="0123456789.[]:"
+		android:maxLength="39"
+		android:singleLine="true"
+		android:id="@+id/mdns2"
+		android:layout_width="match_parent"
+		android:hint="DNS2"/>
+
+</LinearLayout>
+
