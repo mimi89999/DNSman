@@ -53,12 +53,14 @@ public class DNSManager {
         return 0;
     }
 	
-	public void createResolvConf(String dns1, String dns2){
+	public void writeResolvConf(String dns1, String dns2){
 		String[] cmds = new String[4];
 		
 		cmds[0] = "mount -o remount,rw /system";
+		if(dns1 != ""){
 		cmds[1] = "echo nameserver " + dns1 + " > /etc/resolv.conf";
-		if(dns2 != null){
+		}
+		if(dns2 != ""){
 			cmds[2] = "echo nameserver " + dns2 + " >> /etc/resolv.conf";
 		}
 		cmds[3] = "mount -o remount,ro /system";

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal">
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:imeOptions="actionDone"
+			android:inputType="number"
+			android:digits="0123456789.[]:"
+			android:maxLength="39"
+			android:singleLine="true"
+			android:id="@+id/rdns1"
+			android:layout_width="match_parent"
+			android:hint="DNS1"
+			android:layout_weight="1.0"/>
+
+		<EditText
+			android:layout_height="wrap_content"
+			android:imeOptions="actionDone"
+			android:inputType="number"
+			android:digits="0123456789.[]:"
+			android:maxLength="39"
+			android:singleLine="true"
+			android:id="@+id/rdns2"
+			android:layout_width="match_parent"
+			android:hint="DNS2"
+			android:layout_weight="1.0"/>
+
+	</LinearLayout>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:text="@string/write_conf"
+		android:onClick="writeConfBtn"
+		android:layout_width="match_parent"/>
+
+	<Button
+		android:layout_height="wrap_content"
+		android:text="@string/default_conf"
+		android:onClick="defaultConfBtn"
+		android:layout_width="match_parent"/>
+
+	<Button
+		android:onClick="deleteConfBtn"
+		android:layout_height="wrap_content"
+		android:text="@string/delete_conf"
+		android:layout_width="match_parent"/>
+
+</LinearLayout>
+

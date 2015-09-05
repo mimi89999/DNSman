@@ -16,11 +16,13 @@ import android.app.*;
 
 import io.github.otakuchiyan.dnsman.SettingsActivity;
 import io.github.otakuchiyan.dnsman.IPChecker;
-import io.github.otakuchiyan.dnsman.SystemDNSActivity;
+import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
+import io.github.otakuchiyan.dnsman.DNSConfActivity;
 
 public class MainActivity extends Activity {
 	private SharedPreferences dnssp;
 	private SharedPreferences.Editor dnssped;
+	
 	private SharedPreferences appsp;
 	
 	private EditText wdns1;
@@ -32,8 +34,10 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		dnssp = this.getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
+		dnssp = getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
 		dnssped = dnssp.edit();
+
+
 		appsp = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		if(!dnssp.getBoolean("firstboot", false)){
@@ -59,35 +63,10 @@ public class MainActivity extends Activity {
 		mdns2.setText(dnssp.getString("mdns2", ""));
 		
 		
-			mdns1.setOnFocusChangeListener(new OnFocusChangeListener(){
-					@Override
-					public void onFocusChange(View v, boolean hasFocus){
-						String s = mdns1.getText().toString();
-						if(!hasFocus){
-							if(IPChecker.IPv4Checker(s)){
-								dnssped.putString("mdns1", s);
-								dnssped.commit();
-							}else{
-								showInvaildDNSDialog();
-							}
-						}
-					}
-				});
-
-			mdns2.setOnFocusChangeListener(new OnFocusChangeListener(){
-					@Override
-					public void onFocusChange(View v, boolean hasFocus){
-						String s = mdns2.getText().toString();
-						if(!hasFocus){
-							if(IPChecker.IPv4Checker(s)){
-								dnssped.putString("mdns2", s);
-								dnssped.commit();
-							}else{
-								showInvaildDNSDialog();
-							}
-						}
-					}
-				});
+			mdns1.setOnFocusChangeListener(
+				new IPCheckerOnFocusChangeListener(this, mdns1, "mdns1"));
+			mdns2.setOnFocusChangeListener(
+			new IPCheckerOnFocusChangeListener(this, mdns2, "mdns2"));
 			
 		}else{
 			mdns1.setAlpha(0.0f);
@@ -96,36 +75,11 @@ public class MainActivity extends Activity {
 			wifi_category.setText("");
 		}
 		
-		wdns1.setOnFocusChangeListener(new OnFocusChangeListener(){
-			@Override
-			public void onFocusChange(View v, boolean hasFocus){
-				String s = wdns1.getText().toString();
-				if(!hasFocus){
-					if(IPChecker.IPv4Checker(s)){
-						dnssped.putString("wdns1", s);
-						dnssped.commit();
-					}else{
-						showInvaildDNSDialog();
-					}
-				}
-			}
-		});
+		wdns1.setOnFocusChangeListener(
+		new IPCheckerOnFocusChangeListener(this, wdns1, "wdns1"));
 		
-		wdns2.setOnFocusChangeListener(new OnFocusChangeListener(){
-				@Override
-				public void onFocusChange(View v, boolean hasFocus){
-					String s = wdns2.getText().toString();
-					if(!hasFocus){
-						if(IPChecker.IPv4Checker(s)){
-							dnssped.putString("wdns2", s);
-							dnssped.commit();
-						}else{
-							showInvaildDNSDialog();
-						}
-					}
-				}
-			});
-			
+		wdns2.setOnFocusChangeListener(
+		new IPCheckerOnFocusChangeListener(this, wdns2, "wdns2"));
 		    }
 
 	@Override
@@ -140,7 +94,7 @@ public class MainActivity extends Activity {
 	{
 		switch(item.getItemId()){
 			case R.id.resolv_edit:
-				startActivity(new Intent(this, SystemDNSActivity.class));
+				startActivity(new Intent(this, DNSConfActivity.class));
 				break;
 			case R.id.settings:
 				startActivity(new Intent(this, SettingsActivity.class));
@@ -150,13 +104,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	private void showInvaildDNSDialog(){
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setTitle(R.string.badip)
-			.setMessage(R.string.badip_msg)
-			.setPositiveButton(android.R.string.ok, null);
-		adb.create().show();
-	}
+	
 	
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);

@@ -5,7 +5,7 @@
 	<string name="set_succeed">Setting DNS succeed.</string>
     <string name="set_failed">Setting DNS failed.</string>
 	
-	<string name="edit_resolv">System DNS</string>
+	<string name="edit_resolv">DNS config file</string>
 	<string name="settings">Settings</string>
 	<string name="about">About</string>
 	
@@ -25,6 +25,9 @@
 	<string name="default_conf">Use default resolver</string>
 	<string name="delete_conf">Delete config</string>
     
+	<string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf</string>
+	<string name="default_conf_msg">Do you want to use Google public DNS?</string>
+	<string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
 	<string name="opensource">Source</string>
     <string name="opensource_hint">Author: otakuchiyan Licence: GNU GPLv3</string>
 </resources>
