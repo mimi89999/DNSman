@@ -3,6 +3,8 @@ import android.app.*;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
@@ -14,7 +16,7 @@ import android.view.View;
 
 public class DNSConfActivity extends Activity
 {
-	private SharedPreferences dnssp;
+	private SharedPreferences sp;
 	private DNSManager d = new DNSManager();
 	private EditText rdns1;
 	private EditText rdns2;
@@ -23,13 +25,12 @@ public class DNSConfActivity extends Activity
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dnsconf_activity);
-		dnssp = getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
-		
+		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		rdns1 = (EditText) findViewById(R.id.rdns1);
 		rdns2 = (EditText) findViewById(R.id.rdns2);
 	
-		rdns1.setText(dnssp.getString("rdns1", ""));
-		rdns2.setText(dnssp.getString("rdns2", ""));
+		rdns1.setText(sp.getString("rdns1", ""));
+		rdns2.setText(sp.getString("rdns2", ""));
 		
 		rdns1.setOnFocusChangeListener(
 			new IPCheckerOnFocusChangeListener(this, rdns1, "rdns1"));
@@ -46,6 +47,7 @@ public class DNSConfActivity extends Activity
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
 					d.writeResolvConf(rdns1ip, rdns2ip);
+					operationToast();
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
@@ -58,7 +60,9 @@ public class DNSConfActivity extends Activity
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
 					d.writeResolvConf("8.8.8.8", "8.8.4.4");
-				}
+					operationToast();
+					
+					}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
 		adb.create().show();
@@ -70,9 +74,15 @@ public class DNSConfActivity extends Activity
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface di, int which){
 				d.removeResolvConf();
-			}
+				operationToast();
+				
+				}
 		})
 		.setNegativeButton(android.R.string.cancel, null);
 		adb.create().show();
+	}
+	
+	private void operationToast(){
+		Toast.makeText(this, R.string.operation_succeed, Toast.LENGTH_SHORT).show();
 	}
 }

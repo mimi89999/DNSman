@@ -20,11 +20,8 @@ import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
 import io.github.otakuchiyan.dnsman.DNSConfActivity;
 
 public class MainActivity extends Activity {
-	private SharedPreferences dnssp;
-	private SharedPreferences.Editor dnssped;
-	
-	private SharedPreferences appsp;
-	private SharedPreferences.Editor appsped;
+	private SharedPreferences sp;
+	private SharedPreferences.Editor sped;
 	
 	private EditText wdns1;
 	private EditText wdns2;
@@ -36,19 +33,16 @@ public class MainActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		dnssp = getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
-		dnssped = dnssp.edit();
-
-		appsp = PreferenceManager.getDefaultSharedPreferences(this);
-		appsped = appsp.edit();
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		sped = sp.edit();
 		
-		if(!dnssp.getBoolean("firstboot", false)){
-			appsped.putBoolean("distinguish", false);
-			appsped.putBoolean("use_su", true);
-			appsped.commit();
+		if(!sp.getBoolean("firstbooted", false)){
+			sped.putBoolean("distinguish", false);
+			sped.putBoolean("use_su", true);
+			sped.commit();
 			showWelcomeDialog();
-			dnssped.putBoolean("firstboot", true);
-			dnssped.commit();
+			sped.putBoolean("firstbooted", true);
+			sped.commit();
 		}
 	
 		setContentView(R.layout.main_activity);
@@ -60,12 +54,12 @@ public class MainActivity extends Activity {
 		wifi_category = (TextView) findViewById(R.id.wifi_category);
 		mobile_category = (TextView) findViewById(R.id.mobile_category);
 		
-		wdns1.setText(dnssp.getString("wdns1", ""));
-		wdns2.setText(dnssp.getString("wdns2", ""));
+		wdns1.setText(sp.getString("wdns1", ""));
+		wdns2.setText(sp.getString("wdns2", ""));
 		
-		if(appsp.getBoolean("distinguish", false)){
-		mdns1.setText(dnssp.getString("mdns1", ""));
-		mdns2.setText(dnssp.getString("mdns2", ""));
+		if(sp.getBoolean("distinguish", false)){
+		mdns1.setText(sp.getString("mdns1", ""));
+		mdns2.setText(sp.getString("mdns2", ""));
 		
 		
 			mdns1.setOnFocusChangeListener(

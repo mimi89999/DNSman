@@ -60,7 +60,7 @@ public class DNSManager {
 		if(dns1 != ""){
 		cmds[1] = "echo nameserver " + dns1 + " > /etc/resolv.conf";
 		}
-		if(dns2 != ""){
+		if(!dns2.equals("")){
 			cmds[2] = "echo nameserver " + dns2 + " >> /etc/resolv.conf";
 		}
 		cmds[3] = "mount -o remount,ro /system";

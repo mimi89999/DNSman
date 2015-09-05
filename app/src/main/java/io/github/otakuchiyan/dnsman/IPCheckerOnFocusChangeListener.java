@@ -2,6 +2,7 @@ package io.github.otakuchiyan.dnsman;
 
 import android.widget.EditText;
 import android.view.View.*;
+import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.app.AlertDialog;
@@ -10,8 +11,8 @@ import android.util.Log;
 
 public class IPCheckerOnFocusChangeListener implements View.OnFocusChangeListener
 {
-	private SharedPreferences dnssp;
-	private SharedPreferences.Editor dnssped;
+	private SharedPreferences sp;
+	private SharedPreferences.Editor sped;
 	
 	EditText e;
 	String key;
@@ -21,19 +22,21 @@ public class IPCheckerOnFocusChangeListener implements View.OnFocusChangeListene
 		this.c = c;
 		this.e = e;
 		this.key = key;
-		dnssp = c.getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
-		dnssped = dnssp.edit();
+		sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		sped = sp.edit();
 	}
 	
 	@Override
 	public void onFocusChange(View v, boolean hasFocus){
 		String s = this.e.getText().toString();
 		if(!hasFocus){
-			if(!s.equals("") && IPChecker.IPv4Checker(s)){
-				dnssped.putString(this.key, s);
-				dnssped.commit();
-			}else{
-				showInvaildDNSDialog();
+			if(!s.equals("")){
+				if(IPChecker.IPv4Checker(s)){
+					sped.putString(this.key, s);
+					sped.commit();
+				}else{
+					showInvaildDNSDialog();
+				}
 			}
 		}
 	}

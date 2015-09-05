@@ -22,24 +22,24 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     private void setDNS(Context c, boolean isMobile) {
         DNSManager dns = new DNSManager();
 
-		SharedPreferences dnssp = c.getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
-        SharedPreferences appsp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
+			c.getApplicationContext());
 
         String[] dnss = new String[3];
 
-        Boolean use_su = appsp.getBoolean("use_su", false);
+        Boolean use_su = sp.getBoolean("use_su", false);
         //Mobile network
         if(isMobile){
             for(int i = 0; i != 2; i++) {
-                if(appsp.getBoolean("same_dns", false)) {
-                    dnss[i] = dnssp.getString("wdns" + (i + 1), null);
+                if(sp.getBoolean("same_dns", false)) {
+                    dnss[i] = sp.getString("wdns" + (i + 1), null);
                 } else {
-                    dnss[i] = dnssp.getString("mdns" + (i + 1), null);
+                    dnss[i] = sp.getString("mdns" + (i + 1), null);
                 }
             }
         }else{
             for(int i = 0; i != 2; i++) {
-                dnss[i] = dnssp.getString("wdns" + (i + 1), "");
+                dnss[i] = sp.getString("wdns" + (i + 1), "");
             }
         }
 
@@ -51,7 +51,10 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
-
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
+			context.getApplicationContext());
+		
+		if(sp.getBoolean("firstbooted", false)){
         ConnectivityManager connmgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mobi_res = connmgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         NetworkInfo wifi_res = connmgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -60,6 +63,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
         } else if (wifi_res != null && wifi_res.isConnected()){
             setDNS(context, false);
         }
+		}
     }
 }
 

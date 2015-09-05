@@ -4,6 +4,7 @@
 	
 	<string name="set_succeed">Setting DNS succeed.</string>
     <string name="set_failed">Setting DNS failed.</string>
+	<string name="operation_succeed">The operation was completed successfully.</string>
 	
 	<string name="edit_resolv">DNS config file</string>
 	<string name="settings">Settings</string>
@@ -19,7 +20,7 @@
 	<string name="badip_msg">Please change the DNS address.</string>
 	
 	<string name="welcome">Welcome</string>
-	<string name="welcome_msg">Welcome to use DNS man!\nSet DNS by this steps:\n1. Filled the form;\n2. Toggle the network, DNS man will change DNS automatically.</string>
+	<string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
 	
 	<string name="write_conf">Write DNS resolver</string>
 	<string name="default_conf">Use default resolver</string>
