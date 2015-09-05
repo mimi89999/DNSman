@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
 	private SharedPreferences.Editor dnssped;
 	
 	private SharedPreferences appsp;
+	private SharedPreferences.Editor appsped;
 	
 	private EditText wdns1;
 	private EditText wdns2;
@@ -31,16 +32,20 @@ public class MainActivity extends Activity {
 	private EditText mdns2;
 	private TextView wifi_category;
 	private TextView mobile_category;	
-    @Override
+    
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		dnssp = getSharedPreferences("dnsconf", Context.MODE_PRIVATE);
 		dnssped = dnssp.edit();
 
-
 		appsp = PreferenceManager.getDefaultSharedPreferences(this);
+		appsped = appsp.edit();
 		
 		if(!dnssp.getBoolean("firstboot", false)){
+			appsped.putBoolean("distinguish", false);
+			appsped.putBoolean("use_su", true);
+			appsped.commit();
 			showWelcomeDialog();
 			dnssped.putBoolean("firstboot", true);
 			dnssped.commit();
@@ -58,7 +63,7 @@ public class MainActivity extends Activity {
 		wdns1.setText(dnssp.getString("wdns1", ""));
 		wdns2.setText(dnssp.getString("wdns2", ""));
 		
-		if(!appsp.getBoolean("samedns", false)){
+		if(appsp.getBoolean("distinguish", false)){
 		mdns1.setText(dnssp.getString("mdns1", ""));
 		mdns2.setText(dnssp.getString("mdns2", ""));
 		
