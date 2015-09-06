@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="wifi_category">Wi-Fi</string>
+    <string name="mobile_category">移动网络</string>
+
     <string name="set_succeed">设置 DNS 成功。</string>
     <string name="set_failed">设置 DNS 失败。</string>
+    <string name="operation_succeed">操作成功。</string>
+
+    <string name="edit_resolv">DNS 配置文件</string>
+    <string name="settings">设置</string>
+    
     <string name="toggle_hint">不要忘记开关一次网络</string>
     <string name="opensource">源代码</string>
     <string name="su_chk">使用 root 权限</string>

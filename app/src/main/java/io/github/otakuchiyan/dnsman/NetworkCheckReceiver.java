@@ -25,24 +25,28 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
 			c.getApplicationContext());
 
-        String[] dnss = new String[3];
-
+        String[] wdnss = new String[2];
+		String[] mdnss = new String[2];
+		String[] dnss = new String[2];
+		
+		
+		for(int i = 0; i <= 1; i++) {
+			wdnss[i] = sp.getString("wdns" + (i + 1), "");
+			mdnss[i] = sp.getString("mdns" + (i + 1), "");
+		}
+		
         Boolean use_su = sp.getBoolean("use_su", false);
         //Mobile network
         if(isMobile){
-            for(int i = 0; i != 2; i++) {
-                if(sp.getBoolean("same_dns", false)) {
-                    dnss[i] = sp.getString("wdns" + (i + 1), null);
-                } else {
-                    dnss[i] = sp.getString("mdns" + (i + 1), null);
-                }
-            }
+                if(sp.getBoolean("same_dns", true)) {
+                    dnss = wdnss;		
+				} else {
+                    dnss = mdnss;
+				}
         }else{
-            for(int i = 0; i != 2; i++) {
-                dnss[i] = sp.getString("wdns" + (i + 1), "");
-            }
+            dnss = wdnss;
         }
-
+		
         if (dns.setDNSViaSetprop(dnss[0], dnss[1], use_su) == 1) {
                 Toast.makeText(c, R.string.set_failed, Toast.LENGTH_LONG).show();
         } else {
