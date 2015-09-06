@@ -9,10 +9,13 @@
 
     <string name="edit_resolv">DNS 配置文件</string>
     <string name="settings">设置</string>
-    
-    <string name="toggle_hint">不要忘记开关一次网络</string>
-    <string name="opensource">源代码</string>
+
+    <string name="distinguish_chk">区别网络类型</string>
+    <string name="distinguish_chk_summary">依据网络类型来改变 DNS.</string>
     <string name="su_chk">使用 root 权限</string>
     <string name="su_chk_summary">如果使用 CM ROM, 也许不需要勾选</string>
-    <string name="samedns_chk">将 Wi-Fi DNS 作为移动网络的 DNS</string>
+    <string name="toggle_hint">不要忘记开关一次网络</string>
+
+    <string name="badip">无效的 DNS</string>
+    <string name="opensource">源代码</string>
 </resources>

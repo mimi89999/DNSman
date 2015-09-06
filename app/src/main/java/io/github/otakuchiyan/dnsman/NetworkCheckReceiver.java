@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import android.util.Log;
@@ -15,9 +17,12 @@ import java.util.UnknownFormatFlagsException;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import java.net.UnknownHostException;
+import android.app.*;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
     final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+	private Notification n;
+	private NotificationManager nm;
 
     private void setDNS(Context c, boolean isMobile) {
         DNSManager dns = new DNSManager();
@@ -38,14 +43,20 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
         Boolean use_su = sp.getBoolean("use_su", false);
         //Mobile network
         if(isMobile){
-                if(sp.getBoolean("same_dns", true)) {
-                    dnss = wdnss;		
+                if(sp.getBoolean("distinguish", false)) {
+                    dnss = mdnss;		
 				} else {
-                    dnss = mdnss;
+                    dnss = wdnss;
 				}
         }else{
             dnss = wdnss;
         }
+		
+		if(dnss[0].equals("") && dnss[1].equals("")){
+			n = new Notification();
+			nm = (NotificationManager) c.getSystemService("NOTIFICATION_SERVICE");
+			
+		}
 		
         if (dns.setDNSViaSetprop(dnss[0], dnss[1], use_su) == 1) {
                 Toast.makeText(c, R.string.set_failed, Toast.LENGTH_LONG).show();
