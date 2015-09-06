@@ -24,8 +24,8 @@
 	<string name="nodns_noti">No alivable DNS for current network type.</string>
 	
 	<string name="write_conf">Write DNS resolver</string>
-	<string name="default_conf">Use default resolver</string>
-	<string name="delete_conf">Delete config</string>
+	<string name="default_conf">Use Google public DNS</string>
+    <string name="delete_conf">Delete /etc/resolv.conf</string>
     
 	<string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf?</string>
 	<string name="default_conf_msg">Do you want to use Google public DNS?</string>

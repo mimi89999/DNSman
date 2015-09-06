@@ -16,6 +16,7 @@ import android.util.Log;
 import java.util.UnknownFormatFlagsException;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
+import io.github.otakuchiyan.dnsman.MainActivity;
 import java.net.UnknownHostException;
 import android.app.*;
 
@@ -42,7 +43,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		
         Boolean use_su = sp.getBoolean("use_su", false);
         //Mobile network
-        if(isMobile){
+	        if(isMobile){
                 if(sp.getBoolean("distinguish", false)) {
                     dnss = mdnss;		
 				} else {
@@ -55,7 +56,22 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		if(dnss[0].equals("") && dnss[1].equals("")){
 			n = new Notification();
 			nm = (NotificationManager) c.getSystemService("NOTIFICATION_SERVICE");
+			Intent i = new Intent(c, MainActivity.class);
+			TaskStackBuilder tsb = TaskStackBuilder.create(c);
+			tsb.addParentStack(MainActivity.class);
+			tsb.addNextIntent(i);
 			
+			PendingIntent pi = PendingIntent.getActivity(c, 0, i, 0);
+			
+			
+			n.icon = R.mipmap.ic_launcher;
+			n.when = System.currentTimeMillis();
+			n.setLatestEventInfo(c,
+				c.getText(R.string.nodns_noti),
+				"",
+				pi);
+			nm.notify(1, n);
+			return;
 		}
 		
         if (dns.setDNSViaSetprop(dnss[0], dnss[1], use_su) == 1) {

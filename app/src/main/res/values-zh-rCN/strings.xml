@@ -17,5 +17,20 @@
     <string name="toggle_hint">不要忘记开关一次网络</string>
 
     <string name="badip">无效的 DNS</string>
+
+    <string name="welcome">欢迎</string>
+    <string name="welcome_msg">欢迎使用 DNS man！当开关网络的时候，它就会自动更改 DNS.</string>
+
+
+
+    <string name="write_conf">写入至 /etc/resolv.conf</string>
+    <string name="default_conf">使用 Google public DNS</string>
+    <string name="delete_conf">删除 /etc/resolv.conf</string>
+
+    <string name="write_conf_msg">您真的要写入 DNS 服务器到 /etc/resolv.conf 中？</string>
+    <string name="default_conf_msg">您真的要使用 Google public DNS?</string>
+    <string name="delete_conf_msg">您真的要删除 /etc/resolv.conf? 这可能会导致网络问题！！</string>
+
     <string name="opensource">源代码</string>
+    <string name="opensource_hint">作者： otakuchiyan 协议： GNU GPLv3</string>
 </resources>
