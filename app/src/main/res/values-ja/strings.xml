@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="set_failed">DNS 設定失敗。</string>
-    <string name="set_succeed">DNS 設定完了。</string>
-    <string name="toggle_hint">ネットワークをトグルの忘れないで</string>
+    <string name="wifi_category">Wi-Fi</string>
+    <string name="mobile_category">モバイルネットワーク</string>
+
+    <string name="set_succeed">設定 DNS 成功。</string>
+    <string name="set_failed">設定 DNS 失败。</string>
+    <string name="operation_succeed">操作成功。</string>
+
+    <string name="edit_resolv">DNS 設定ファイル</string>
+    <string name="settings">設定</string>
+
+    <string name="distinguish_chk">區分網路類型</string>
+    <string name="distinguish_chk_summary">依照網路類型來改變 DNS</string>
+    <string name="su_chk">スーパーユーザーを使用する</string>
+    <string name="su_chk_summary">が使いの場合、スーパーユーザーを使うのかもしれません</string>
+
+    <string name="badip">無効な DNS</string>
+
+    <string name="welcome">ようこそ</string>
+    <string name="welcome_msg">DNS man にようこそ！ 當開關網路的時候，它就會自動設置 DNS.</string>
+
+
+
+    <string name="write_conf">/etc/resolv.conf に書く</string>
+    <string name="default_conf">Google public DNS を使用する</string>
+    <string name="delete_conf">/etc/resolv.conf を削除する</string>
+
+    <string name="write_conf_msg">本当 DNS サーバを /etc/resolv.conf に書く？</string>
+    <string name="default_conf_msg">本当に Google public DNS を使用する？</string>
+    <string name="delete_conf_msg">本当に /etc/resolv.conf を削除する？ネットワーク異常を誘発するのかもしれません！！</string>
+
     <string name="opensource">ソースコード</string>
-    <string name="samedns_chk">Wi-Fi DNS に Mobile DNS として</string>
-    <string name="su_chk">スーパユーザーを使う</string>
-    <string name="su_chk_summary">CM が使いの場合、スーパユーザーを使うのかもしれない</string>
+    <string name="opensource_hint">作者： otakuchiyan ライセンス： GNU GPLv3</string>
 </resources>

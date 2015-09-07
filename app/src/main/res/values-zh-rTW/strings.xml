@@ -26,9 +26,9 @@
     <string name="default_conf">使用 Google public DNS</string>
     <string name="delete_conf">刪除 /etc/resolv.conf</string>
 
-    <string name="write_conf_msg">您真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
-    <string name="default_conf_msg">您真的要使用 Google public DNS?</string>
-    <string name="delete_conf_msg">您真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
+    <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
+    <string name="default_conf_msg">真的要使用 Google public DNS?</string>
+    <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
 
     <string name="opensource">程式碼</string>
     <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>

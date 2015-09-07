@@ -57,20 +57,16 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 			n = new Notification();
 			nm = (NotificationManager) c.getSystemService("NOTIFICATION_SERVICE");
 			Intent i = new Intent(c, MainActivity.class);
-			TaskStackBuilder tsb = TaskStackBuilder.create(c);
-			tsb.addParentStack(MainActivity.class);
-			tsb.addNextIntent(i);
 			
 			PendingIntent pi = PendingIntent.getActivity(c, 0, i, 0);
 			
-			
-			n.icon = R.mipmap.ic_launcher;
+			//n.icon = R.mipmap.ic_launcher;
 			n.when = System.currentTimeMillis();
 			n.setLatestEventInfo(c,
 				c.getText(R.string.nodns_noti),
-				"",
+				"test",
 				pi);
-			nm.notify(1, n);
+			nm.notify(0, n);
 			return;
 		}
 		
