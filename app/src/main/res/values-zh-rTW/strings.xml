@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="wifi_category">Wi-Fi</string>
+    <string name="mobile_category">行動網路</string>
+
     <string name="set_succeed">設定 DNS 成功。</string>
-    <string name="set_failed">設定 DNS 失敗。</string>
-    <string name="toggle_hint">不要忘記開關一次網路</string>
+    <string name="set_failed">設定 DNS 失败。</string>
+    <string name="operation_succeed">操作成功。</string>
+
+    <string name="edit_resolv">DNS 設定檔</string>
+    <string name="settings">設定</string>
+
+    <string name="distinguish_chk">區分網路類型</string>
+    <string name="distinguish_chk_summary">依照網路類型來改變 DNS</string>
     <string name="su_chk">使用超級使用者權限</string>
+    <string name="su_chk_summary">如果使用 CM 韌體，也許不需要勾選</string>
+
+    <string name="badip">無效的 DNS</string>
+
+    <string name="welcome">歡迎</string>
+    <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
+
+
+
+    <string name="write_conf">寫入至 /etc/resolv.conf</string>
+    <string name="default_conf">使用 Google public DNS</string>
+    <string name="delete_conf">刪除 /etc/resolv.conf</string>
+
+    <string name="write_conf_msg">您真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
+    <string name="default_conf_msg">您真的要使用 Google public DNS?</string>
+    <string name="delete_conf_msg">您真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
+
     <string name="opensource">程式碼</string>
-    <string name="su_chk_summary">如果使用 CM ROM, 也許不需要勾選</string>
-    <string name="samedns_chk">將 Wi-Fi DNS 作爲移動網路的 DNS</string>
+    <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
 </resources>

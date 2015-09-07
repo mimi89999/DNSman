@@ -11,10 +11,9 @@
     <string name="settings">设置</string>
 
     <string name="distinguish_chk">区别网络类型</string>
-    <string name="distinguish_chk_summary">依据网络类型来改变 DNS.</string>
+    <string name="distinguish_chk_summary">依据网络类型来改变 DNS</string>
     <string name="su_chk">使用 root 权限</string>
     <string name="su_chk_summary">如果使用 CM ROM, 也许不需要勾选</string>
-    <string name="toggle_hint">不要忘记开关一次网络</string>
 
     <string name="badip">无效的 DNS</string>
 
@@ -32,5 +31,5 @@
     <string name="delete_conf_msg">您真的要删除 /etc/resolv.conf? 这可能会导致网络问题！！</string>
 
     <string name="opensource">源代码</string>
-    <string name="opensource_hint">作者： otakuchiyan 协议： GNU GPLv3</string>
+    <string name="opensource_hint">作者： otakuchiyan 许可证： GNU GPLv3</string>
 </resources>
