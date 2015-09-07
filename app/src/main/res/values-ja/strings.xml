@@ -3,22 +3,22 @@
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">モバイルネットワーク</string>
 
-    <string name="set_succeed">設定 DNS 成功。</string>
-    <string name="set_failed">設定 DNS 失败。</string>
-    <string name="operation_succeed">操作成功。</string>
+    <string name="set_succeed">DNS 設定は成功しました。</string>
+    <string name="set_failed">DNS 設定は失敗しました。</string>
+    <string name="operation_succeed">操作は成功しました。</string>
 
     <string name="edit_resolv">DNS 設定ファイル</string>
     <string name="settings">設定</string>
 
-    <string name="distinguish_chk">區分網路類型</string>
-    <string name="distinguish_chk_summary">依照網路類型來改變 DNS</string>
+    <string name="distinguish_chk">ネットワークの種類を区別する</string>
+    <string name="distinguish_chk_summary">ネットワークの種類より、 DNS を設定する</string>
     <string name="su_chk">スーパーユーザーを使用する</string>
-    <string name="su_chk_summary">が使いの場合、スーパーユーザーを使うのかもしれません</string>
+    <string name="su_chk_summary">CM が使いの場合、スーパーユーザーを使うのかもしれません</string>
 
     <string name="badip">無効な DNS</string>
 
     <string name="welcome">ようこそ</string>
-    <string name="welcome_msg">DNS man にようこそ！ 當開關網路的時候，它就會自動設置 DNS.</string>
+    <string name="welcome_msg">DNS man にようこそ！ ネットワークをトグルの時， DNS を自動的に設定する。</string>
 
 
 
