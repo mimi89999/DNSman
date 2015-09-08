@@ -20,7 +20,7 @@
     <string name="welcome">ようこそ</string>
     <string name="welcome_msg">DNS man にようこそ！ ネットワークをトグルの時， DNS を自動的に設定する。</string>
 
-
+	<string name="nodns_noti">このネットワーク使用できる DNS サーバーはありません。</string>
 
     <string name="write_conf">/etc/resolv.conf に書く</string>
     <string name="default_conf">Google public DNS を使用する</string>

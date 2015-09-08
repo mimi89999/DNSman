@@ -8,9 +8,11 @@ public class SettingsActivity extends PreferenceActivity{
 	@Override
 	public void onCreate(final Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		getActionBar().setHomeButtonEnabled(true);
 		getFragmentManager().beginTransaction()
 			.replace(android.R.id.content, new AppPref())
 			.commit();
+		
 	}
 
     public static class AppPref extends PreferenceFragment{

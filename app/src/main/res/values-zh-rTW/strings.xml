@@ -20,7 +20,7 @@
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
 
-
+    <string name="nodns_noti">當前網路沒有可用 DNS.</string>
 
     <string name="write_conf">寫入至 /etc/resolv.conf</string>
     <string name="default_conf">使用 Google public DNS</string>

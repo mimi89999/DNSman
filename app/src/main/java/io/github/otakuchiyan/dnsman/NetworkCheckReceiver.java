@@ -54,7 +54,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
         }
 		
 		if(dnss[0].equals("") && dnss[1].equals("")){
-			n = new Notification();
+			/*n = new Notification();
 			nm = (NotificationManager) c.getSystemService("NOTIFICATION_SERVICE");
 			Intent i = new Intent(c, MainActivity.class);
 			
@@ -67,6 +67,9 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 				"test",
 				pi);
 			nm.notify(0, n);
+			*/
+			Toast.makeText(c, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+			
 			return;
 		}
 		
