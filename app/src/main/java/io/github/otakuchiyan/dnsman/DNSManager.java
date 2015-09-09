@@ -3,12 +3,14 @@ package io.github.otakuchiyan.dnsman;
 import android.util.Log;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import eu.chainfire.libsuperuser.Shell;
 /**
  * Created by otakuchiyan on 2015/5/1.
  */
 public class DNSManager {
     String net_dns_prop = "net.dns";
 	
+	/*
 	private void runCMD(String[] cmds, boolean use_su){
 		Process p = null;
         DataOutputStream dos = null;
@@ -43,13 +45,15 @@ public class DNSManager {
         }
         
 	}
+	*/
 
     public int setDNSViaSetprop(String dns1, String dns2, boolean use_su) {
 		String[] cmds = {
 			"setprop " + net_dns_prop + "1 " + dns1,
 			"setprop " + net_dns_prop + "2 " + dns2
 		};
-		runCMD(cmds, use_su);
+		//runCMD(cmds, use_su);
+		Shell.SU.run(cmds);
         return 0;
     }
 	
@@ -64,7 +68,9 @@ public class DNSManager {
 			cmds[2] = "echo nameserver " + dns2 + " >> /etc/resolv.conf";
 		}
 		cmds[3] = "mount -o remount,ro /system";
-		runCMD(cmds, true);
+		//runCMD(cmds, true);
+		Shell.SU.run(cmds);
+        
 	}
 	
 	public void removeResolvConf(){
@@ -73,6 +79,7 @@ public class DNSManager {
 			"rm /etc/resolv.conf",
 			"mount -o remount,ro /system"
 		};
-		runCMD(cmds, true);
+		//runCMD(cmds, true);
+		Shell.SU.run(cmds);
 	}
 }
