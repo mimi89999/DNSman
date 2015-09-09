@@ -12,12 +12,14 @@ import android.app.NotificationManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import android.util.Log;
+import android.os.Bundle;
 
 import java.util.UnknownFormatFlagsException;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.MainActivity;
-import java.net.UnknownHostException;
+import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
+
 import android.app.*;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
@@ -26,23 +28,20 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 	private NotificationManager nm;
 
     private void setDNS(Context c, boolean isMobile) {
-        DNSManager dns = new DNSManager();
-
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
 			c.getApplicationContext());
 
         String[] wdnss = new String[2];
 		String[] mdnss = new String[2];
 		String[] dnss = new String[2];
-		
+		Bundle dnss_bundle = new Bundle();
 		
 		for(int i = 0; i <= 1; i++) {
 			wdnss[i] = sp.getString("wdns" + (i + 1), "");
 			mdnss[i] = sp.getString("mdns" + (i + 1), "");
 		}
 		
-        Boolean use_su = sp.getBoolean("use_su", false);
-        //Mobile network
+       	//Mobile network
 	        if(isMobile){
                 if(sp.getBoolean("distinguish", false)) {
                     dnss = mdnss;		
@@ -72,12 +71,12 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 			
 			return;
 		}
+		dnss_bundle.putString("dns1", dnss[0]);
+		dnss_bundle.putString("dns2", dnss[1]);
+		dnss_bundle.putBoolean("use_su", sp.getBoolean("use_su", true));
 		
-        if (dns.setDNSViaSetprop(dnss[0], dnss[1], use_su) == 1) {
-                Toast.makeText(c, R.string.set_failed, Toast.LENGTH_LONG).show();
-        } else {
-                Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_LONG).show();
-            }
+		DNSBackgroundIntentService.performAction(c, dnss_bundle);		
+        Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_LONG).show();
     }
 
     public void onReceive(Context context, Intent intent) {
