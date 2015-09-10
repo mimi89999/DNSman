@@ -3,7 +3,7 @@
 	<string name="mobile_category">Mobile network</string>
 	
 	<string name="set_succeed">Setting DNS succeed.</string>
-    <string name="set_failed">Setting DNS failed.</string>
+    <string name="set_failed">Setting DNS failed. May need root your phone.</string>
 	<string name="operation_succeed">The operation was completed successfully.</string>
 	
 	<string name="edit_resolv">DNS config file</string>

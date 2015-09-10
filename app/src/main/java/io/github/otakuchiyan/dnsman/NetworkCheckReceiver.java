@@ -14,7 +14,7 @@ import android.widget.Toast;
 import android.util.Log;
 import android.os.Bundle;
 
-import java.util.UnknownFormatFlagsException;
+import eu.chainfire.libsuperuser.Shell;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.MainActivity;
@@ -73,10 +73,8 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		}
 		dnss_bundle.putString("dns1", dnss[0]);
 		dnss_bundle.putString("dns2", dnss[1]);
-		dnss_bundle.putBoolean("use_su", sp.getBoolean("use_su", true));
 		
-		DNSBackgroundIntentService.performAction(c, dnss_bundle);		
-        Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_LONG).show();
+		DNSBackgroundIntentService.performAction(c, dnss_bundle);
     }
 
     public void onReceive(Context context, Intent intent) {

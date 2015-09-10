@@ -38,8 +38,6 @@ public class MainActivity extends Activity {
 		
 		if(!sp.getBoolean("firstbooted", false)){
 			sped.putBoolean("distinguish", false);
-			sped.putBoolean("use_su", true);
-			sped.commit();
 			showWelcomeDialog();
 			sped.putBoolean("firstbooted", true);
 			sped.commit();

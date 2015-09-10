@@ -1,27 +1,41 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.util.Log;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.List;
+
 import eu.chainfire.libsuperuser.Shell;
+
 /**
  * Created by otakuchiyan on 2015/5/1.
  */
 public class DNSManager {
-    final static String NETDNS_PROP = "net.dns";
+    final static String SETDNS_PREFIX = "setprop net.dns";
+	final static String GETDNS_PREFIX = "getprop net.dns";
 	
-	public static int setDNSViaSetprop(String dns1, String dns2, boolean use_su) {
-		String[] cmds = {
-			"setprop " + NETDNS_PROP + "1 " + dns1,
-			"setprop " + NETDNS_PROP + "2 " + dns2
+	public static boolean setDNSViaSetprop(String dns1, String dns2) {
+		String[] set_cmds = {
+			SETDNS_PREFIX + "1 " + dns1,
+			SETDNS_PREFIX + "2 " + dns2
 		};
-		//runCMD(cmds, use_su);
-		if(use_su){
-			Shell.SU.run(cmds);
+		String[] chk_cmds = {
+			GETDNS_PREFIX + "1",
+			GETDNS_PREFIX + "2"
+		};
+		List<String> result;
+		if(Shell.SU.available()){
+			Shell.SU.run(set_cmds);
 		}else{
-			Shell.SH.run(cmds);
+			Shell.SH.run(set_cmds);
 		}
-        return 0;
+		
+		//Check effect
+		result = Shell.SH.run(chk_cmds);
+		if(!result.get(0).equals(dns1) ||
+			!result.get(1).equals(dns2)){
+				return false;
+			}
+		
+        return true;
     }
 	
 	public static void writeResolvConf(String dns1, String dns2){
