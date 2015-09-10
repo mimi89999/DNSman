@@ -11,16 +11,17 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String SETDNS_PREFIX = "setprop net.dns";
 	final static String GETDNS_PREFIX = "getprop net.dns";
+	final static String[] chk_cmds = {
+		GETDNS_PREFIX + "1",
+		GETDNS_PREFIX + "2"
+	};
 	
 	public static boolean setDNSViaSetprop(String dns1, String dns2) {
 		String[] set_cmds = {
 			SETDNS_PREFIX + "1 " + dns1,
 			SETDNS_PREFIX + "2 " + dns2
 		};
-		String[] chk_cmds = {
-			GETDNS_PREFIX + "1",
-			GETDNS_PREFIX + "2"
-		};
+		
 		List<String> result;
 		if(Shell.SU.available()){
 			Shell.SU.run(set_cmds);
@@ -59,5 +60,9 @@ public class DNSManager {
 			"mount -o remount,ro /system"
 		};
 		Shell.SU.run(cmds);
+	}
+	
+	public static List<String> getCurrentDNS(){
+		return Shell.SH.run(chk_cmds);
 	}
 }

@@ -13,6 +13,9 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
 import android.app.*;
+import android.os.AsyncTask;
+
+import java.util.List;
 
 import io.github.otakuchiyan.dnsman.SettingsActivity;
 import io.github.otakuchiyan.dnsman.IPChecker;
@@ -27,6 +30,8 @@ public class MainActivity extends Activity {
 	private EditText wdns2;
 	private EditText mdns1;
 	private EditText mdns2;
+	private TextView cdns1;
+	private TextView cdns2;
 	private TextView wifi_category;
 	private TextView mobile_category;	
     
@@ -49,11 +54,15 @@ public class MainActivity extends Activity {
 		wdns2 = (EditText) findViewById(R.id.wdns2);
 		mdns1 = (EditText) findViewById(R.id.mdns1);
 		mdns2 = (EditText) findViewById(R.id.mdns2);
+		cdns1 = (TextView) findViewById(R.id.cdns1);
+		cdns2 = (TextView) findViewById(R.id.cdns2);
 		wifi_category = (TextView) findViewById(R.id.wifi_category);
 		mobile_category = (TextView) findViewById(R.id.mobile_category);
 		
 		wdns1.setText(sp.getString("wdns1", ""));
 		wdns2.setText(sp.getString("wdns2", ""));
+		
+		(new getDNSAsync()).execute();
 		
 		if(sp.getBoolean("distinguish", false)){
 		mdns1.setText(sp.getString("mdns1", ""));
@@ -69,7 +78,7 @@ public class MainActivity extends Activity {
 			mdns1.setAlpha(0.0f);
 			mdns2.setAlpha(0.0f);
 			mobile_category.setText("");
-			wifi_category.setText("");
+			wifi_category.setText(getText(R.string.global_category));
 		}
 		
 		wdns1.setOnFocusChangeListener(
@@ -109,5 +118,24 @@ public class MainActivity extends Activity {
 			.setMessage(R.string.welcome_msg)
 			.setPositiveButton(android.R.string.ok, null);
 		adb.create().show();
+	}
+	
+	private void getCurrentDNS(){
+		List<String> currentDNSs = DNSManager.getCurrentDNS();
+		
+		cdns1.setText(currentDNSs.get(0));
+		cdns2.setText(currentDNSs.get(1));
+	}
+	
+	private class getDNSAsync extends AsyncTask<Void, Void, Void>
+	{
+
+		@Override
+		protected Void doInBackground(Void[] p1)
+		{
+			getCurrentDNS();
+			// TODO: Implement this method
+			return null;
+		}
 	}
 }

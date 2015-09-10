@@ -23,7 +23,8 @@ import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
 import android.app.*;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
-    final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+	public static boolean dns_result;
+    //final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 	private Notification n;
 	private NotificationManager nm;
 
@@ -75,6 +76,12 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		dnss_bundle.putString("dns2", dnss[1]);
 		
 		DNSBackgroundIntentService.performAction(c, dnss_bundle);
+		
+		if(dns_result){
+			Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
+		}
     }
 
     public void onReceive(Context context, Intent intent) {

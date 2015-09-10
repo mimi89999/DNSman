@@ -34,14 +34,8 @@ public class DNSBackgroundIntentService extends IntentService{
 		if(dnss == null){
 			return;
 		}
-		if(DNSManager.setDNSViaSetprop(dnss.getString("dns1"),
-			dnss.getString("dns2"))){
-				Log.d("DBGIS", "succeed");
-				Toast.makeText(context, R.string.set_succeed, Toast.LENGTH_SHORT).show();
-		}else{
-
-			Log.d("DBGIS", "failed");
-			Toast.makeText(context, R.string.set_failed, Toast.LENGTH_SHORT).show();
-		}
+		NetworkCheckReceiver.dns_result = DNSManager.
+			setDNSViaSetprop(dnss.getString("dns1"),
+				dnss.getString("dns2"));
 	}
 }
