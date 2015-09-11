@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.widget.Toast;
 import android.util.Log;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.content.IntentFilter;
 
 import eu.chainfire.libsuperuser.Shell;
 
@@ -23,19 +25,34 @@ import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
 import android.app.*;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
-	public static boolean dns_result;
-    //final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
 	private Notification n;
 	private NotificationManager nm;
 
+    private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+		    if(i.getBooleanExtra("result", false)){
+			Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
+		}
+		}
+	    }
+	};
+
     private void setDNS(Context c, boolean isMobile) {
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
+	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
 			c.getApplicationContext());
 
         String[] wdnss = new String[2];
 		String[] mdnss = new String[2];
 		String[] dnss = new String[2];
 		Bundle dnss_bundle = new Bundle();
+		
+		IntentFilter iFilter = new IntentFilter();
+		iFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
+		LocalBroadcastManager.getInstance(c).registerReceiver(dnsSetted, iFilter);
 		
 		for(int i = 0; i <= 1; i++) {
 			wdnss[i] = sp.getString("wdns" + (i + 1), "");
@@ -77,11 +94,6 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		
 		DNSBackgroundIntentService.performAction(c, dnss_bundle);
 		
-		if(dns_result){
-			Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
-		}else{
-			Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
-		}
     }
 
     public void onReceive(Context context, Intent intent) {

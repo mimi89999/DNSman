@@ -8,6 +8,7 @@
     <string name="set_failed">Setting DNS failed. May need root your phone.</string>
 	<string name="operation_succeed">The operation was completed successfully.</string>
 	
+	<string name="refresh_cdns">Refresh current DNS</string>
 	<string name="edit_resolv">DNS config file</string>
 	<string name="settings">Settings</string>
 	

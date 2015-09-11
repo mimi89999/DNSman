@@ -14,6 +14,9 @@ import android.preference.PreferenceManager;
 import android.widget.TextView;
 import android.app.*;
 import android.os.AsyncTask;
+import android.content.IntentFilter;
+import android.content.BroadcastReceiver;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.List;
 
@@ -34,7 +37,20 @@ public class MainActivity extends Activity {
 	private TextView cdns2;
 	private TextView wifi_category;
 	private TextView mobile_category;	
-    
+   
+	private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+		    if(i.getBooleanExtra("result", false)){
+				getCurrentDNS();
+		}
+		}
+	    }
+	};
+
+
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +77,11 @@ public class MainActivity extends Activity {
 		
 		wdns1.setText(sp.getString("wdns1", ""));
 		wdns2.setText(sp.getString("wdns2", ""));
+		/*
+		IntentFilter iFilter = new IntentFilter();
+		iFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
+		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted, iFilter);
+		*/
 		
 		(new getDNSAsync()).execute();
 		
@@ -99,6 +120,11 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch(item.getItemId()){
+			/*
+			case R.id.refresh_cdns:
+				(new getDNSAsync()).execute();
+				break;
+				*/
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
 				break;

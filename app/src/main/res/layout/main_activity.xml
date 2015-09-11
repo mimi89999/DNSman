@@ -7,7 +7,7 @@
 
 	<LinearLayout
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:orientation="horizontal">
 
 		<TextView
@@ -18,19 +18,20 @@
 
 		<TextView
 			android:id="@+id/cdns1"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"/>
-		
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:layout_weight="1.0"
+			android:gravity="center|fill_vertical"/>
+
 		<TextView
 			android:id="@+id/cdns2"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:layout_weight="1.0"/>
-		
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:layout_weight="1.0"
+			android:gravity="center|fill_vertical"/>
+
 	</LinearLayout>
 
-	
 	<TextView
 		android:id="@+id/wifi_category"
 		android:layout_height="wrap_content"
