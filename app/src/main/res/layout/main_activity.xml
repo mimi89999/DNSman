@@ -32,6 +32,30 @@
 
 	</LinearLayout>
 
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="horizontal">
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:text="@string/distinguish_chk"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content"/>
+
+		<Switch
+			android:id="@+id/distinguish"
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:layout_alignParentRight="true"/>
+
+	</LinearLayout>
+
+	<View
+		android:layout_height="1dp"
+		android:background="?android:attr/dividerVertical"
+		android:layout_width="match_parent"/>
+
 	<TextView
 		android:id="@+id/wifi_category"
 		android:layout_height="wrap_content"

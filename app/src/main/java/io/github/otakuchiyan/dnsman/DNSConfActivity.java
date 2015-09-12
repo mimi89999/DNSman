@@ -1,10 +1,16 @@
 package io.github.otakuchiyan.dnsman;
 import android.app.*;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.widget.EditText;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+
+import java.lang.Void;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
@@ -13,13 +19,25 @@ import android.content.*;
 import android.view.View;
 
 
-
-public class DNSConfActivity extends Activity
-{
+public class DNSConfActivity extends Activity{
+    final static String ACTION_CONFOPERATION = "io.github.otakuchiyan.dnsman.ACTION_CONFOPERATION";
 	private SharedPreferences sp;
-	private DNSManager d = new DNSManager();
 	private EditText rdns1;
 	private EditText rdns2;
+
+    private BroadcastReceiver confOperation = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		String err = i.getStringExtra("err");
+		if(i.getAction().equals(ACTION_CONFOPERATION)){
+		    if(err != null){
+				Toast.makeText(c, err, Toast.LENGTH_LONG).show();
+		    }else{
+	    Toast.makeText(c, R.string.operation_succeed, Toast.LENGTH_SHORT).show();
+		    }
+		}
+	    }
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -36,6 +54,11 @@ public class DNSConfActivity extends Activity
 			new IPCheckerOnFocusChangeListener(this, rdns1, "rdns1"));
 		rdns2.setOnFocusChangeListener(
 			new IPCheckerOnFocusChangeListener(this, rdns2, "rdns2"));
+
+		IntentFilter iFilter = new IntentFilter();
+		iFilter.addAction(ACTION_CONFOPERATION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);
+		
 		}
 	
 	public void writeConfBtn(View v){
@@ -46,8 +69,7 @@ public class DNSConfActivity extends Activity
 		adb.setMessage(R.string.write_conf_msg)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
-					d.writeResolvConf(rdns1ip, rdns2ip);
-					operationToast();
+				    (new writeConfAsync()).execute(rdns1ip, rdns2ip);
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
@@ -59,9 +81,7 @@ public class DNSConfActivity extends Activity
 		adb.setMessage(R.string.default_conf_msg)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
-					d.writeResolvConf("8.8.8.8", "8.8.4.4");
-					operationToast();
-					
+				    (new writeConfAsync()).execute("8.8.8.8", "8.8.4.4");
 					}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
@@ -73,16 +93,40 @@ public class DNSConfActivity extends Activity
 		adb.setMessage(R.string.delete_conf_msg)
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface di, int which){
-				d.removeResolvConf();
-				operationToast();
-				
+			    (new deleteConfAsync()).execute();
 				}
 		})
 		.setNegativeButton(android.R.string.cancel, null);
 		adb.create().show();
 	}
 	
-	private void operationToast(){
-		Toast.makeText(this, R.string.operation_succeed, Toast.LENGTH_SHORT).show();
+    private class writeConfAsync extends AsyncTask<String, Void, Void>{
+	@Override
+	protected Void doInBackground(String... dnss){
+	    String err = DNSManager.writeResolvConf(dnss[0], dnss[1]);
+	    Intent i = new Intent(ACTION_CONFOPERATION);
+	    if(err != null){
+		i.putExtra("err", err);
+	    }
+	    LocalBroadcastManager.getInstance(getApplicationContext())
+		.sendBroadcast(i);
+	    return null;
 	}
+    }
+    private class deleteConfAsync extends AsyncTask<Void, Void, Void>{
+	@Override
+	protected Void doInBackground(Void[] p1){
+	    String err = DNSManager.removeResolvConf();
+	    Intent i = new Intent(ACTION_CONFOPERATION);
+	    if(err != null){
+		i.putExtra("err", err);
+	    }
+	    LocalBroadcastManager.getInstance(getApplicationContext())
+		.sendBroadcast(i);
+		    return null;
+	}
+    }   
+
+
+	
 }

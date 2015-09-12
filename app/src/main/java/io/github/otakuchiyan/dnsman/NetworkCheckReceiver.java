@@ -21,6 +21,7 @@ import eu.chainfire.libsuperuser.Shell;
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.MainActivity;
 import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
+import io.github.otakuchiyan.dnsman.GetNetwork;
 
 import android.app.*;
 
@@ -101,9 +102,9 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 			context.getApplicationContext());
 		
 		if(sp.getBoolean("firstbooted", false)){
-        ConnectivityManager connmgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mobi_res = connmgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        NetworkInfo wifi_res = connmgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+			GetNetwork.init(context);
+			NetworkInfo mobi_res = GetNetwork.getMobileNetwork();
+			NetworkInfo wifi_res = GetNetwork.getWiFiNetwork();
         if(mobi_res != null && mobi_res.isConnected()){
             setDNS(context, true);
         } else if (wifi_res != null && wifi_res.isConnected()){

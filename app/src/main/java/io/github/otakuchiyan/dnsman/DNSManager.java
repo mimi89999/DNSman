@@ -39,8 +39,9 @@ public class DNSManager {
         return true;
     }
 	
-	public static void writeResolvConf(String dns1, String dns2){
+	public static String writeResolvConf(String dns1, String dns2){
 		String[] cmds = new String[4];
+		List<String> result;
 		
 		cmds[0] = "mount -o remount,rw /system";
 		if(dns1 != ""){
@@ -50,16 +51,25 @@ public class DNSManager {
 			cmds[2] = "echo nameserver " + dns2 + " >> /etc/resolv.conf";
 		}
 		cmds[3] = "mount -o remount,ro /system";
-		Shell.SU.run(cmds);       
+		result = Shell.SU.run(cmds);
+		if(!result.isEmpty()){
+		    return result.get(0);
+		}
+		return null;
 	}
 	
-	public static void removeResolvConf(){
+	public static String removeResolvConf(){
 		String[] cmds = {
 			"mount -o remount,rw /system",
 			"rm /etc/resolv.conf",
 			"mount -o remount,ro /system"
 		};
-		Shell.SU.run(cmds);
+		List<String> result;
+		result = Shell.SU.run(cmds);
+		if(!result.isEmpty()){
+		    return result.get(0);
+		}
+		return null;
 	}
 	
 	public static List<String> getCurrentDNS(){
