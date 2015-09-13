@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="current_dnss">当前 DNS:</string>
+	<string name="global_category">全局</string>
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">移动网络</string>
 
-    <string name="set_succeed">设置 DNS 成功。</string>
-    <string name="set_failed">设置 DNS 失败。</string>
-    <string name="operation_succeed">操作成功。</string>
+    <string name="set_succeed">设置 DNS 成功</string>
+    <string name="set_failed">设置 DNS 失败</string>
+    <string name="operation_succeed">操作成功</string>
 
     <string name="edit_resolv">DNS 配置文件</string>
     <string name="settings">设置</string>
 
     <string name="distinguish_chk">区别网络类型</string>
-    <string name="distinguish_chk_summary">依据网络类型来改变 DNS</string>
-    <string name="su_chk">使用 root 权限</string>
-    <string name="su_chk_summary">如果使用 CM ROM, 也许不需要勾选</string>
 
     <string name="badip">无效的 DNS</string>
+	<string name="badip_msg">请检查 DNS 地址。</string>
 
     <string name="welcome">欢迎</string>
     <string name="welcome_msg">欢迎使用 DNS man！当开关网络的时候，它就会自动更改 DNS.</string>
 
-    <string name="nodns_noti">当前网络没有可用 DNS.</string>
+	<string name="dnscrypt_running">检测到 DNSCrypt 正在运行</string>
+	<string name="dnscrypt_running_msg">现在就将全局 DNS 设置为 127.0.0.1 如何？</string>
+
+    <string name="nodns_noti">没有可用 DNS</string>
+	<string name="nodns_noti_text">点击以进行设置</string>
 
     <string name="write_conf">写入至 /etc/resolv.conf</string>
     <string name="default_conf">使用 Google public DNS</string>

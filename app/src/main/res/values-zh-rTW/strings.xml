@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="current_dnss">當前 DNS:</string>
+	<string name="global_category">全局</string>
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">行動網路</string>
 
@@ -11,16 +13,18 @@
     <string name="settings">設定</string>
 
     <string name="distinguish_chk">區分網路類型</string>
-    <string name="distinguish_chk_summary">依照網路類型來改變 DNS</string>
-    <string name="su_chk">使用超級使用者權限</string>
-    <string name="su_chk_summary">如果使用 CM 韌體，也許不需要勾選</string>
 
     <string name="badip">無效的 DNS</string>
+	<string name="badip_msg">請檢查 DNS 位址。</string>
 
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
 
-    <string name="nodns_noti">當前網路沒有可用 DNS.</string>
+	<string name="dnscrypt_running">偵測到 DNSCrypt 運作中</string>
+	<string name="dnscrypt_running_msg">現在就將全局 DNS 設定為 127.0.0.1 如何？</string>
+
+    <string name="nodns_noti">沒有可用 DNS</string>
+    <string name="nodns_noti_text">點選以進行設定</string>
 
     <string name="write_conf">寫入至 /etc/resolv.conf</string>
     <string name="default_conf">使用 Google public DNS</string>

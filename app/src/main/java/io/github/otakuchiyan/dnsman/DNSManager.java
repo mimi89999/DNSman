@@ -75,4 +75,8 @@ public class DNSManager {
 	public static List<String> getCurrentDNS(){
 		return Shell.SH.run(chk_cmds);
 	}
+
+    public static boolean detectDNSCrypt(){
+	return Shell.SH.run("ps | grep 'dnscrypt'").isEmpty() ? false : true;
+    }
 }

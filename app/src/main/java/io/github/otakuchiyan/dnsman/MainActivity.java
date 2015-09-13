@@ -17,9 +17,11 @@ import android.app.*;
 import android.os.AsyncTask;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Switch;
 import android.widget.CompoundButton;
+import android.util.Log;
 
 import java.util.List;
 
@@ -33,6 +35,8 @@ import android.widget.CompoundButton.*;
 
 public class MainActivity extends Activity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
+    final private String ACTION_DNSCRYPT_RUNNING = "io.github.otakuchiyan.dnsman.ACTION_DNSCRYPT_RUNNING";
+    
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
 	
@@ -68,6 +72,15 @@ public class MainActivity extends Activity {
 	    }
 	};
 
+    private BroadcastReceiver dnscryptRunning = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		if(i.getAction().equals(ACTION_DNSCRYPT_RUNNING)){
+		    dnscryptRunningDialog();
+		}
+	    }
+	};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,16 +105,11 @@ public class MainActivity extends Activity {
 		    }
 			sped.putBoolean("distinguish", false);
 			showWelcomeDialog();
+			(new detectDNSCryptAsync()).execute();
 			sped.putBoolean("firstbooted", true);
 			sped.commit();
 		}
 
-		if(sp.getBoolean("distinguish", false)){
-		    enableMobileDNSView();
-		}else{
-		    		    disableMobileDNSView();
-
-		}
 
 
 		wdns1.setText(sp.getString("wdns1", ""));
@@ -116,14 +124,28 @@ public class MainActivity extends Activity {
 					   new IPCheckerOnFocusChangeListener(this, mdns1, "mdns1"));
 	    mdns2.setOnFocusChangeListener(
 			new IPCheckerOnFocusChangeListener(this, mdns2, "mdns2"));
+	    
 	    (new getDNSAsync()).execute();
+
+	    
+	    distinguish_swh.setChecked(sp.getBoolean("distinguish", false));
+	    		if(sp.getBoolean("distinguish", false)){
+		    enableMobileDNSView();
+		}else{
+			    disableMobileDNSView();
+		}
+
 		distinguish_swh.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 			@Override
 				public void onCheckedChanged(CompoundButton cb, boolean state){
 				    if(state){
-						disableMobileDNSView();
-				    }else{
 						enableMobileDNSView();
+						sped.putBoolean("distinguish", true);
+						sped.commit();
+				    }else{
+												disableMobileDNSView();
+												sped.putBoolean("distinguish", false);
+												sped.commit();
 					}
 				}
 			});
@@ -136,6 +158,10 @@ public class MainActivity extends Activity {
 		IntentFilter getFilter = new IntentFilter();
 		getFilter.addAction(ACTION_GETDNS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
+
+		IntentFilter dnscryptFilter = new IntentFilter();
+		dnscryptFilter.addAction(ACTION_DNSCRYPT_RUNNING);
+		LocalBroadcastManager.getInstance(this).registerReceiver(dnscryptRunning, dnscryptFilter);
 	}
 
 		
@@ -172,6 +198,21 @@ public class MainActivity extends Activity {
 		adb.create().show();
 	}
 
+    private void dnscryptRunningDialog(){
+	AlertDialog.Builder adb = new AlertDialog.Builder(this);
+	adb.setTitle(R.string.dnscrypt_running)
+	    .setMessage(R.string.dnscrypt_running_msg)
+	    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+		    public void onClick(DialogInterface di, int which){
+			wdns1.setText("127.0.0.1");
+			sped.putString("wdns1", "127.0.0.1");
+			sped.commit();
+		    }
+		})
+	    .setNegativeButton(android.R.string.cancel, null);
+	adb.create().show();
+    }
+
     private void enableMobileDNSView(){
 	mdns1.setEnabled(true);
 	mdns2.setEnabled(true);
@@ -205,4 +246,20 @@ public class MainActivity extends Activity {
 			return null;
 		}
 	}
+
+    private void detectDNSCrypt(){
+	if(DNSManager.detectDNSCrypt()){
+	    Intent i = new Intent(ACTION_DNSCRYPT_RUNNING);
+	    LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+	}
+    }
+
+    private class detectDNSCryptAsync extends AsyncTask<Void, Void, Void>{
+	@Override
+	protected Void doInBackground(Void[] p1){
+	    detectDNSCrypt();
+	    return null;
+	}
+    }
+
 }

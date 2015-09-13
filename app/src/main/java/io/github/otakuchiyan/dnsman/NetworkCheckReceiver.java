@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.NotificationCompat;
 import android.content.IntentFilter;
 
 import eu.chainfire.libsuperuser.Shell;
@@ -72,21 +73,25 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
         }
 		
 		if(dnss[0].equals("") && dnss[1].equals("")){
-			/*n = new Notification();
-			nm = (NotificationManager) c.getSystemService("NOTIFICATION_SERVICE");
-			Intent i = new Intent(c, MainActivity.class);
-			
-			PendingIntent pi = PendingIntent.getActivity(c, 0, i, 0);
-			
-			//n.icon = R.mipmap.ic_launcher;
-			n.when = System.currentTimeMillis();
-			n.setLatestEventInfo(c,
-				c.getText(R.string.nodns_noti),
-				"test",
-				pi);
-			nm.notify(0, n);
-			*/
-			Toast.makeText(c, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+		    NotificationCompat.Builder ncb =
+			new NotificationCompat.Builder(c)
+			.setSmallIcon(R.drawable.ic_error_outline_white_24dp)
+			.setContentTitle(c.getText(R.string.nodns_noti))
+			.setContentText(c.getText(R.string.nodns_noti_text));
+		    Intent mainIntent = new Intent(c, MainActivity.class);
+
+		    TaskStackBuilder tsb = TaskStackBuilder.create(c);
+		    tsb.addParentStack(MainActivity.class);
+		    tsb.addNextIntent(mainIntent);
+		    PendingIntent mainPendingIntent =
+			tsb.getPendingIntent(0,
+					     PendingIntent.FLAG_UPDATE_CURRENT);
+		    ncb.setContentIntent(mainPendingIntent);
+		    nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+		    nm.notify(0, ncb.build());
+
+
+					    //			Toast.makeText(c, R.string.nodns_noti, Toast.LENGTH_LONG).show();
 			
 			return;
 		}

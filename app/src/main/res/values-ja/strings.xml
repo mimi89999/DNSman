@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="current_dnss">現在の DNS:</string>
+	<string name="global_category">全域</string>
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">モバイルネットワーク</string>
 
-    <string name="set_succeed">DNS 設定は成功しました。</string>
-    <string name="set_failed">DNS 設定は失敗しました。</string>
-    <string name="operation_succeed">操作は成功しました。</string>
+    <string name="set_succeed">DNS 設定は成功しました</string>
+    <string name="set_failed">DNS 設定は失敗しました</string>
+    <string name="operation_succeed">操作は成功しました</string>
 
     <string name="edit_resolv">DNS 設定ファイル</string>
     <string name="settings">設定</string>
 
     <string name="distinguish_chk">ネットワークの種類を区別する</string>
-    <string name="distinguish_chk_summary">ネットワークの種類より、 DNS を設定する</string>
-    <string name="su_chk">スーパーユーザーを使用する</string>
-    <string name="su_chk_summary">CM が使いの場合、スーパーユーザーを使うのかもしれません</string>
 
     <string name="badip">無効な DNS</string>
-
+    <string name="badip_msg">DNS をチェックください。</string>
     <string name="welcome">ようこそ</string>
     <string name="welcome_msg">DNS man にようこそ！ ネットワークをトグルの時， DNS を自動的に設定する。</string>
 
-	<string name="nodns_noti">このネットワーク使用できる DNS サーバーはありません。</string>
+    <string name="dnscrypt_running">DNSCrypt を検出された</string>
+	<string name="dnscrypt_running_msg">すぐ DNS に 127.0.0.1 を設定する？</string>
+	<string name="nodns_noti">使用できる DNS サーバーはありません</string>
+    <string name="nodns_noti_text">クリックして DNS を設定する</string>
 
     <string name="write_conf">/etc/resolv.conf に書く</string>
     <string name="default_conf">Google public DNS を使用する</string>

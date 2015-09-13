@@ -4,27 +4,26 @@
 	<string name="wifi_category">Wi-Fi</string>
 	<string name="mobile_category">Mobile network</string>
 	
-	<string name="set_succeed">Setting DNS succeed.</string>
-    <string name="set_failed">Setting DNS failed. May need root your phone.</string>
-	<string name="operation_succeed">The operation was completed successfully.</string>
+	<string name="set_succeed">Setting DNS succeed</string>
+    <string name="set_failed">Setting DNS failed, May need root your phone</string>
+	<string name="operation_succeed">The operation was completed successfully</string>
 	
-	<string name="refresh_cdns">Refresh current DNS</string>
 	<string name="edit_resolv">DNS config file</string>
 	<string name="settings">Settings</string>
 	
     <string name="distinguish_chk">Distinguish network</string>
-	<string name="distinguish_chk_summary">Change DNS according network type</string>
-    <string name="su_chk">Use root permissions</string>
-    <string name="su_chk_summary">If you are using CM, may needn\'t toggle it</string>
-    <string name="toggle_hint">When toggle network, </string>
 	
 	<string name="badip">Invaild DNS</string>
-	<string name="badip_msg">Please change the DNS address.</string>
+	<string name="badip_msg">Please check the DNS address.</string>
 	
 	<string name="welcome">Welcome</string>
 	<string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
-	
-	<string name="nodns_noti">No alivable DNS for current network type.</string>
+
+	<string name="dnscrypt_running">Detected DNSCrypt was running</string>
+	<string name="dnscrypt_running_msg">Set global DNS as 127.0.0.1 now?</string>
+
+    <string name="nodns_noti_text">Click to set DNS</string>
+	<string name="nodns_noti">No alivable DNS</string>
 	
 	<string name="write_conf">Write DNS resolver</string>
 	<string name="default_conf">Use Google public DNS</string>
