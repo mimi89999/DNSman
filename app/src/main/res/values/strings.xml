@@ -13,8 +13,6 @@
 	
     <string name="distinguish_chk">Distinguish network</string>
 	
-	<string name="badip">Invaild DNS</string>
-	<string name="badip_msg">Please check the DNS address.</string>
 	
 	<string name="welcome">Welcome</string>
 	<string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>

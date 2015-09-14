@@ -27,7 +27,7 @@ import java.util.List;
 
 import io.github.otakuchiyan.dnsman.SettingsActivity;
 import io.github.otakuchiyan.dnsman.IPChecker;
-import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
+import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 import io.github.otakuchiyan.dnsman.DNSConfActivity;
 import io.github.otakuchiyan.dnsman.GetNetwork;
 import android.widget.*;
@@ -114,16 +114,18 @@ public class MainActivity extends Activity {
 
 		wdns1.setText(sp.getString("wdns1", ""));
 		wdns2.setText(sp.getString("wdns2", ""));
-		wdns1.setOnFocusChangeListener(
-		new IPCheckerOnFocusChangeListener(this, wdns1, "wdns1"));
-		wdns2.setOnFocusChangeListener(
-		new IPCheckerOnFocusChangeListener(this, wdns2, "wdns2"));
+		wdns1.addTextChangedListener(
+		new IPCheckerComponent(this, wdns1, "wdns1"));
+		
+
+		wdns2.addTextChangedListener(
+		new IPCheckerComponent(this, wdns2, "wdns2"));
         mdns1.setText(sp.getString("mdns1", ""));
         mdns2.setText(sp.getString("mdns2", ""));
-	    mdns1.setOnFocusChangeListener(
-					   new IPCheckerOnFocusChangeListener(this, mdns1, "mdns1"));
-	    mdns2.setOnFocusChangeListener(
-			new IPCheckerOnFocusChangeListener(this, mdns2, "mdns2"));
+	    mdns1.addTextChangedListener(
+					   new IPCheckerComponent(this, mdns1, "mdns1"));
+	    mdns2.addTextChangedListener(
+			new IPCheckerComponent(this, mdns2, "mdns2"));
 	    
 	    (new getDNSAsync()).execute();
 

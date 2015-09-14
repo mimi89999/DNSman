@@ -14,9 +14,6 @@
 
     <string name="distinguish_chk">區分網路類型</string>
 
-    <string name="badip">無效的 DNS</string>
-	<string name="badip_msg">請檢查 DNS 位址。</string>
-
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
 

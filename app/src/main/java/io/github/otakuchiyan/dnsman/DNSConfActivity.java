@@ -13,7 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import java.lang.Void;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
-import io.github.otakuchiyan.dnsman.IPCheckerOnFocusChangeListener;
+import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 import android.view.View.*;
 import android.content.*;
 import android.view.View;
@@ -50,10 +50,10 @@ public class DNSConfActivity extends Activity{
 		rdns1.setText(sp.getString("rdns1", ""));
 		rdns2.setText(sp.getString("rdns2", ""));
 		
-		rdns1.setOnFocusChangeListener(
-			new IPCheckerOnFocusChangeListener(this, rdns1, "rdns1"));
-		rdns2.setOnFocusChangeListener(
-			new IPCheckerOnFocusChangeListener(this, rdns2, "rdns2"));
+		rdns1.addTextChangedListener(
+			new IPCheckerComponent(this, rdns1, "rdns1"));
+		rdns2.addTextChangedListener(
+			new IPCheckerComponent(this, rdns2, "rdns2"));
 
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(ACTION_CONFOPERATION);

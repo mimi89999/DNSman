@@ -17,6 +17,12 @@ public class DNSManager {
 	};
 	
 	public static boolean setDNSViaSetprop(String dns1, String dns2) {
+		if(dns1.equals("")){
+			dns1 = "";
+		}
+		if(dns2.equals("")){
+			dns2 = "";
+		}
 		String[] set_cmds = {
 			SETDNS_PREFIX + "1 " + dns1,
 			SETDNS_PREFIX + "2 " + dns2

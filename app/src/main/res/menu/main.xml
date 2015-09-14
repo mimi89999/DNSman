@@ -2,7 +2,7 @@
     <item
         android:id="@+id/resolv_edit"
         android:title="@string/edit_resolv"/>
-    <item
+	<item
 		android:id="@+id/settings"
 		android:title="@string/settings"/>
 </menu>

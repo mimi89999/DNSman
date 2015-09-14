@@ -14,8 +14,6 @@
 
     <string name="distinguish_chk">区别网络类型</string>
 
-    <string name="badip">无效的 DNS</string>
-	<string name="badip_msg">请检查 DNS 地址。</string>
 
     <string name="welcome">欢迎</string>
     <string name="welcome_msg">欢迎使用 DNS man！当开关网络的时候，它就会自动更改 DNS.</string>

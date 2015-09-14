@@ -14,8 +14,6 @@
 
     <string name="distinguish_chk">ネットワークの種類を区別する</string>
 
-    <string name="badip">無効な DNS</string>
-    <string name="badip_msg">DNS をチェックください。</string>
     <string name="welcome">ようこそ</string>
     <string name="welcome_msg">DNS man にようこそ！ ネットワークをトグルの時， DNS を自動的に設定する。</string>
 

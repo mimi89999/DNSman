@@ -8,8 +8,10 @@ import android.view.View;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
+import android.text.TextWatcher;
+import android.text.Editable;
 
-public class IPCheckerOnFocusChangeListener implements View.OnFocusChangeListener
+public class IPCheckerComponent implements TextWatcher
 {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
@@ -18,7 +20,7 @@ public class IPCheckerOnFocusChangeListener implements View.OnFocusChangeListene
 	String key;
 	Context c;
 		
-	public IPCheckerOnFocusChangeListener(Context c, EditText e, String key){
+	public IPCheckerComponent(Context c, EditText e, String key){
 		this.c = c;
 		this.e = e;
 		this.key = key;
@@ -27,25 +29,31 @@ public class IPCheckerOnFocusChangeListener implements View.OnFocusChangeListene
 	}
 	
 	@Override
-	public void onFocusChange(View v, boolean hasFocus){
+	public void afterTextChanged(Editable e){
 		String s = this.e.getText().toString();
-		if(!hasFocus){
-			if(!s.equals("")){
-				if(IPChecker.IPv4Checker(s)){
+				if(s.equals("")){
+					sped.putString(this.key, s);
+					sped.commit();
+				}else if(!s.equals("") && IPChecker.IPv4Checker(s)){
+					this.e.setAlpha(1.0f);
 					sped.putString(this.key, s);
 					sped.commit();
 				}else{
-					showInvaildDNSDialog();
+					this.e.setAlpha(0.5f);
+					//showInvaildDNSDialog();
 				}
-			}
-		}
+		
 	}
 	
-	private void showInvaildDNSDialog(){
-		AlertDialog.Builder adb = new AlertDialog.Builder(c);
-		adb.setTitle(R.string.badip)
-			.setMessage(R.string.badip_msg)
-			.setPositiveButton(android.R.string.ok, null);
-		adb.create().show();
+	@Override
+	public void onTextChanged(CharSequence cs, int start, int end, int count){
+		
 	}
+
+	@Override
+	public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4)
+	{
+		// TODO: Implement this method
+	}
+	
 }
