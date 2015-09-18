@@ -25,10 +25,13 @@ import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
 import io.github.otakuchiyan.dnsman.GetNetwork;
 
 import android.app.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
-	private Notification n;
 	private NotificationManager nm;
+    private ArrayList<String> dnsList2set = new ArrayList<String>();
+    private SharedPreferences sp;
 
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
@@ -43,39 +46,42 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 	    }
 	};
 
-    private void setDNS(Context c, boolean isMobile) {
-	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
-			c.getApplicationContext());
+    private void setDNS(Context c, final int net_type) {
+        sp = PreferenceManager.getDefaultSharedPreferences(
+                c.getApplicationContext());
 
-        String[] wdnss = new String[2];
-		String[] mdnss = new String[2];
-		String[] dnss = new String[2];
 		Bundle dnss_bundle = new Bundle();
 		
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
 		LocalBroadcastManager.getInstance(c).registerReceiver(dnsSetted, iFilter);
-		
-		for(int i = 0; i <= 1; i++) {
-			wdnss[i] = sp.getString("wdns" + (i + 1), "");
-			mdnss[i] = sp.getString("mdns" + (i + 1), "");
-		}
-		
-       	//Mobile network
-	        if(isMobile){
-                if(sp.getBoolean("distinguish", false)) {
-                    dnss = mdnss;		
-				} else {
-                    dnss = wdnss;
-				}
-        }else{
-            dnss = wdnss;
+
+        setDNSArrayByPrefix("g");
+        switch(net_type){
+            case ConnectivityManager.TYPE_WIFI:
+                setDNSArrayByPrefix("w");
+                break;
+            case ConnectivityManager.TYPE_MOBILE:
+                setDNSArrayByPrefix("m");
+                break;
+            case ConnectivityManager.TYPE_BLUETOOTH:
+                setDNSArrayByPrefix("b");
+                break;
+            case ConnectivityManager.TYPE_ETHERNET:
+                setDNSArrayByPrefix("e");
+                break;
+            case ConnectivityManager.TYPE_WIMAX:
+                setDNSArrayByPrefix("wi");
+                break;
         }
+
+        Log.d("DNSman", "dns1 = " + dnsList2set.get(0));
+        Log.d("DNSman", "dns2 = " + dnsList2set.get(1));
 		
-		if(dnss[0].equals("") && dnss[1].equals("")){
+		if(dnsList2set.get(0).equals("") && dnsList2set.get(1).equals("")){
 		    NotificationCompat.Builder ncb =
 			new NotificationCompat.Builder(c)
-			.setSmallIcon(R.drawable.ic_error_outline_white_24dp)
+			.setSmallIcon(android.R.drawable.stat_notify_error)
 			.setContentTitle(c.getText(R.string.nodns_noti))
 			.setContentText(c.getText(R.string.nodns_noti_text));
 		    Intent mainIntent = new Intent(c, MainActivity.class);
@@ -89,18 +95,25 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		    ncb.setContentIntent(mainPendingIntent);
 		    nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
 		    nm.notify(0, ncb.build());
-
-
-					    //			Toast.makeText(c, R.string.nodns_noti, Toast.LENGTH_LONG).show();
-			
 			return;
 		}
-		dnss_bundle.putString("dns1", dnss[0]);
-		dnss_bundle.putString("dns2", dnss[1]);
+		dnss_bundle.putString("dns1", dnsList2set.get(0));
+		dnss_bundle.putString("dns2", dnsList2set.get(1));
 		
 		DNSBackgroundIntentService.performAction(c, dnss_bundle);
 		
     }
+
+    public void getDNSByPrefix(final String net_prefix){
+        dnsList2set.add(sp.getString(net_prefix + "dns1", ""));
+        dnsList2set.add(sp.getString(net_prefix + "dns2", ""));
+        
+    }
+
+    public void setDNSArrayByPrefix(final String prefix){
+        getDNSByPrefix(prefix);
+    }
+
 
     public void onReceive(Context context, Intent intent) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
@@ -108,14 +121,31 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		
 		if(sp.getBoolean("firstbooted", false)){
 			GetNetwork.init(context);
-			NetworkInfo mobi_res = GetNetwork.getMobileNetwork();
-			NetworkInfo wifi_res = GetNetwork.getWiFiNetwork();
-        if(mobi_res != null && mobi_res.isConnected()){
-            setDNS(context, true);
-        } else if (wifi_res != null && wifi_res.isConnected()){
-            setDNS(context, false);
+			NetworkInfo mobi_res  = GetNetwork.getMobileNetInfo();
+			NetworkInfo wifi_res  = GetNetwork.getWiFiNetInfo();
+            NetworkInfo bt_res    = GetNetwork.getBluetoothNetInfo();
+            NetworkInfo eth_res   = GetNetwork.getEthernetNetInfo();
+            NetworkInfo wimax_res = GetNetwork.getWiMaxNetInfo();
+            if(checkNetType(mobi_res)){
+                setDNS(context, ConnectivityManager.TYPE_MOBILE);
+            } else if (checkNetType(wifi_res)){
+                setDNS(context, ConnectivityManager.TYPE_WIFI);
+            } else if (checkNetType(bt_res)){
+                setDNS(context, ConnectivityManager.TYPE_BLUETOOTH);
+            } else if (checkNetType(eth_res)){
+                setDNS(context, ConnectivityManager.TYPE_ETHERNET);
+            } else if (checkNetType(wimax_res)){
+                setDNS(context, ConnectivityManager.TYPE_WIMAX);
+            }
         }
-		}
+    }
+
+    private static boolean checkNetType(NetworkInfo ni){
+        if(ni != null && ni.isConnected()){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

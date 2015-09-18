@@ -24,8 +24,8 @@ public class DNSManager {
 			dns2 = "";
 		}
 		String[] set_cmds = {
-			SETDNS_PREFIX + "1 " + dns1,
-			SETDNS_PREFIX + "2 " + dns2
+			SETDNS_PREFIX + "1 \"" + dns1 + "\"",
+			SETDNS_PREFIX + "2 \"" + dns2 + "\""
 		};
 		
 		List<String> result;

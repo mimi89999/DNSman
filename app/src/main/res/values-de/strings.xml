@@ -1,10 +1,6 @@
 <resources>
     <string name="set_succeed">DNS setzen erfolgreich</string>
     <string name="set_failed">DNS setzten fehlgeschlagen</string>
-    <string name="samedns_chk">Nutze Wi-Fi DNS als Mobile DNS</string>
-    <string name="su_chk">Benutze Root Rechte</string>
-    <string name="su_chk_summary">Wenn Sie CM nutzen, ist ein umschalten nicht nötig</string>
-    <string name="toggle_hint">Vergessen Sie nicht das Netzwerk umzuschalten</string>
     <string name="opensource">Quellcode</string>
     <string name="opensource_hint">Autor: otakuchiyan Lizenz: GNU GPLv3</string>
 </resources>

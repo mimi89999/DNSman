@@ -1,8 +1,6 @@
-
 package io.github.otakuchiyan.dnsman;
-
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.SharedPreferences; 
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -19,8 +17,6 @@ import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Switch;
-import android.widget.CompoundButton;
 import android.util.Log;
 
 import java.util.List;
@@ -32,25 +28,43 @@ import io.github.otakuchiyan.dnsman.DNSConfActivity;
 import io.github.otakuchiyan.dnsman.GetNetwork;
 import android.widget.*;
 import android.widget.CompoundButton.*;
+import android.widget.Toolbar.*;
+import android.view.*;
 
 public class MainActivity extends Activity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
-    final private String ACTION_DNSCRYPT_RUNNING = "io.github.otakuchiyan.dnsman.ACTION_DNSCRYPT_RUNNING";
     
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
-	
-	private EditText wdns1;
-	private EditText wdns2;
-	private EditText mdns1;
-	private EditText mdns2;
+
+    //Layouts
+    private LinearLayout mainActivity;
+	private LinearLayout.LayoutParams edittext_params = new LinearLayout.LayoutParams(
+			LayoutParams.MATCH_PARENT,
+			LayoutParams.WRAP_CONTENT,
+            1.0f);
+    private TextView cdnstext;
 	private TextView cdns1;
 	private TextView cdns2;
+    private TextView global_category;
+    private EditText gdns1;
+    private EditText gdns2;
 	private TextView wifi_category;
+	private EditText wdns1;
+	private EditText wdns2;
 	private TextView mobile_category;
-    private Switch distinguish_swh;
-
-
+	private EditText mdns1;
+	private EditText mdns2;
+    private TextView bt_category;
+    private EditText bdns1;
+    private EditText bdns2;
+    private TextView eth_category;
+    private EditText edns1;
+    private EditText edns2;
+    private TextView wimax_category;
+    private EditText widns1;
+    private EditText widns2;
+	
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
@@ -62,96 +76,76 @@ public class MainActivity extends Activity {
 	    }
 	};
 
-    private BroadcastReceiver getDNSFinished = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(ACTION_GETDNS)){
-		    cdns1.setText(i.getStringExtra("dns1"));
-		    cdns2.setText(i.getStringExtra("dns2"));
-		}
-	    }
-	};
-
-    private BroadcastReceiver dnscryptRunning = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(ACTION_DNSCRYPT_RUNNING)){
-		    dnscryptRunningDialog();
-		}
-	    }
-	};
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_activity);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
-		
-		wdns1 = (EditText) findViewById(R.id.wdns1);
-		wdns2 = (EditText) findViewById(R.id.wdns2);
-		mdns1 = (EditText) findViewById(R.id.mdns1);
-		mdns2 = (EditText) findViewById(R.id.mdns2);
-		cdns1 = (TextView) findViewById(R.id.cdns1);
-		cdns2 = (TextView) findViewById(R.id.cdns2);
-		wifi_category = (TextView) findViewById(R.id.wifi_category);
-		mobile_category = (TextView) findViewById(R.id.mobile_category);
-		distinguish_swh = (Switch) findViewById(R.id.distinguish);
+
+        GetNetwork.init(this);
+		mainActivity = new LinearLayout(this);
+		mainActivity.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout cdnsView = new LinearLayout(this);
+        cdnsView.setOrientation(LinearLayout.HORIZONTAL);
+        cdnstext = new TextView(this);
+        cdnstext.setText(R.string.current_dnss);
+        cdns1 = new TextView(this);
+		cdns2 = new TextView(this);
+        cdns1.setLayoutParams(edittext_params);
+        cdns2.setLayoutParams(edittext_params);
+        (new getDNSAsync()).execute();
+		cdnsView.addView(cdnstext);
+        cdnsView.addView(cdns1);
+        cdnsView.addView(cdns2);
+        mainActivity.addView(cdnsView);
+
+        global_category = new TextView(this);
+        global_category.setText(R.string.global_category);
+        mainActivity.addView(global_category);
+        mainActivity.addView(setDNSTwopane(gdns1, gdns2, "g"));
+
+        if(GetNetwork.isSupportWiFi()){
+            wifi_category = new TextView(this);
+            wifi_category.setText(R.string.wifi_category);
+            mainActivity.addView(wifi_category);
+            mainActivity.addView(setDNSTwopane(wdns1, wdns2, "w"));
+        }
+
+        if(GetNetwork.isSupportMobile()){
+            mobile_category = new TextView(this);
+            mobile_category.setText(R.string.mobile_category);
+            mainActivity.addView(mobile_category);
+            mainActivity.addView(setDNSTwopane(mdns1, mdns2, "m"));
+        }
+
+        if(GetNetwork.isSupportBluetooth()){
+            bt_category = new TextView(this);
+            bt_category.setText(R.string.bt_category);
+            mainActivity.addView(bt_category);
+            mainActivity.addView(setDNSTwopane(bdns1, bdns2, "b"));
+        }
+
+        if(GetNetwork.isSupportEthernet()){
+            eth_category = new TextView(this);
+            eth_category.setText(R.string.eth_category);
+            mainActivity.addView(eth_category);
+            mainActivity.addView(setDNSTwopane(edns1, edns2, "e"));
+        }
+       
+        if(GetNetwork.isSupportWiMax()){
+            wimax_category = new TextView(this);
+            wimax_category.setText(R.string.wimax_category);
+            mainActivity.addView(wimax_category);
+            mainActivity.addView(setDNSTwopane(widns1, widns2, "wi"));
+        }
+
 		
 		if(!sp.getBoolean("firstbooted", false)){
-		    GetNetwork.init(this);
-		    if(GetNetwork.getMobileNetwork() == null){
-				distinguish_swh.setEnabled(false);
-		    }
-			sped.putBoolean("distinguish", false);
 			showWelcomeDialog();
-			(new detectDNSCryptAsync()).execute();
 			sped.putBoolean("firstbooted", true);
 			sped.commit();
 		}
-
-
-
-		wdns1.setText(sp.getString("wdns1", ""));
-		wdns2.setText(sp.getString("wdns2", ""));
-		wdns1.addTextChangedListener(
-		new IPCheckerComponent(this, wdns1, "wdns1"));
-		
-
-		wdns2.addTextChangedListener(
-		new IPCheckerComponent(this, wdns2, "wdns2"));
-        mdns1.setText(sp.getString("mdns1", ""));
-        mdns2.setText(sp.getString("mdns2", ""));
-	    mdns1.addTextChangedListener(
-					   new IPCheckerComponent(this, mdns1, "mdns1"));
-	    mdns2.addTextChangedListener(
-			new IPCheckerComponent(this, mdns2, "mdns2"));
-	    
-	    (new getDNSAsync()).execute();
-
-	    
-	    distinguish_swh.setChecked(sp.getBoolean("distinguish", false));
-	    		if(sp.getBoolean("distinguish", false)){
-		    enableMobileDNSView();
-		}else{
-			    disableMobileDNSView();
-		}
-
-		distinguish_swh.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-			@Override
-				public void onCheckedChanged(CompoundButton cb, boolean state){
-				    if(state){
-						enableMobileDNSView();
-						sped.putBoolean("distinguish", true);
-						sped.commit();
-				    }else{
-												disableMobileDNSView();
-												sped.putBoolean("distinguish", false);
-												sped.commit();
-					}
-				}
-			});
-
 
 		IntentFilter setFilter = new IntentFilter();
 		setFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
@@ -161,11 +155,31 @@ public class MainActivity extends Activity {
 		getFilter.addAction(ACTION_GETDNS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
-		IntentFilter dnscryptFilter = new IntentFilter();
-		dnscryptFilter.addAction(ACTION_DNSCRYPT_RUNNING);
-		LocalBroadcastManager.getInstance(this).registerReceiver(dnscryptRunning, dnscryptFilter);
+		setContentView(mainActivity);
+
 	}
 
+    private LinearLayout setDNSTwopane(EditText e1, EditText e2, String keyprefix){
+        LinearLayout ll = new LinearLayout(this);
+        e1 = new EditText(this);
+        e2 = new EditText(this);
+        setDNSEditText(e1, keyprefix + "dns1");
+        setDNSEditText(e2, keyprefix + "dns2");
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        e1.setLayoutParams(edittext_params);
+        e2.setLayoutParams(edittext_params);
+        ll.addView(e1);
+        ll.addView(e2);
+        return ll;
+    }
+
+
+    private void setDNSEditText(EditText e, String key){
+        e.setSingleLine(true);
+        e.setText(sp.getString(key, ""));
+        e.addTextChangedListener(
+                new IPCheckerComponent(this, e, key));
+    }
 		
 
 	@Override
@@ -199,36 +213,17 @@ public class MainActivity extends Activity {
 			.setPositiveButton(android.R.string.ok, null);
 		adb.create().show();
 	}
-
-    private void dnscryptRunningDialog(){
-	AlertDialog.Builder adb = new AlertDialog.Builder(this);
-	adb.setTitle(R.string.dnscrypt_running)
-	    .setMessage(R.string.dnscrypt_running_msg)
-	    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-		    public void onClick(DialogInterface di, int which){
-			wdns1.setText("127.0.0.1");
-			sped.putString("wdns1", "127.0.0.1");
-			sped.commit();
-		    }
-		})
-	    .setNegativeButton(android.R.string.cancel, null);
-	adb.create().show();
-    }
-
-    private void enableMobileDNSView(){
-	mdns1.setEnabled(true);
-	mdns2.setEnabled(true);
-	mobile_category.setEnabled(true);
-	wifi_category.setText(getText(R.string.wifi_category));
-    }
-
-    private void disableMobileDNSView(){
-        mdns1.setEnabled(false);
-	mdns2.setEnabled(false);
-	mobile_category.setEnabled(false);
-        wifi_category.setText(getText(R.string.global_category));
-    }
 	
+    private BroadcastReceiver getDNSFinished = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		if(i.getAction().equals(ACTION_GETDNS)){
+		    cdns1.setText(i.getStringExtra("dns1"));
+		    cdns2.setText(i.getStringExtra("dns2"));
+		}
+	    }
+	};
+
 	private void getCurrentDNS(){
 		List<String> currentDNSs = DNSManager.getCurrentDNS();
 
@@ -248,20 +243,5 @@ public class MainActivity extends Activity {
 			return null;
 		}
 	}
-
-    private void detectDNSCrypt(){
-	if(DNSManager.detectDNSCrypt()){
-	    Intent i = new Intent(ACTION_DNSCRYPT_RUNNING);
-	    LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-	}
-    }
-
-    private class detectDNSCryptAsync extends AsyncTask<Void, Void, Void>{
-	@Override
-	protected Void doInBackground(Void[] p1){
-	    detectDNSCrypt();
-	    return null;
-	}
-    }
 
 }

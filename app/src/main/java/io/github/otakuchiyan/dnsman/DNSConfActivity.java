@@ -42,7 +42,7 @@ public class DNSConfActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dnsconf_activity);
+		/*setContentView(R.layout.dnsconf_activity);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		rdns1 = (EditText) findViewById(R.id.rdns1);
 		rdns2 = (EditText) findViewById(R.id.rdns2);
@@ -55,6 +55,7 @@ public class DNSConfActivity extends Activity{
 		rdns2.addTextChangedListener(
 			new IPCheckerComponent(this, rdns2, "rdns2"));
 
+			*/
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(ACTION_CONFOPERATION);
 		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);

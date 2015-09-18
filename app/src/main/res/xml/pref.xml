@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-		<PreferenceScreen android:title="@string/opensource"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">	
+    <ListPreference android:title="@string/dns_toast"
+        android:entries="@array/dnstoast_list"
+        android:entryValues="@array/dnstoast_values"
+        />
+	<PreferenceScreen android:title="@string/opensource"
 			android:summary="@string/opensource_hint">
 			<intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/otakuchiyan/DNSman"

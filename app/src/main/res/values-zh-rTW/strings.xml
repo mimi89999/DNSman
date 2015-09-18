@@ -12,8 +12,6 @@
     <string name="edit_resolv">DNS 設定檔</string>
     <string name="settings">設定</string>
 
-    <string name="distinguish_chk">區分網路類型</string>
-
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
 

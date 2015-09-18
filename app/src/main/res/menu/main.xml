@@ -2,7 +2,10 @@
     <item
         android:id="@+id/resolv_edit"
         android:title="@string/edit_resolv"/>
+
 	<item
 		android:id="@+id/settings"
-		android:title="@string/settings"/>
+		android:title="@string/settings"
+        android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_preferences"/>
 </menu>

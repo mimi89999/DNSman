@@ -29,18 +29,16 @@ public class IPCheckerComponent implements TextWatcher
 	}
 	
 	@Override
-	public void afterTextChanged(Editable e){
+	public void afterTextChanged(Editable eable){
 		String s = this.e.getText().toString();
 				if(s.equals("")){
 					sped.putString(this.key, s);
 					sped.commit();
 				}else if(!s.equals("") && IPChecker.IPv4Checker(s)){
-					this.e.setAlpha(1.0f);
 					sped.putString(this.key, s);
 					sped.commit();
 				}else{
-					this.e.setAlpha(0.5f);
-					//showInvaildDNSDialog();
+                    this.e.setError(c.getText(R.string.invaild_dns));
 				}
 		
 	}
