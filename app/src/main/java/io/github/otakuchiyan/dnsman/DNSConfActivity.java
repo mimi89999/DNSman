@@ -49,9 +49,13 @@ public class DNSConfActivity extends Activity{
 	dnsConfActivity.addView(confDNS);
         dnsConfActivity.addView(setDNSTwopane());
 
-		IntentFilter iFilter = new IntentFilter();
-		iFilter.addAction(ACTION_CONFOPERATION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);
+		IntentFilter operationFilter = new IntentFilter();
+		operationFilter.addAction(ACTION_CONFOPERATION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, operationFilter);
+
+        IntentFilter confFilter = new IntentFilter();
+        confFilter.addAction(ACTION_CONF_GETTED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
 		
         setContentView(dnsConfActivity);
 	(new getConfAsync()).execute();
@@ -158,6 +162,7 @@ public class DNSConfActivity extends Activity{
 	    return null;
 	}
     }
+
     private class deleteConfAsync extends AsyncTask<Void, Void, Void>{
 	@Override
 	protected Void doInBackground(Void[] p1){
@@ -175,10 +180,9 @@ public class DNSConfActivity extends Activity{
     private BroadcastReceiver gettedConf = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
-		String err = i.getStringExtra("err");
-		if(i.getAction().equals(ACTION_CONF_GETTED)){
-		    confDNS.setText(i.getStringExtra("confDNS"));
-		}
+            if(i.getAction().equals(ACTION_CONF_GETTED)){
+                confDNS.setText(i.getStringExtra("confDNS"));
+            }
 	    }
 	};
 

@@ -1,6 +1,7 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.util.Log;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.chainfire.libsuperuser.Shell;
@@ -46,17 +47,18 @@ public class DNSManager {
     }
 	
 	public static String writeResolvConf(String dns1, String dns2){
-		String[] cmds = new String[4];
+        List<String> cmds = new ArrayList<String>();
 		List<String> result;
 		
-		cmds[0] = "mount -o remount,rw /system";
+		cmds.add("mount -o remount,rw /system");
 		if(dns1 != ""){
-		cmds[1] = "echo nameserver " + dns1 + " > /etc/resolv.conf";
+		    cmds.add("echo nameserver " + dns1 + " > /etc/resolv.conf");
 		}
 		if(!dns2.equals("")){
-			cmds[2] = "echo nameserver " + dns2 + " >> /etc/resolv.conf";
+			cmds.add("echo nameserver " + dns2 + " >> /etc/resolv.conf");
 		}
-		cmds[3] = "mount -o remount,ro /system";
+        cmds.add("chmod 644 /etc/resolv.conf");
+        cmds.add("mount -o remount,ro /system");
 		result = Shell.SU.run(cmds);
 		if(!result.isEmpty()){
 		    return result.get(0);
@@ -85,7 +87,7 @@ public class DNSManager {
     public static String getResolvConf(){
 	StringBuilder sb = new StringBuilder();
 	for(String s : Shell.SH.run("cat /etc/resolv.conf | grep 'nameserver'")){
-	    sb.append(s);
+	    sb.append(s.replace("nameserver", ""));
 	    sb.append("\n");
 	}
 	return sb.toString();

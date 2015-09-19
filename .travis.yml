@@ -8,7 +8,7 @@ android:
 
         - extra-android-m2repository
 
-          jdk:
-              - oraclejdk7
+jdk:
+    - oraclejdk7
 
 script: ./gradlw build --no-daemon
