@@ -16,8 +16,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.content.IntentFilter;
-
-import eu.chainfire.libsuperuser.Shell;
+import android.content.res.Resources;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.MainActivity;
@@ -37,10 +36,15 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 	    @Override
 	    public void onReceive(Context c, Intent i){
 		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+		    int dnsToast = sp.getInt("dns_toast_pref", 0);
 		    if(i.getBooleanExtra("result", false)){
-			Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+			if(dnsToast == 2){
+			    Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+			}
 		}else{
+			if(dnsToast == 0){
 			Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 		}
 	    }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">	
-    <ListPreference android:title="@string/dns_toast"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <ListPreference
+      android:key="dns_toast_pref"
+      android:title="@string/dns_toast"
         android:entries="@array/dnstoast_list"
         android:entryValues="@array/dnstoast_values"
         />

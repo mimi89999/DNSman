@@ -11,4 +11,4 @@ android:
 jdk:
     - oraclejdk7
 
-script: ./gradlw build --no-daemon
+script: ./gradlew build --no-daemon
