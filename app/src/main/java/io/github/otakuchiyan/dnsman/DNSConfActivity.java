@@ -11,11 +11,13 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import java.lang.Void;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.IPCheckerComponent;
+import io.github.otakuchiyan.dnsman.DNSEditText;
 import android.view.View.*;
 import android.content.*;
 import android.view.*;
@@ -23,14 +25,71 @@ import android.view.*;
 
 public class DNSConfActivity extends Activity{
     final static String ACTION_CONFOPERATION = "io.github.otakuchiyan.dnsman.ACTION_CONFOPERATION";
+    final static String ACTION_CONF_GETTED = "io.github.otakuchiyan.dnsman.ACTION_CONF_GETTED";
+    
 	private SharedPreferences sp;
     private LinearLayout dnsConfActivity;
-	private LinearLayout.LayoutParams edittext_params = new LinearLayout.LayoutParams(
-			LayoutParams.MATCH_PARENT,
-			LayoutParams.WRAP_CONTENT,
-            1.0f);
+    private TextView confPath;
+    private TextView confDNS;
 	private EditText rdns1;
 	private EditText rdns2;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        dnsConfActivity = new LinearLayout(this);
+        dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
+	confPath = new TextView(this);
+	confDNS = new TextView(this);
+	confPath.setText("/etc/resolv.conf:");
+
+	dnsConfActivity.addView(confPath);
+	dnsConfActivity.addView(confDNS);
+        dnsConfActivity.addView(setDNSTwopane());
+
+		IntentFilter iFilter = new IntentFilter();
+		iFilter.addAction(ACTION_CONFOPERATION);
+		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);
+		
+        setContentView(dnsConfActivity);
+	(new getConfAsync()).execute();
+		}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+	getMenuInflater().inflate(R.menu.dnsconf, menu);
+	return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+	switch(item.getItemId()){
+	case R.id.write_conf:
+	    writeConf();
+	    break;
+	case R.id.default_conf:
+	    defaultConf();
+	    break;
+	case R.id.delete_conf:
+	    deleteConf();
+	    break;
+	}
+	return super.onOptionsItemSelected(item);
+    }
+
+    private LinearLayout setDNSTwopane(){
+        LinearLayout ll = new LinearLayout(this);
+	rdns1 = new DNSEditText(this, "rdns1");
+	rdns2 = new DNSEditText(this, "rdns2");
+
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.addView(rdns1);
+        ll.addView(rdns2);
+
+        return ll;
+    }
 
     private BroadcastReceiver confOperation = new BroadcastReceiver(){
 	    @Override
@@ -46,46 +105,8 @@ public class DNSConfActivity extends Activity{
 	    }
 	};
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState){
-		super.onCreate(savedInstanceState);
-		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        dnsConfActivity = new LinearLayout(this);
-        dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
-
-        dnsConfActivity.addView(setDNSTwopane());
-
-		IntentFilter iFilter = new IntentFilter();
-		iFilter.addAction(ACTION_CONFOPERATION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);
-		
-        setContentView(dnsConfActivity);
-		}
-
-    private LinearLayout setDNSTwopane(){
-        LinearLayout ll = new LinearLayout(this);
-		rdns1 = new EditText(this);
-		rdns2 = new EditText(this);
 	
-        setDNSEditText(rdns1, "rdns1");
-        setDNSEditText(rdns2, "rdns2");
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.addView(rdns1);
-        ll.addView(rdns2);
-
-        return ll;
-    }
-
-    private void setDNSEditText(EditText e, String key){
-        e.setSingleLine(true);
-        e.setText(sp.getString(key, ""));
-        e.setLayoutParams(edittext_params);
-        e.addTextChangedListener(
-                new IPCheckerComponent(this, e, key));
-    }
-	
-	public void writeConfBtn(View v){
+	public void writeConf(){
 		final String rdns1ip = rdns1.getText().toString();
 		final String rdns2ip = rdns2.getText().toString();
 		
@@ -100,7 +121,7 @@ public class DNSConfActivity extends Activity{
 		adb.create().show();
 	}
 	
-	public void defaultConfBtn(View v){
+	public void defaultConf(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setMessage(R.string.default_conf_msg)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
@@ -112,7 +133,7 @@ public class DNSConfActivity extends Activity{
 		adb.create().show();
 	}
 	
-	public void deleteConfBtn(View v){
+    public void deleteConf(){
 	AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setMessage(R.string.delete_conf_msg)
 		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
@@ -149,8 +170,27 @@ public class DNSConfActivity extends Activity{
 		.sendBroadcast(i);
 		    return null;
 	}
-    }   
+    }
 
+    private BroadcastReceiver gettedConf = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context c, Intent i){
+		String err = i.getStringExtra("err");
+		if(i.getAction().equals(ACTION_CONF_GETTED)){
+		    confDNS.setText(i.getStringExtra("confDNS"));
+		}
+	    }
+	};
 
-	
+    private class getConfAsync extends AsyncTask<Void, Void, Void>{
+	@Override
+	protected Void doInBackground(Void[] p1){
+	    Intent i = new Intent(ACTION_CONF_GETTED);
+	    i.putExtra("confDNS", DNSManager.getResolvConf());
+	    LocalBroadcastManager.getInstance(getApplicationContext())
+		.sendBroadcast(i);
+	    return null;
+	}
+    }
+
 }

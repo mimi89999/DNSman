@@ -1,4 +1,5 @@
 package io.github.otakuchiyan.dnsman;
+
 import android.content.Context;
 import android.content.SharedPreferences; 
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 import io.github.otakuchiyan.dnsman.DNSConfActivity;
 import io.github.otakuchiyan.dnsman.GetNetwork;
 import io.github.otakuchiyan.dnsman.LocalDNSDetecter;
+import io.github.otakuchiyan.dnsman.DNSEditText;
+
 import android.widget.*;
 import android.widget.Toolbar.*;
 import android.view.*;
@@ -176,24 +179,15 @@ public class MainActivity extends Activity {
 
     private LinearLayout setDNSTwopane(EditText e1, EditText e2, String keyprefix){
         LinearLayout ll = new LinearLayout(this);
-        e1 = new EditText(this);
-        e2 = new EditText(this);
-        setDNSEditText(e1, keyprefix + "dns1");
-        setDNSEditText(e2, keyprefix + "dns2");
+	e1 = new DNSEditText(this, keyprefix + "dns1");
+	e2 = new DNSEditText(this, keyprefix + "dns2");
+
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.addView(e1);
         ll.addView(e2);
         return ll;
     }
 
-
-    private void setDNSEditText(EditText e, String key){
-        e.setSingleLine(true);
-        e.setText(sp.getString(key, ""));
-        e.setLayoutParams(edittext_params);
-        e.addTextChangedListener(
-                new IPCheckerComponent(this, e, key));
-    }
 		
 
 	@Override
@@ -249,7 +243,6 @@ public class MainActivity extends Activity {
 	
 	private class getDNSAsync extends AsyncTask<Void, Void, Void>
 	{
-
 		@Override
 		protected Void doInBackground(Void[] p1)
 		{

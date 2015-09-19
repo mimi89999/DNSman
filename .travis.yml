@@ -1,0 +1,14 @@
+language: android
+android:
+    components:
+        - platform-tools
+        - tools
+        - build-tools-22.0.0
+        - android-21
+
+        - extra-android-m2repository
+
+          jdk:
+              - oraclejdk7
+
+script: ./gradlw build --no-daemon

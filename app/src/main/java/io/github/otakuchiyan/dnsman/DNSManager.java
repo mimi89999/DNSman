@@ -82,7 +82,18 @@ public class DNSManager {
 		return Shell.SH.run(chk_cmds);
 	}
 
+    public static String getResolvConf(){
+	StringBuilder sb = new StringBuilder();
+	for(String s : Shell.SH.run("cat /etc/resolv.conf | grep 'nameserver'")){
+	    sb.append(s);
+	    sb.append("\n");
+	}
+	return sb.toString();
+    }
+    
     public static boolean detectDNSCrypt(){
 	return Shell.SH.run("ps | grep 'dnscrypt'").isEmpty() ? false : true;
     }
+
+   
 }
