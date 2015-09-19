@@ -26,8 +26,8 @@ import io.github.otakuchiyan.dnsman.IPChecker;
 import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 import io.github.otakuchiyan.dnsman.DNSConfActivity;
 import io.github.otakuchiyan.dnsman.GetNetwork;
+import io.github.otakuchiyan.dnsman.LocalDNSDetecter;
 import android.widget.*;
-import android.widget.CompoundButton.*;
 import android.widget.Toolbar.*;
 import android.view.*;
 
@@ -76,6 +76,17 @@ public class MainActivity extends Activity {
 	    }
 	};
 
+    private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context c, Intent i){
+	    if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING) &&
+	       LocalDNSDetecter.isEnabled(c) &&
+	       LocalDNSDetecter.isGlobalDNSSetted(c)){
+		Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
+	    }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +105,7 @@ public class MainActivity extends Activity {
 		cdns2 = new TextView(this);
         cdns1.setLayoutParams(edittext_params);
         cdns2.setLayoutParams(edittext_params);
-        (new getDNSAsync()).execute();
+        
 		cdnsView.addView(cdnstext);
         cdnsView.addView(cdns1);
         cdnsView.addView(cdns2);
@@ -156,6 +167,10 @@ public class MainActivity extends Activity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
 		setContentView(mainActivity);
+		
+        (new getDNSAsync()).execute();
+
+	LocalDNSDetecter.detect(this);
 
 	}
 
@@ -166,8 +181,6 @@ public class MainActivity extends Activity {
         setDNSEditText(e1, keyprefix + "dns1");
         setDNSEditText(e2, keyprefix + "dns2");
         ll.setOrientation(LinearLayout.HORIZONTAL);
-        e1.setLayoutParams(edittext_params);
-        e2.setLayoutParams(edittext_params);
         ll.addView(e1);
         ll.addView(e2);
         return ll;
@@ -177,6 +190,7 @@ public class MainActivity extends Activity {
     private void setDNSEditText(EditText e, String key){
         e.setSingleLine(true);
         e.setText(sp.getString(key, ""));
+        e.setLayoutParams(edittext_params);
         e.addTextChangedListener(
                 new IPCheckerComponent(this, e, key));
     }

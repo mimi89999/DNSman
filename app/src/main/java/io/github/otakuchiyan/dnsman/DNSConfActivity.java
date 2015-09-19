@@ -9,6 +9,8 @@ import android.widget.Toast;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
 import java.lang.Void;
 
@@ -16,12 +18,17 @@ import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 import android.view.View.*;
 import android.content.*;
-import android.view.View;
+import android.view.*;
 
 
 public class DNSConfActivity extends Activity{
     final static String ACTION_CONFOPERATION = "io.github.otakuchiyan.dnsman.ACTION_CONFOPERATION";
 	private SharedPreferences sp;
+    private LinearLayout dnsConfActivity;
+	private LinearLayout.LayoutParams edittext_params = new LinearLayout.LayoutParams(
+			LayoutParams.MATCH_PARENT,
+			LayoutParams.WRAP_CONTENT,
+            1.0f);
 	private EditText rdns1;
 	private EditText rdns2;
 
@@ -42,25 +49,41 @@ public class DNSConfActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		/*setContentView(R.layout.dnsconf_activity);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		rdns1 = (EditText) findViewById(R.id.rdns1);
-		rdns2 = (EditText) findViewById(R.id.rdns2);
-	
-		rdns1.setText(sp.getString("rdns1", ""));
-		rdns2.setText(sp.getString("rdns2", ""));
-		
-		rdns1.addTextChangedListener(
-			new IPCheckerComponent(this, rdns1, "rdns1"));
-		rdns2.addTextChangedListener(
-			new IPCheckerComponent(this, rdns2, "rdns2"));
 
-			*/
+        dnsConfActivity = new LinearLayout(this);
+        dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
+
+        dnsConfActivity.addView(setDNSTwopane());
+
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(ACTION_CONFOPERATION);
 		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, iFilter);
 		
+        setContentView(dnsConfActivity);
 		}
+
+    private LinearLayout setDNSTwopane(){
+        LinearLayout ll = new LinearLayout(this);
+		rdns1 = new EditText(this);
+		rdns2 = new EditText(this);
+	
+        setDNSEditText(rdns1, "rdns1");
+        setDNSEditText(rdns2, "rdns2");
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.addView(rdns1);
+        ll.addView(rdns2);
+
+        return ll;
+    }
+
+    private void setDNSEditText(EditText e, String key){
+        e.setSingleLine(true);
+        e.setText(sp.getString(key, ""));
+        e.setLayoutParams(edittext_params);
+        e.addTextChangedListener(
+                new IPCheckerComponent(this, e, key));
+    }
 	
 	public void writeConfBtn(View v){
 		final String rdns1ip = rdns1.getText().toString();
