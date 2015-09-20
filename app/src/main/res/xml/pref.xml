@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <ListPreference
       android:key="dns_toast_pref"
-      android:title="@string/dns_toast"
+      android:title="@string/dnstoast"
         android:entries="@array/dnstoast_list"
         android:entryValues="@array/dnstoast_values"
         />

@@ -9,7 +9,7 @@
 		android:id="@+id/default_conf"
 		android:title="@string/default_conf"
         android:showAsAction="ifRoom"
-        android:icon="@android:drawable/btn_default"/>
+        android:icon="@android:drawable/ic_menu_rotate"/>
 
 	<item
 	    android:id="@+id/delete_conf"

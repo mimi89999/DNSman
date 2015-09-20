@@ -26,6 +26,7 @@ import io.github.otakuchiyan.dnsman.GetNetwork;
 import android.app.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.Integer;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
 	private NotificationManager nm;
@@ -36,7 +37,9 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 	    @Override
 	    public void onReceive(Context c, Intent i){
 		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
-		    int dnsToast = sp.getInt("dns_toast_pref", 0);
+			sp = PreferenceManager.getDefaultSharedPreferences(
+                c.getApplicationContext());
+		    int dnsToast = Integer.parseInt(sp.getString("dns_toast_pref", "2"));
 		    if(i.getBooleanExtra("result", false)){
 			if(dnsToast == 2){
 			    Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
@@ -78,12 +81,9 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 setDNSArrayByPrefix("wi");
                 break;
         }
-
-        Log.d("DNSman", "dns1 = " + dnsList2set.get(0));
-        Log.d("DNSman", "dns2 = " + dnsList2set.get(1));
 		
-		if(dnsList2set.get(0).equals("") && dnsList2set.get(1).equals("")){
-		    NotificationCompat.Builder ncb =
+		if(dnsList2set.isEmpty()){
+			NotificationCompat.Builder ncb =
 			new NotificationCompat.Builder(c)
 			.setSmallIcon(android.R.drawable.stat_notify_error)
 			.setContentTitle(c.getText(R.string.nodns_noti))
@@ -109,15 +109,22 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     }
 
     public void getDNSByPrefix(final String net_prefix){
-        dnsList2set.add(sp.getString(net_prefix + "dns1", ""));
-        dnsList2set.add(sp.getString(net_prefix + "dns2", ""));
+        String dns1 = sp.getString(net_prefix + "dns1", "");
+        String dns2 = sp.getString(net_prefix + "dns2", "");
+		if(dns1 != "" || dns2 != ""){
+			Log.d("DNSman", "added");
+            dnsList2set.clear();
+            dnsList2set.add(dns1);
+            dnsList2set.add(dns2);
+        }
         
+        Log.d("DNSman", "dns1 = " + dns1);
+        Log.d("DNSman", "dns2 = " + dns2);
     }
 
     public void setDNSArrayByPrefix(final String prefix){
         getDNSByPrefix(prefix);
     }
-
 
     public void onReceive(Context context, Intent intent) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(

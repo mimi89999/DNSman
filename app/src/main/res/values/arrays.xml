@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="dnstoast_list">
-        <item>Show</item>
-        <item>Only show errors</item>
-        <item>Never show</item>
+        <item>@string/dnstoast_list_show</item>
+        <item>@string/dnstoast_list_error</item>
+        <item>@string/dnstoast_list_never</item>
     </string-array>
     <string-array name="dnstoast_values">
         <item>2</item>

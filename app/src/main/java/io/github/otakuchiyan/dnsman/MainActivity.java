@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.util.TypedValue;
 
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class MainActivity extends Activity {
     private TextView global_category;
     private EditText gdns1;
     private EditText gdns2;
+    private TextView individual_category;
 	private TextView wifi_category;
 	private EditText wdns1;
 	private EditText wdns2;
@@ -85,7 +87,7 @@ public class MainActivity extends Activity {
 	    if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING) &&
 	       LocalDNSDetecter.isEnabled(c) &&
 	       LocalDNSDetecter.isGlobalDNSSetted(c)){
-		Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
+            Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
 	    }
         }
     };
@@ -102,8 +104,7 @@ public class MainActivity extends Activity {
 
         LinearLayout cdnsView = new LinearLayout(this);
         cdnsView.setOrientation(LinearLayout.HORIZONTAL);
-        cdnstext = new TextView(this);
-        cdnstext.setText(R.string.current_dnss);
+        cdnstext = setCategoryText(R.string.cdnstext);
         cdns1 = new TextView(this);
 		cdns2 = new TextView(this);
         cdns1.setLayoutParams(edittext_params);
@@ -118,6 +119,9 @@ public class MainActivity extends Activity {
         global_category.setText(R.string.global_category);
         mainActivity.addView(global_category);
         mainActivity.addView(setDNSTwopane(gdns1, gdns2, "g"));
+
+        individual_category = setCategoryText(R.string.individual_category);
+        mainActivity.addView(individual_category);
 
         if(GetNetwork.isSupportWiFi()){
             wifi_category = new TextView(this);
@@ -169,11 +173,15 @@ public class MainActivity extends Activity {
 		getFilter.addAction(ACTION_GETDNS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
+		IntentFilter dnscryptFilter = new IntentFilter();
+		getFilter.addAction(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING);
+		LocalBroadcastManager.getInstance(this).registerReceiver(dnscryptDetected, dnscryptFilter);
+
 		setContentView(mainActivity);
 		
         (new getDNSAsync()).execute();
 
-	LocalDNSDetecter.detect(this);
+        LocalDNSDetecter.detect(this);
 
 	}
 
@@ -186,6 +194,13 @@ public class MainActivity extends Activity {
         ll.addView(e1);
         ll.addView(e2);
         return ll;
+    }
+
+    private TextView setCategoryText(int res){
+        TextView tv = new TextView(this);
+        tv.setText(res);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        return tv;
     }
 
 		
