@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="current_dnss">當前 DNS:</string>
+	<string name="cdnstext">當前 DNS:</string>
 	<string name="global_category">全局</string>
+    <string name="individual_category">局部</string>
+
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">行動網路</string>
+    <string name="bt_category">藍牙</string>
+    <string name="eth_category">有線</string>
 
     <string name="set_succeed">設定 DNS 成功。</string>
     <string name="set_failed">設定 DNS 失败。</string>
@@ -11,6 +15,14 @@
 
     <string name="edit_resolv">DNS 設定檔</string>
     <string name="settings">設定</string>
+
+    <string name="dnstoast">Toast 通知</string>
+
+    <string name="dnstoast_list_show">顯示</string>
+    <string name="dnstoast_list_error">僅顯示錯誤</string>
+    <string name="dnstoast_list_never">不顯示</string>
+
+    <string name="invaild_dns">無效的 DNS</string>
 
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
@@ -28,7 +40,6 @@
     <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
     <string name="default_conf_msg">真的要使用 Google public DNS?</string>
     <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
-
     <string name="opensource">程式碼</string>
     <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
 </resources>

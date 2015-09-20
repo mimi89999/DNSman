@@ -81,16 +81,6 @@ public class MainActivity extends Activity {
 	    }
 	};
 
-    private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
-        @Override
-        public void onReceive(Context c, Intent i){
-	    if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING) &&
-	       LocalDNSDetecter.isEnabled(c) &&
-	       LocalDNSDetecter.isGlobalDNSSetted(c)){
-            Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
-	    }
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,8 +170,7 @@ public class MainActivity extends Activity {
 		setContentView(mainActivity);
 		
         (new getDNSAsync()).execute();
-
-        LocalDNSDetecter.detect(this);
+        (new detectDNSCryptTask()).execute();
 
 	}
 
@@ -265,5 +254,26 @@ public class MainActivity extends Activity {
 			return null;
 		}
 	}
+
+    private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context c, Intent i){
+	    if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING) //&&
+	       //LocalDNSDetecter.isEnabled(c) &&
+//	       LocalDNSDetecter.isGlobalDNSSetted(c)){
+	       ){
+            Log.d("DNSman", "detected");
+            Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
+	    }
+        }
+    };
+
+    private class detectDNSCryptTask extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void[] p1){
+            LocalDNSDetecter.detect(getApplicationContext());
+			return null;
+        }
+    }
 
 }
