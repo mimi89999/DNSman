@@ -6,9 +6,6 @@ import java.util.List;
 
 import eu.chainfire.libsuperuser.Shell;
 
-/**
- * Created by otakuchiyan on 2015/5/1.
- */
 public class DNSManager {
     final static String SETDNS_PREFIX = "setprop net.dns";
 	final static String GETDNS_PREFIX = "getprop net.dns";
@@ -94,7 +91,10 @@ public class DNSManager {
     }
     
     public static boolean detectDNSCrypt(){
-	return Shell.SH.run("ps | grep 'dnscrypt'").isEmpty() ? false : true;
+	    if(!Shell.SH.run("ps | grep 'dnscrypt'").isEmpty()){
+            return true;
+        }
+        return false;
     }
 
    
