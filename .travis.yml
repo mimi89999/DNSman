@@ -3,12 +3,11 @@ android:
     components:
         - platform-tools
         - tools
-        - build-tools-22.0.0
+        - build-tools-23.0.0
         - android-22
-
         - extra-android-m2repository
 
 jdk:
     - oraclejdk7
 
-script: ./gradlew build --no-daemon
+script: ./Autogen.sh

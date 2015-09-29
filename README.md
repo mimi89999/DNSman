@@ -1,12 +1,17 @@
 # DNS man
-全自動 DNS 設定工具。
 
-Automatically DNS resolver setting tool.
+DNS resolver setting tool for Android.
 
-License: GNU GPL v3
+How to build
+===
 
-Opensource library:
+    $ ./Autogen.sh
+
+
+Used opensource library:
 
 [libsuperuser](https://github.com/Chainfire/libsuperuser)
+
+License: GNU GPL v3
 
 Copyright (c) 2015 otakuchiyan <codeotakuchiyan[at]gmail.com>
