@@ -10,4 +10,7 @@ android:
 jdk:
     - oraclejdk7
 
-script: ./Autogen.sh
+before_script:
+    - ./depending_repos.sh
+
+script: ./gradlew build
