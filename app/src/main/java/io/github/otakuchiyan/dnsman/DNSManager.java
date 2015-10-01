@@ -9,6 +9,12 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String SETDNS_PREFIX = "setprop net.dns";
 	final static String GETDNS_PREFIX = "getprop net.dns";
+    final static String ADDRULES_PREFIX = "iptables -t nat ";
+    final static String ADDRULES_SUFFIX = " --dport 53 -j DNAT --to-destination";
+    final static String CHKRULES_PREFIX = "iptables -t nat -L OUTPUT | grep 'DNAT.*";
+
+    static String hijackedLastDNS;
+
 	final static String[] chk_cmds = {
 		GETDNS_PREFIX + "1",
 		GETDNS_PREFIX + "2"
@@ -40,6 +46,44 @@ public class DNSManager {
 				return false;
 			}
 		
+        return true;
+    }
+
+	public static String setDNSViaIPtables(String dns){
+        if(isRulesAlivable()){
+            return null;
+        }
+
+        if(hijackedLastDNS != dns) {
+            hijackedLastDNS = dns;
+            deleteRules();
+        }
+
+        List<String> cmds = new ArrayList<String>();
+        List<String> result;
+        cmds.add(ADDRULES_PREFIX + "-A OUTPUT -p udp" + ADDRULES_SUFFIX);
+        cmds.add(ADDRULES_SUFFIX + "-A OUTPUT -p tcp" + ADDRULES_SUFFIX);
+        result = Shell.SU.run(cmds);
+        if(!result.isEmpty()){
+            return result.get(0);
+        }
+        return null;
+    }
+
+    private static List<String> deleteRules(){
+        List<String> cmds = new ArrayList<String>();
+        cmds.add(ADDRULES_PREFIX + "-D OUTPUT -p udp" + ADDRULES_SUFFIX);
+        cmds.add(ADDRULES_PREFIX + "-D OUTPUT -p tcp" + ADDRULES_SUFFIX);
+        return Shell.SU.run(cmds);
+    }
+
+    private static boolean isRulesAlivable(){
+        List<String> cmds = new ArrayList<String>();
+        cmds.add(CHKRULES_PREFIX + "udp");
+        cmds.add(CHKRULES_PREFIX + "tcp");
+        if(Shell.SU.run(cmds).isEmpty()){
+            return false;
+        }
         return true;
     }
 	
