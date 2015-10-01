@@ -35,32 +35,6 @@ public class IPCheckerComponent implements TextWatcher
 	
 	@Override
 	public void afterTextChanged(Editable eable){
-	    if(isFormatting){
-		return;
-	    }
-
-	    isFormatting = true;
-
-	    if(deletingDot && dotStart > 0){
-		//Backspace
-		if(delBackward){
-		    if(dotStart - 1 < eable.length()){
-			eable.delete(dotStart - 1, dotStart);
-		    }
-		//Del
-		}else if(dotStart < eable.length()){
-		    eable.delete(dotStart, dotStart + 1);
-		}
-	    }
-
-
-
-	    if(IPChecker.IPSegmentChecker43C(eable.toString())){
-		    eable.append(".");
-		    }
-
-	    isFormatting = false;
-	    
 		String s = this.e.getText().toString();
 				if(s.equals("")){
 					sped.putString(this.key, s);
@@ -71,7 +45,6 @@ public class IPCheckerComponent implements TextWatcher
 				}else{
                     this.e.setError(c.getText(R.string.invaild_dns));
 				}
-		
 	}
 	
 	@Override
@@ -82,28 +55,7 @@ public class IPCheckerComponent implements TextWatcher
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count, int after)
 	{
-	    if(isFormatting){
-		return;
-	    }
 
-	    final int selStart = Selection.getSelectionStart(s);
-	    final int selEnd = Selection.getSelectionEnd(s);
-	    if(s.length() > 1 &&
-	       count == 1 &&
-	       after == 0 &&
-	       s.charAt(start) == '.' &&
-	       selStart == selEnd){
-		deletingDot = true;
-		dotStart = start;
-
-		if(selStart == start + 1){
-		    delBackward = true;
-		}else{
-		    delBackward = false;
-		}
-	    }else{
-		deletingDot = false;
-	    }
 	}
 	
 }

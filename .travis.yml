@@ -3,7 +3,7 @@ android:
     components:
         - platform-tools
         - tools
-        - build-tools-23.0.0
+        - build-tools-23.0.1
         - android-22
         - extra-android-m2repository
 
@@ -13,4 +13,4 @@ jdk:
 before_script:
     - ./depending_repos.sh
 
-script: ./gradlew build
+script: ./gradlew build -s

@@ -9,6 +9,5 @@ if [ ! -e 'libsuperuser' ]; then
     mv libsuperuser/libsuperuser tmp
     rm -rf libsuperuser
     mv tmp libsuperuser
-    sed -i "s/compileSdkVersion.*/compileSdkVersion $COMPILESDK_VER/g" ./libsuperuser/build.gradle
-    sed -i "s/buildToolsVersion.*/buildToolsVersion $BUILDTOOLS_VER/g" ./libsuperuser/build.gradle
+    mv ./build.gradle.libsuperuser ./libsuperuser/build.gradle
 fi
