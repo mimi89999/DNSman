@@ -14,8 +14,6 @@
     <string name="welcome">ようこそ</string>
     <string name="welcome_msg">DNS man にようこそ！ ネットワークをトグルの時， DNS を自動的に設定する。</string>
 
-    <string name="dnscrypt_running">DNSCrypt を検出された</string>
-	<string name="dnscrypt_running_msg">すぐ DNS に 127.0.0.1 を設定する？</string>
 	<string name="nodns_noti">使用できる DNS サーバーはありません</string>
     <string name="nodns_noti_text">クリックして DNS を設定する</string>
 
@@ -40,4 +38,5 @@
     <string name="pref_toast_show">表示</string>
     <string name="individual_category">個別</string>
     <string name="invalid_dns">無効の DNS</string>
+    <string name="default_port">デフォルトポート</string>
 </resources>

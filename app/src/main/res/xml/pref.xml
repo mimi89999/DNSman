@@ -7,6 +7,7 @@
         android:entries="@array/mode"
         android:entryValues="@array/mode_values"
         />
+
   <ListPreference
       android:key="toast"
       android:title="@string/pref_toast"
@@ -20,4 +21,4 @@
             android:data="https://github.com/otakuchiyan/DNSman"
             />
 	</PreferenceScreen>
-	</PreferenceScreen>
+</PreferenceScreen>

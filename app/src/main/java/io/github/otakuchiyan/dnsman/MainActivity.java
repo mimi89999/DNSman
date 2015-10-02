@@ -3,38 +3,23 @@ package io.github.otakuchiyan.dnsman;
 import android.content.Context;
 import android.content.SharedPreferences; 
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
 import android.app.*;
 import android.os.AsyncTask;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.util.TypedValue;
 
 import java.util.List;
 
-import io.github.otakuchiyan.dnsman.SettingsActivity;
-import io.github.otakuchiyan.dnsman.IPChecker;
-import io.github.otakuchiyan.dnsman.IPCheckerComponent;
-import io.github.otakuchiyan.dnsman.DNSConfActivity;
-import io.github.otakuchiyan.dnsman.GetNetwork;
-import io.github.otakuchiyan.dnsman.LocalDNSDetecter;
-import io.github.otakuchiyan.dnsman.DNSEditText;
-
 import android.widget.*;
 import android.widget.Toolbar.*;
-import android.view.*;
 
 public class MainActivity extends Activity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
@@ -80,15 +65,6 @@ public class MainActivity extends Activity {
 		    }
 		}
 	    }
-	};
-
-	private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
-		@Override
-		public void onReceive(Context c, Intent i){
-			if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_DETECTED)){
-				Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
-			}
-		}
 	};
 
     @Override
@@ -172,14 +148,9 @@ public class MainActivity extends Activity {
 		getFilter.addAction(ACTION_GETDNS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
-		IntentFilter dnscryptFilter = new IntentFilter();
-		dnscryptFilter.addAction(LocalDNSDetecter.ACTION_DNSCRYPT_DETECTED);
-		LocalBroadcastManager.getInstance(this).registerReceiver(dnscryptDetected, dnscryptFilter);
-
-		setContentView(mainActivity);
+        setContentView(mainActivity);
 		
         (new getDNSAsync()).execute();
-		LocalDNSDetecter.perfromAction(this);
 	}
 
 	@Override

@@ -29,11 +29,9 @@ public class DNSEditText extends EditText{
         setLayoutParams(edittext_params);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
         if(isPort) {
-            setHint("Port");
-            return;
+            setHint(c.getText(R.string.default_port) + " 53");
         }
-            addTextChangedListener(
-                    new IPCheckerComponent(c, this, key, isPort));
+        addTextChangedListener(new IPCheckerComponent(c, this, key, isPort));
 
     }
 }

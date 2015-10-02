@@ -15,7 +15,6 @@ public class DNSManager {
 
     static String hijackedLastDNS = "";
 	static String hijackedLastPort = "";
-    static String dnscryptIP = "";
 
 	final static String[] chk_cmds = {
 		GETDNS_PREFIX + "1",
@@ -136,14 +135,4 @@ public class DNSManager {
 	return sb.toString();
     }
     
-    public static boolean detectDNSCrypt(){
-	    List<String> result = Shell.SH.run("netstat | grep -e \"\\..\\..\\..\\:53\" --only-match");
-        if(!result.isEmpty()){
-            dnscryptIP = "127" + result.get(0);
-            return true;
-        }
-        return false;
-    }
-
-   
 }

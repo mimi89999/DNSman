@@ -43,7 +43,6 @@
         </receiver>
 		
 		<service android:name=".DNSBackgroundIntentService" />
-        <service android:name=".LocalDNSDetecter"/>
     </application>
     <uses-permission android:name="android.permission.SUPER_USER"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>

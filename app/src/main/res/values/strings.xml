@@ -8,6 +8,8 @@
     <string name="bt_category">Bluetooth</string>
     <string name="eth_category">Ethernet</string>
 	<string name="wimax_category">WiMax</string>
+
+	<string name="default_port">Default port:</string>
 	
 	<string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed, May need root your phone</string>
@@ -19,7 +21,7 @@
 	<string name="pref_mode">Operating mode</string>
 	<string name="pref_mode_prop">System properties</string>
 	<string name="pref_mode_iptables">Firewall rules</string>
-	
+
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
     <string name="pref_toast_error">Except errors</string>
@@ -30,9 +32,6 @@
 	
 	<string name="welcome">Welcome</string>
 	<string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
-
-	<string name="dnscrypt_running">Detected DNSCrypt was running</string>
-	<string name="dnscrypt_running_msg">Set global DNS as 127.0.0.1 now?</string>
 
     <string name="nodns_noti_text">Click to set DNS</string>
 	<string name="nodns_noti">No alivable DNS</string>

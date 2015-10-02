@@ -21,9 +21,6 @@
     <string name="welcome">歡迎</string>
     <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
 
-	<string name="dnscrypt_running">偵測到 DNSCrypt 運作中</string>
-	<string name="dnscrypt_running_msg">現在就將全局 DNS 設定為 127.0.0.1 如何？</string>
-
     <string name="nodns_noti">沒有可用 DNS</string>
     <string name="nodns_noti_text">點選以進行設定</string>
 
@@ -44,4 +41,5 @@
     <string name="pref_mode_iptables">防火牆規則</string>
     <string name="pref_mode_prop">系統屬性</string>
     <string name="pref_toast">懸浮通知</string>
+    <string name="default_port">預設埠口</string>
 </resources>
