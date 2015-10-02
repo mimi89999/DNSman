@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="dnstoast_list">
-        <item>@string/dnstoast_list_show</item>
-        <item>@string/dnstoast_list_error</item>
-        <item>@string/dnstoast_list_never</item>
+    <string-array name="toast">
+        <item>@string/pref_toast_show</item>
+        <item>@string/pref_toast_error</item>
+        <item>@string/pref_toast_never</item>
     </string-array>
-    <string-array name="dnstoast_values">
-        <item>2</item>
-        <item>1</item>
+    <string-array name="toast_values">
         <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="mode">
+        <item>@string/pref_mode_prop</item>
+        <item>@string/pref_mode_iptables</item>
+    </string-array>
+    <string-array name="mode_values">
+        <item>0</item>
+        <item>1</item>
     </string-array>
 </resources>

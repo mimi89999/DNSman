@@ -13,7 +13,8 @@ public class SettingsActivity extends PreferenceActivity{
 	@Override
 	public void onCreate(final Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(R.string.settings);
 		//			SharedPreference sp = PreferenceManager.getDefaultPreference();
 				
 		getFragmentManager().beginTransaction()
@@ -30,5 +31,7 @@ public class SettingsActivity extends PreferenceActivity{
 	    //	    ListPreference dnsToastPref = getPreference("dns
 	    
         }
+
+
     }
 }

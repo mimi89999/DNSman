@@ -16,19 +16,18 @@ public class IPCheckerComponent implements TextWatcher
 {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
-    private boolean deletingDot;
-    private int dotStart;
-    private boolean delBackward;
-    private boolean isFormatting;
-	
-	EditText e;
-	String key;
-	Context c;
+
+	private EditText e;
+	private String key;
+	private Context c;
+	private boolean isPort;
+
 		
-	public IPCheckerComponent(Context c, EditText e, String key){
+	public IPCheckerComponent(Context c, EditText e, String key, boolean isPort){
 		this.c = c;
 		this.e = e;
 		this.key = key;
+		this.isPort = isPort;
 		sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		sped = sp.edit();
 	}
@@ -36,15 +35,18 @@ public class IPCheckerComponent implements TextWatcher
 	@Override
 	public void afterTextChanged(Editable eable){
 		String s = this.e.getText().toString();
-				if(s.equals("")){
-					sped.putString(this.key, s);
-					sped.commit();
-				}else if(!s.equals("") && IPChecker.IPv4Checker(s)){
-					sped.putString(this.key, s);
-					sped.commit();
-				}else{
-                    this.e.setError(c.getText(R.string.invaild_dns));
-				}
+		if(s.equals("")){
+			sped.putString(this.key, s);
+			sped.apply();
+		}else if(!this.isPort && !s.equals("") && IPChecker.IPv4Checker(s)) {
+			sped.putString(this.key, s);
+			sped.apply();
+		}else if(this.isPort && !s.equals("")) {
+			sped.putString(this.key, s);
+			sped.apply();
+		}else{
+			this.e.setError(c.getText(R.string.invalid_dns));
+		}
 	}
 	
 	@Override

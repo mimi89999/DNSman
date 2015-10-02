@@ -20,16 +20,20 @@ public class DNSEditText extends EditText{
 			LayoutParams.WRAP_CONTENT,
             1.0f);
 
-    public DNSEditText(Context c, String key){
+    public DNSEditText(Context c, String key, boolean isPort){
 	super(c);
 	sp = PreferenceManager.getDefaultSharedPreferences(c);
         setSingleLine(true);
         setText(sp.getString(key, ""));
-	setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        setRawInputType(InputType.TYPE_CLASS_NUMBER);
         setLayoutParams(edittext_params);
-	setFilters(new InputFilter[] { new InputFilter.LengthFilter(15) });
-        addTextChangedListener(
-			       new IPCheckerComponent(c, this, key));
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
+        if(isPort) {
+            setHint("Port");
+            return;
+        }
+            addTextChangedListener(
+                    new IPCheckerComponent(c, this, key, isPort));
 
     }
 }

@@ -5,7 +5,8 @@ DNS resolver setting tool for Android.
 How to build
 ===
 
-    $ ./Autogen.sh
+    $ ./depending_repos.sh
+    $ ./gradlew build
 
 
 Used opensource library:

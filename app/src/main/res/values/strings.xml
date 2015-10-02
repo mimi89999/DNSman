@@ -13,16 +13,19 @@
     <string name="set_failed">Setting DNS failed, May need root your phone</string>
 	<string name="operation_succeed">The operation was completed successfully</string>
 	
-	<string name="edit_resolv">DNS config file</string>
-	<string name="settings">Settings</string>
+	<string name="action_edit_resolv">DNS config file</string>
+	<string name="action_settings">Settings</string>
+	
+	<string name="pref_mode">Operating mode</string>
+	<string name="pref_mode_prop">System properties</string>
+	<string name="pref_mode_iptables">Firewall rules</string>
+	
+    <string name="pref_toast">Toast</string>
+    <string name="pref_toast_show">Show</string>
+    <string name="pref_toast_error">Except errors</string>
+    <string name="pref_toast_never">Never</string>
 
-    <string name="dnstoast">DNS toast notification</string>
-
-    <string name="dnstoast_list_show">Show</string>
-    <string name="dnstoast_list_error">Except errors</string>
-    <string name="dnstoast_list_never">Never</string>
-
-    <string name="invaild_dns">Invaild DNS</string>
+    <string name="invalid_dns">Invalid DNS</string>
 	
 	
 	<string name="welcome">Welcome</string>

@@ -9,11 +9,13 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String SETDNS_PREFIX = "setprop net.dns";
 	final static String GETDNS_PREFIX = "getprop net.dns";
-    final static String ADDRULES_PREFIX = "iptables -t nat ";
-    final static String ADDRULES_SUFFIX = " --dport 53 -j DNAT --to-destination";
-    final static String CHKRULES_PREFIX = "iptables -t nat -L OUTPUT | grep 'DNAT.*";
+    final static String RULES_PREFIX = "iptables -t nat ";
+    final static String RULES_SUFFIX = " --dport 53 -j DNAT --to-destination ";
+    final static String CHKRULES_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
-    static String hijackedLastDNS;
+    static String hijackedLastDNS = "";
+	static String hijackedLastPort = "";
+    static String dnscryptIP = "";
 
 	final static String[] chk_cmds = {
 		GETDNS_PREFIX + "1",
@@ -49,42 +51,42 @@ public class DNSManager {
         return true;
     }
 
-	public static String setDNSViaIPtables(String dns){
-        if(isRulesAlivable()){
-            return null;
+	public static boolean setDNSViaIPtables(String dns, String port){
+        if(isRulesAlivable() && hijackedLastDNS.equals(dns)){
+            return true;
         }
 
-        if(hijackedLastDNS != dns) {
+		String usedPort = !port.equals("") ? port : "53";
+
+        if(!hijackedLastDNS.equals(dns)) {
             hijackedLastDNS = dns;
+			hijackedLastPort = usedPort;
             deleteRules();
         }
 
         List<String> cmds = new ArrayList<String>();
         List<String> result;
-        cmds.add(ADDRULES_PREFIX + "-A OUTPUT -p udp" + ADDRULES_SUFFIX);
-        cmds.add(ADDRULES_SUFFIX + "-A OUTPUT -p tcp" + ADDRULES_SUFFIX);
+        cmds.add(RULES_PREFIX + "-A OUTPUT -p udp" + RULES_SUFFIX + dns + ":" + usedPort);
+        cmds.add(RULES_PREFIX + "-A OUTPUT -p tcp" + RULES_SUFFIX + dns + ":" + usedPort);
+
         result = Shell.SU.run(cmds);
-        if(!result.isEmpty()){
-            return result.get(0);
-        }
-        return null;
+        return result.isEmpty();
     }
 
     private static List<String> deleteRules(){
         List<String> cmds = new ArrayList<String>();
-        cmds.add(ADDRULES_PREFIX + "-D OUTPUT -p udp" + ADDRULES_SUFFIX);
-        cmds.add(ADDRULES_PREFIX + "-D OUTPUT -p tcp" + ADDRULES_SUFFIX);
+        cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+        cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
         return Shell.SU.run(cmds);
     }
 
     private static boolean isRulesAlivable(){
         List<String> cmds = new ArrayList<String>();
-        cmds.add(CHKRULES_PREFIX + "udp");
-        cmds.add(CHKRULES_PREFIX + "tcp");
-        if(Shell.SU.run(cmds).isEmpty()){
-            return false;
-        }
-        return true;
+		if(!hijackedLastDNS.equals("")) {
+			cmds.add(CHKRULES_PREFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			return !Shell.SU.run(cmds).isEmpty();
+		}
+        return false;
     }
 	
 	public static String writeResolvConf(String dns1, String dns2){
@@ -92,7 +94,7 @@ public class DNSManager {
 		List<String> result;
 		
 		cmds.add("mount -o remount,rw /system");
-		if(dns1 != ""){
+		if(!dns1.equals("")){
 		    cmds.add("echo nameserver " + dns1 + " > /etc/resolv.conf");
 		}
 		if(!dns2.equals("")){
@@ -135,7 +137,9 @@ public class DNSManager {
     }
     
     public static boolean detectDNSCrypt(){
-	    if(!Shell.SH.run("ps | grep 'dnscrypt'").isEmpty()){
+	    List<String> result = Shell.SH.run("netstat | grep -e \"\\..\\..\\..\\:53\" --only-match");
+        if(!result.isEmpty()){
+            dnscryptIP = "127" + result.get(0);
             return true;
         }
         return false;

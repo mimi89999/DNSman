@@ -3,6 +3,7 @@ package io.github.otakuchiyan.dnsman;
 import android.content.Context;
 import android.content.SharedPreferences; 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.content.Intent;
@@ -81,6 +82,14 @@ public class MainActivity extends Activity {
 	    }
 	};
 
+	private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context c, Intent i){
+			if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_DETECTED)){
+				Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
+			}
+		}
+	};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,7 +161,7 @@ public class MainActivity extends Activity {
 		if(!sp.getBoolean("firstbooted", false)){
 			showWelcomeDialog();
 			sped.putBoolean("firstbooted", true);
-			sped.commit();
+			sped.apply();
 		}
 
 		IntentFilter setFilter = new IntentFilter();
@@ -164,20 +173,39 @@ public class MainActivity extends Activity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
 		IntentFilter dnscryptFilter = new IntentFilter();
-		getFilter.addAction(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING);
+		dnscryptFilter.addAction(LocalDNSDetecter.ACTION_DNSCRYPT_DETECTED);
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnscryptDetected, dnscryptFilter);
 
 		setContentView(mainActivity);
 		
         (new getDNSAsync()).execute();
-        (new detectDNSCryptTask()).execute();
-
+		LocalDNSDetecter.perfromAction(this);
 	}
+
+	@Override
+    public void onResume(){
+        super.onResume();
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		sped = sp.edit();
+		String current_mode = sp.getString("mode", "0");
+		if(!current_mode.equals(sp.getString("last_mode", "0"))){
+			sped.putString("last_mode", current_mode);
+			sped.apply();
+			finish();
+			startActivity(getIntent());
+		}
+    }
 
     private LinearLayout setDNSTwopane(EditText e1, EditText e2, String keyprefix){
         LinearLayout ll = new LinearLayout(this);
-	e1 = new DNSEditText(this, keyprefix + "dns1");
-	e2 = new DNSEditText(this, keyprefix + "dns2");
+		boolean isPort = false;
+		String e2Suffix = "dns2";
+		if(sp.getString("mode", "1").equals("1")) {
+			isPort = true;
+			e2Suffix = "port";
+		}
+		e1 = new DNSEditText(this, keyprefix + "dns1", false);
+		e2 = new DNSEditText(this, keyprefix + e2Suffix, isPort);
 
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.addView(e1);
@@ -255,25 +283,5 @@ public class MainActivity extends Activity {
 		}
 	}
 
-    private BroadcastReceiver dnscryptDetected = new BroadcastReceiver(){
-        @Override
-        public void onReceive(Context c, Intent i){
-	    if(i.getAction().equals(LocalDNSDetecter.ACTION_DNSCRYPT_RUNNING) //&&
-	       //LocalDNSDetecter.isEnabled(c) &&
-//	       LocalDNSDetecter.isGlobalDNSSetted(c)){
-	       ){
-            Log.d("DNSman", "detected");
-            Toast.makeText(c, "DNS detected", Toast.LENGTH_LONG).show();
-	    }
-        }
-    };
-
-    private class detectDNSCryptTask extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void[] p1){
-            LocalDNSDetecter.detect(getApplicationContext());
-			return null;
-        }
-    }
 
 }

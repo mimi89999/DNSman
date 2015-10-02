@@ -36,20 +36,22 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
-			sp = PreferenceManager.getDefaultSharedPreferences(
-                c.getApplicationContext());
-		    int dnsToast = Integer.parseInt(sp.getString("dns_toast_pref", "2"));
-		    if(i.getBooleanExtra("result", false)){
-			if(dnsToast == 2){
-			    Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
-			}
-		}else{
-			if(dnsToast == 0){
-			Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
-			}
-		}
-		}
+            if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+                sp = PreferenceManager.getDefaultSharedPreferences(
+                        c.getApplicationContext());
+                String dnsToast = sp.getString("toast", "0");
+                if(sp.getString("mode", "0").equals("0")) {
+                    if (i.getBooleanExtra("result", false)) {
+                        if (dnsToast.equals("0")) {
+                            Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (dnsToast.equals("2")) {
+                            Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
 	    }
 	};
 
@@ -83,43 +85,32 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
         }
 		
 		if(dnsList2set.isEmpty()){
-			NotificationCompat.Builder ncb =
-			new NotificationCompat.Builder(c)
-			.setSmallIcon(android.R.drawable.stat_notify_error)
-			.setContentTitle(c.getText(R.string.nodns_noti))
-			.setContentText(c.getText(R.string.nodns_noti_text));
-		    Intent mainIntent = new Intent(c, MainActivity.class);
-
-		    TaskStackBuilder tsb = TaskStackBuilder.create(c);
-		    tsb.addParentStack(MainActivity.class);
-		    tsb.addNextIntent(mainIntent);
-		    PendingIntent mainPendingIntent =
-			tsb.getPendingIntent(0,
-					     PendingIntent.FLAG_UPDATE_CURRENT);
-		    ncb.setContentIntent(mainPendingIntent);
-		    nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
-		    nm.notify(0, ncb.build());
-			return;
+			Toast.makeText(c, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+            return;
 		}
 		dnss_bundle.putString("dns1", dnsList2set.get(0));
-		dnss_bundle.putString("dns2", dnsList2set.get(1));
+        String dns2suffix = "dns2";
+        if(sp.getString("mode", "1").equals("1")){
+            dns2suffix = "port";
+        }
+		dnss_bundle.putString(dns2suffix, dnsList2set.get(1));
 		
 		DNSBackgroundIntentService.performAction(c, dnss_bundle);
 		
     }
 
     public void getDNSByPrefix(final String net_prefix){
+        String dns2suffix = "dns2";
         String dns1 = sp.getString(net_prefix + "dns1", "");
-        String dns2 = sp.getString(net_prefix + "dns2", "");
-		if(dns1 != "" || dns2 != ""){
-			Log.d("DNSman", "added");
+        if(sp.getString("mode", "1").equals("1")) {
+            dns2suffix = "port";
+        }
+        String dns2 = sp.getString(net_prefix + dns2suffix, "");
+		if(!dns1.equals("")|| !dns2.equals("")){
             dnsList2set.clear();
             dnsList2set.add(dns1);
             dnsList2set.add(dns2);
         }
-        
-        Log.d("DNSman", "dns1 = " + dns1);
-        Log.d("DNSman", "dns2 = " + dns2);
     }
 
     public void setDNSArrayByPrefix(final String prefix){

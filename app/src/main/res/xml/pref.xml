@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="mode"
+        android:title="@string/pref_mode"
+        android:defaultValue="0"
+        android:entries="@array/mode"
+        android:entryValues="@array/mode_values"
+        />
   <ListPreference
-      android:key="dns_toast_pref"
-      android:title="@string/dnstoast"
-        android:entries="@array/dnstoast_list"
-        android:entryValues="@array/dnstoast_values"
+      android:key="toast"
+      android:title="@string/pref_toast"
+      android:defaultValue="0"
+        android:entries="@array/toast"
+        android:entryValues="@array/toast_values"
         />
 	<PreferenceScreen android:title="@string/opensource"
 			android:summary="@string/opensource_hint">

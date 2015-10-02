@@ -37,6 +37,8 @@ public class DNSConfActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(R.string.edit_resolv);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         dnsConfActivity = new LinearLayout(this);
@@ -85,8 +87,8 @@ public class DNSConfActivity extends Activity{
 
     private LinearLayout setDNSTwopane(){
         LinearLayout ll = new LinearLayout(this);
-	rdns1 = new DNSEditText(this, "rdns1");
-	rdns2 = new DNSEditText(this, "rdns2");
+	rdns1 = new DNSEditText(this, "rdns1", false);
+	rdns2 = new DNSEditText(this, "rdns2", false);
 
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.addView(rdns1);
