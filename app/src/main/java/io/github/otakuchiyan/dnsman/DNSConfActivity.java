@@ -38,7 +38,7 @@ public class DNSConfActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(R.string.edit_resolv);
+        getActionBar().setTitle(R.string.action_edit_resolv);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         dnsConfActivity = new LinearLayout(this);

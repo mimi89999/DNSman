@@ -13,8 +13,8 @@
     <string name="set_failed">設定 DNS 失败。</string>
     <string name="operation_succeed">操作成功。</string>
 
-    <string name="edit_resolv">DNS 設定檔</string>
-    <string name="settings">設定</string>
+    <string name="action_edit_resolv">DNS 設定檔</string>
+    <string name="action_settings">設定</string>
 
     <string name="invalid_dns">無效的 DNS</string>
 

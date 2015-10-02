@@ -14,7 +14,7 @@ public class SettingsActivity extends PreferenceActivity{
 	public void onCreate(final Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(R.string.settings);
+        getActionBar().setTitle(R.string.action_settings);
 		//			SharedPreference sp = PreferenceManager.getDefaultPreference();
 				
 		getFragmentManager().beginTransaction()
