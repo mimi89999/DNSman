@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
 			LayoutParams.WRAP_CONTENT,
             1.0f);
     private TextView cdnstext;
+	private TextView propdnstext;
 	private TextView cdns1;
 	private TextView cdns2;
     private TextView global_category;
@@ -80,18 +81,21 @@ public class MainActivity extends Activity {
         LinearLayout cdnsView = new LinearLayout(this);
         cdnsView.setOrientation(LinearLayout.HORIZONTAL);
         cdnstext = setCategoryText(R.string.cdnstext);
+		propdnstext = new TextView(this);
         cdns1 = new TextView(this);
 		cdns2 = new TextView(this);
+		propdnstext.setText(R.string.pref_mode_prop);
         cdns1.setLayoutParams(edittext_params);
         cdns2.setLayoutParams(edittext_params);
-        
-		cdnsView.addView(cdnstext);
+
+		cdnsView.addView(propdnstext);
         cdnsView.addView(cdns1);
         cdnsView.addView(cdns2);
+		mainActivity.addView(cdnstext);
         mainActivity.addView(cdnsView);
 
-        global_category = new TextView(this);
-        global_category.setText(R.string.global_category);
+
+        global_category = setCategoryText(R.string.global_category);
         mainActivity.addView(global_category);
         mainActivity.addView(setDNSTwopane(gdns1, gdns2, "g"));
 
@@ -171,7 +175,7 @@ public class MainActivity extends Activity {
         LinearLayout ll = new LinearLayout(this);
 		boolean isPort = false;
 		String e2Suffix = "dns2";
-		if(sp.getString("mode", "1").equals("1")) {
+		if(sp.getString("mode", "0").equals("1")) {
 			isPort = true;
 			e2Suffix = "port";
 		}
