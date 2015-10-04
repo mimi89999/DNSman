@@ -40,11 +40,7 @@ public class DNSManager {
 		}
 	}
 
-    public static boolean setDNSByNetType(Context c){
-        return setDNSByNetType(c, false);
-    }
-
-	public static boolean setDNSByNetType(Context c, boolean isDelete){
+	public static boolean setDNSByNetType(Context c){
 		context = c;
 
             GetNetwork.init(context);
@@ -67,8 +63,10 @@ public class DNSManager {
             if (dnsList2set.isEmpty()) {
                 return false;
             }
+        Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(0));
+        Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(1));
 
-		DNSManager.setDNS(isDelete);
+		DNSManager.setDNS();
 		return true;
 	}
 
@@ -93,18 +91,14 @@ public class DNSManager {
 		}
 	}
 
-	private static void setDNS(boolean isDelete){
+	private static void setDNS(){
         Bundle dnss_bundle = new Bundle();
-        if(!isDelete) {
-            dnss_bundle.putString("dns1", dnsList2set.get(0));
-            String dns2suffix = "dns2";
-            if (sp.getString("mode", "1").equals("1")) {
-                dns2suffix = "port";
-            }
-            dnss_bundle.putString(dns2suffix, dnsList2set.get(1));
-        }else{
-            dnss_bundle.clear();
-        }
+		dnss_bundle.putString("dns1", dnsList2set.get(0));
+		String dns2suffix = "dns2";
+		if (sp.getString("mode", "0").equals("1")) {
+			dns2suffix = "port";
+		}
+		dnss_bundle.putString(dns2suffix, dnsList2set.get(1));
 		DNSBackgroundIntentService.performAction(context, dnss_bundle);
 	}
 
@@ -196,37 +190,28 @@ public class DNSManager {
         return result.isEmpty();
     }
 
-    public static List<String> deleteRules(){
-        return deleteRules(false);
-    }
-
-    public static List<String> deleteRules(boolean isCurrent){
+    private static List<String> deleteRules(){
         List<String> cmds = new ArrayList<String>();
-        if(isCurrent) {
-            hijackedLastDNS = dnsList2set.get(0);
-            hijackedLastPort = dnsList2set.get(1);
-        } else {
-            if (hijackedLastDNS.equals("") && hijackedLastPort.equals("")) {
-                sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-                hijackedLastDNS = sp.getString("hijackedLastDNS", "");
-                hijackedLastPort = sp.getString("hijackedLastPort", "");
-            }
-
-        }
-            if (hijackedLastPort.equals("")) {
-                hijackedLastPort = "53";
-            }
+		if (hijackedLastDNS.equals("") && hijackedLastPort.equals("")) {
+			sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+			hijackedLastDNS = sp.getString("hijackedLastDNS", "");
+			hijackedLastPort = sp.getString("hijackedLastPort", "");
+		}
+		if (hijackedLastPort.equals("")) {
+			hijackedLastPort = "53";
+		}
 
 
-
-        cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
-        cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
-        Log.d("DNSManager[CMD]", cmds.get(0));
-        Log.d("DNSManager[CMD]", cmds.get(1));
+		if(!hijackedLastDNS.equals("")) {
+			cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			Log.d("DNSManager[CMD]", cmds.get(0));
+			Log.d("DNSManager[CMD]", cmds.get(1));
+		}
         return Shell.SU.run(cmds);
     }
 
-    public static boolean isRulesAlivable(Context context){
+    private static boolean isRulesAlivable(Context context){
 		sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         List<String> cmds = new ArrayList<String>();
 		if(hijackedLastDNS.equals("") && hijackedLastPort.equals("")){

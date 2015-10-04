@@ -30,17 +30,14 @@ public class DNSBackgroundIntentService extends IntentService{
 	protected void onHandleIntent(Intent i){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Bundle dnss = i.getExtras();
-		boolean result = true;
+		boolean result;
 
-        if(dnss.isEmpty()){
-            DNSManager.deleteRules(true);
-        }else {
-            if (sp.getString("mode", "1").equals("1")) {
-                result = DNSManager.setDNSViaIPtables(dnss.getString("dns1"), dnss.getString("port"));
-            } else {
-                result = DNSManager.setDNSViaSetprop(dnss.getString("dns1"), dnss.getString("dns2"));
-            }
-        }
+        if (sp.getString("mode", "0").equals("1")) {
+			result = DNSManager.setDNSViaIPtables(dnss.getString("dns1"), dnss.getString("port"));
+		} else {
+			result = DNSManager.setDNSViaSetprop(dnss.getString("dns1"), dnss.getString("dns2"));
+		}
+
 		Intent result_intent = new Intent(ACTION_SETDNS_DONE);
 		result_intent.putExtra("result", result);
 		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(result_intent);

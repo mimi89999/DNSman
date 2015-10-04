@@ -37,8 +37,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 	    @Override
 	    public void onReceive(Context c, Intent i){
             if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
-                sp = PreferenceManager.getDefaultSharedPreferences(
-                        c.getApplicationContext());
+                sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
                 String dnsToast = sp.getString("toast", "0");
                 if(sp.getString("mode", "0").equals("0")) {
                     if (i.getBooleanExtra("result", false)) {
@@ -65,7 +64,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted, iFilter);
 
             if(!DNSManager.setDNSByNetType(context)) {
-                Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+               Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
             }
         }
 

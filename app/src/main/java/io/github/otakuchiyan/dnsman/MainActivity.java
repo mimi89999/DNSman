@@ -212,12 +212,6 @@ public class MainActivity extends Activity {
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
 				break;
-			case R.id.apply:
-				DNSManager.setDNSByNetType(this);
-				break;
-			case R.id.unapply:
-				DNSManager.setDNSByNetType(this, true);
-				break;
 			case R.id.settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;

@@ -60,7 +60,7 @@ public class DNSConfActivity extends Activity{
         LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
 		
         setContentView(dnsConfActivity);
-	(new getConfAsync()).execute();
+        (new getConfAsync()).execute();
 		}
 
     @Override
@@ -121,6 +121,7 @@ public class DNSConfActivity extends Activity{
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
 				    (new writeConfAsync()).execute(rdns1ip, rdns2ip);
+                    (new getConfAsync()).execute();
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
@@ -133,6 +134,7 @@ public class DNSConfActivity extends Activity{
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int which){
 				    (new writeConfAsync()).execute("8.8.8.8", "8.8.4.4");
+                    (new getConfAsync()).execute();
 					}
 			})
 			.setNegativeButton(android.R.string.cancel, null);
@@ -156,11 +158,11 @@ public class DNSConfActivity extends Activity{
 	protected Void doInBackground(String... dnss){
 	    String err = DNSManager.writeResolvConf(dnss[0], dnss[1]);
 	    Intent i = new Intent(ACTION_CONFOPERATION);
-	    if(err != null){
+		if(err != null){
 		i.putExtra("err", err);
 	    }
-	    LocalBroadcastManager.getInstance(getApplicationContext())
-		.sendBroadcast(i);
+	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+
 	    return null;
 	}
     }
@@ -173,8 +175,7 @@ public class DNSConfActivity extends Activity{
 	    if(err != null){
 		i.putExtra("err", err);
 	    }
-	    LocalBroadcastManager.getInstance(getApplicationContext())
-		.sendBroadcast(i);
+	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
 		    return null;
 	}
     }
@@ -193,8 +194,7 @@ public class DNSConfActivity extends Activity{
 	protected Void doInBackground(Void[] p1){
 	    Intent i = new Intent(ACTION_CONF_GETTED);
 	    i.putExtra("confDNS", DNSManager.getResolvConf());
-	    LocalBroadcastManager.getInstance(getApplicationContext())
-		.sendBroadcast(i);
+	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
 	    return null;
 	}
     }
