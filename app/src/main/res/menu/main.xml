@@ -5,9 +5,18 @@
         android:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_edit"/>
 
+    <item
+        android:id="@+id/apply"
+        android:title="@string/action_apply"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/unapply"
+        android:title="@string/action_unapply"
+        android:showAsAction="never"/>
+
 	<item
 		android:id="@+id/settings"
 		android:title="@string/action_settings"
-        android:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_preferences"/>
+        android:showAsAction="never"/>
 </menu>

@@ -23,6 +23,7 @@ import android.widget.Toolbar.*;
 
 public class MainActivity extends Activity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
+	final private String ACTION_DELETE_RULES = "io.github.otakuchiyan.dnsman.ACTION_DELETE_RULES";
     
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
@@ -68,7 +69,7 @@ public class MainActivity extends Activity {
 	    }
 	};
 
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -152,7 +153,7 @@ public class MainActivity extends Activity {
 		getFilter.addAction(ACTION_GETDNS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
-        setContentView(mainActivity);
+		setContentView(mainActivity);
 		
         (new getDNSAsync()).execute();
 	}
@@ -211,6 +212,12 @@ public class MainActivity extends Activity {
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
 				break;
+			case R.id.apply:
+				DNSManager.setDNSByNetType(this);
+				break;
+			case R.id.unapply:
+				DNSManager.setDNSByNetType(this, true);
+				break;
 			case R.id.settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
@@ -257,6 +264,5 @@ public class MainActivity extends Activity {
 			return null;
 		}
 	}
-
 
 }

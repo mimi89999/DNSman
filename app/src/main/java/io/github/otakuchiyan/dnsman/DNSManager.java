@@ -1,6 +1,13 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +20,117 @@ public class DNSManager {
     final static String RULES_SUFFIX = " --dport 53 -j DNAT --to-destination ";
     final static String CHKRULES_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
-    static String hijackedLastDNS = "";
-	static String hijackedLastPort = "";
+    private static String hijackedLastDNS = "";
+	private static String hijackedLastPort = "";
+	private static SharedPreferences sp;
+	private static SharedPreferences.Editor sped;
+	private static Context context;
+	private static List<String> dnsList2set = new ArrayList<String>();
 
 	final static String[] chk_cmds = {
 		GETDNS_PREFIX + "1",
 		GETDNS_PREFIX + "2"
 	};
-	
+
+	private static boolean checkNetType(NetworkInfo ni){
+		if(ni != null && ni.isConnected()){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    public static boolean setDNSByNetType(Context c){
+        return setDNSByNetType(c, false);
+    }
+
+	public static boolean setDNSByNetType(Context c, boolean isDelete){
+		context = c;
+
+            GetNetwork.init(context);
+            NetworkInfo mobi_res = GetNetwork.getMobileNetInfo();
+            NetworkInfo wifi_res = GetNetwork.getWiFiNetInfo();
+            NetworkInfo bt_res = GetNetwork.getBluetoothNetInfo();
+            NetworkInfo eth_res = GetNetwork.getEthernetNetInfo();
+            NetworkInfo wimax_res = GetNetwork.getWiMaxNetInfo();
+            if (checkNetType(mobi_res)) {
+                getDNSByNetType(ConnectivityManager.TYPE_MOBILE);
+            } else if (checkNetType(wifi_res)) {
+                getDNSByNetType(ConnectivityManager.TYPE_WIFI);
+            } else if (checkNetType(bt_res)) {
+                getDNSByNetType(ConnectivityManager.TYPE_BLUETOOTH);
+            } else if (checkNetType(eth_res)) {
+                getDNSByNetType(ConnectivityManager.TYPE_ETHERNET);
+            } else if (checkNetType(wimax_res)) {
+                getDNSByNetType(ConnectivityManager.TYPE_WIMAX);
+            }
+            if (dnsList2set.isEmpty()) {
+                return false;
+            }
+
+		DNSManager.setDNS(isDelete);
+		return true;
+	}
+
+	public static void getDNSByNetType(final int net_type) {
+		getDNSByPrefix("g");
+		switch (net_type) {
+			case ConnectivityManager.TYPE_WIFI:
+				getDNSByPrefix("w");
+				break;
+			case ConnectivityManager.TYPE_MOBILE:
+				getDNSByPrefix("m");
+				break;
+			case ConnectivityManager.TYPE_BLUETOOTH:
+				getDNSByPrefix("b");
+				break;
+			case ConnectivityManager.TYPE_ETHERNET:
+				getDNSByPrefix("e");
+				break;
+			case ConnectivityManager.TYPE_WIMAX:
+				getDNSByPrefix("wi");
+				break;
+		}
+	}
+
+	private static void setDNS(boolean isDelete){
+        Bundle dnss_bundle = new Bundle();
+        if(!isDelete) {
+            dnss_bundle.putString("dns1", dnsList2set.get(0));
+            String dns2suffix = "dns2";
+            if (sp.getString("mode", "1").equals("1")) {
+                dns2suffix = "port";
+            }
+            dnss_bundle.putString(dns2suffix, dnsList2set.get(1));
+        }else{
+            dnss_bundle.clear();
+        }
+		DNSBackgroundIntentService.performAction(context, dnss_bundle);
+	}
+
+	private static void getDNSByPrefix(final String net_prefix){
+		sp = PreferenceManager.getDefaultSharedPreferences(
+				context.getApplicationContext());
+		List<String> l = new ArrayList<String>();
+		String dns2suffix = "dns2";
+		String dns1 = sp.getString(net_prefix + "dns1", "");
+
+		if(sp.getString("mode", "1").equals("1")) {
+			dns2suffix = "port";
+		}
+		String dns2 = sp.getString(net_prefix + dns2suffix, "");
+		if(!dns1.equals("")|| !dns2.equals("")){
+			l.clear();
+			l.add(dns1);
+			l.add(dns2);
+		}
+
+		if(!l.isEmpty()){
+			dnsList2set = l;
+		}
+
+	}
+
 	public static boolean setDNSViaSetprop(String dns1, String dns2) {
 		if(dns1.equals("")){
 			dns1 = "";
@@ -32,6 +142,9 @@ public class DNSManager {
 			SETDNS_PREFIX + "1 \"" + dns1 + "\"",
 			SETDNS_PREFIX + "2 \"" + dns2 + "\""
 		};
+
+        Log.d("DNSManager[CMD]", set_cmds[0]);
+        Log.d("DNSManager[CMD]", set_cmds[1]);
 		
 		List<String> result;
 		if(Shell.SU.available()){
@@ -51,41 +164,74 @@ public class DNSManager {
     }
 
 	public static boolean setDNSViaIPtables(String dns, String port){
-        if(isRulesAlivable() && hijackedLastDNS.equals(dns)){
-            return true;
+		sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		sped = sp.edit();
+
+        if(isRulesAlivable(context)){
+            if(hijackedLastDNS.equals(dns)){
+                return true;
+            }
         }
 
-		String usedPort = !port.equals("") ? port : "53";
+        String usedPort = !port.equals("") ? port : "53";
 
         if(!hijackedLastDNS.equals(dns)) {
-            hijackedLastDNS = dns;
-			hijackedLastPort = usedPort;
             deleteRules();
+			hijackedLastDNS = dns;
+			hijackedLastPort = usedPort;
+			sped.putString("hijackedLastDNS", dns);
+            sped.putString("hijackedLastPort", port);
+            sped.apply();
         }
+
 
         List<String> cmds = new ArrayList<String>();
         List<String> result;
         cmds.add(RULES_PREFIX + "-A OUTPUT -p udp" + RULES_SUFFIX + dns + ":" + usedPort);
         cmds.add(RULES_PREFIX + "-A OUTPUT -p tcp" + RULES_SUFFIX + dns + ":" + usedPort);
+        Log.d("DNSManager[CMD]", cmds.get(0));
+        Log.d("DNSManager[CMD]", cmds.get(1));
 
         result = Shell.SU.run(cmds);
         return result.isEmpty();
     }
 
-    private static List<String> deleteRules(){
+    public static List<String> deleteRules(){
         List<String> cmds = new ArrayList<String>();
+		if(hijackedLastDNS.equals("") && hijackedLastPort.equals("")){
+			sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+			hijackedLastDNS = sp.getString("hijackedLastDNS", "");
+			hijackedLastPort = sp.getString("hijackedLastPort", "");
+		}
+
+        if(hijackedLastPort.equals("")){
+            hijackedLastPort = "53";
+        }
+
         cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
         cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+        Log.d("DNSManager[CMD]", cmds.get(0));
+        Log.d("DNSManager[CMD]", cmds.get(1));
         return Shell.SU.run(cmds);
     }
 
-    private static boolean isRulesAlivable(){
+    public static boolean isRulesAlivable(Context context){
+		sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         List<String> cmds = new ArrayList<String>();
+		if(hijackedLastDNS.equals("") && hijackedLastPort.equals("")){
+			hijackedLastDNS = sp.getString("hijackedLastDNS", "");
+			hijackedLastPort = sp.getString("hijackedLastPort", "");
+		}
+
+        if(hijackedLastPort.equals("")){
+            hijackedLastPort = "53";
+        }
+
 		if(!hijackedLastDNS.equals("")) {
 			cmds.add(CHKRULES_PREFIX + hijackedLastDNS + ":" + hijackedLastPort);
-			return !Shell.SU.run(cmds).isEmpty();
+            Log.d("DNSManager[CMD]", cmds.get(0));
 		}
-        return false;
+        return !Shell.SU.run(cmds).isEmpty();
     }
 	
 	public static String writeResolvConf(String dns1, String dns2){

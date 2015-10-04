@@ -13,7 +13,7 @@ public class DNSBackgroundIntentService extends IntentService{
     final static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
 
 	public static void performAction(Context c, Bundle dnss){
-		if(c == null || dnss == null){
+		if(c == null){
 			return;
 		}
 
@@ -30,16 +30,17 @@ public class DNSBackgroundIntentService extends IntentService{
 	protected void onHandleIntent(Intent i){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		Bundle dnss = i.getExtras();
-		if(dnss == null){
-			return;
-		}
-		boolean result;
+		boolean result = true;
 
-		if(sp.getString("mode", "1").equals("1")){
-			result = DNSManager.setDNSViaIPtables(dnss.getString("dns1"), dnss.getString("port"));
-		} else {
-			result = DNSManager.setDNSViaSetprop(dnss.getString("dns1"), dnss.getString("dns2"));
-		}
+        if(dnss.isEmpty()){
+            DNSManager.deleteRules();
+        }else {
+            if (sp.getString("mode", "1").equals("1")) {
+                result = DNSManager.setDNSViaIPtables(dnss.getString("dns1"), dnss.getString("port"));
+            } else {
+                result = DNSManager.setDNSViaSetprop(dnss.getString("dns1"), dnss.getString("dns2"));
+            }
+        }
 		Intent result_intent = new Intent(ACTION_SETDNS_DONE);
 		result_intent.putExtra("result", result);
 		LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(result_intent);
