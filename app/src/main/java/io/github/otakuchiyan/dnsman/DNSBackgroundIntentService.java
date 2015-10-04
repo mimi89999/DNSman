@@ -33,7 +33,7 @@ public class DNSBackgroundIntentService extends IntentService{
 		boolean result = true;
 
         if(dnss.isEmpty()){
-            DNSManager.deleteRules();
+            DNSManager.deleteRules(true);
         }else {
             if (sp.getString("mode", "1").equals("1")) {
                 result = DNSManager.setDNSViaIPtables(dnss.getString("dns1"), dnss.getString("port"));

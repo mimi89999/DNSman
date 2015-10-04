@@ -197,16 +197,27 @@ public class DNSManager {
     }
 
     public static List<String> deleteRules(){
-        List<String> cmds = new ArrayList<String>();
-		if(hijackedLastDNS.equals("") && hijackedLastPort.equals("")){
-			sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-			hijackedLastDNS = sp.getString("hijackedLastDNS", "");
-			hijackedLastPort = sp.getString("hijackedLastPort", "");
-		}
+        return deleteRules(false);
+    }
 
-        if(hijackedLastPort.equals("")){
-            hijackedLastPort = "53";
+    public static List<String> deleteRules(boolean isCurrent){
+        List<String> cmds = new ArrayList<String>();
+        if(isCurrent) {
+            hijackedLastDNS = dnsList2set.get(0);
+            hijackedLastPort = dnsList2set.get(1);
+        } else {
+            if (hijackedLastDNS.equals("") && hijackedLastPort.equals("")) {
+                sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+                hijackedLastDNS = sp.getString("hijackedLastDNS", "");
+                hijackedLastPort = sp.getString("hijackedLastPort", "");
+            }
+
         }
+            if (hijackedLastPort.equals("")) {
+                hijackedLastPort = "53";
+            }
+
+
 
         cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
         cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);

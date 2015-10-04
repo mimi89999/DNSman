@@ -1,0 +1,32 @@
+Applications Memory Usage (kB):
+Uptime: 26806514 Realtime: 50625723
+
+** MEMINFO in pid 14711 [io.github.otakuchiyan.dnsman] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap     7576     7564        0     1420    10928    10263      100
+  Dalvik Heap     2301     2092        0       72     9804     8689     1115
+ Dalvik Other     1455     1324        4     2048                           
+        Stack       96       96        0        8                           
+    Other dev        5        0        4        0                           
+     .so mmap      868      196       56     3148                           
+    .apk mmap      129        0       48        0                           
+    .ttf mmap      274        0       80        0                           
+    .dex mmap     1838       56      836      396                           
+   Other mmap        5        4        0        0                           
+      Unknown       72       72        0        8                           
+        TOTAL    14619    11404     1028     7100    20732    18952     1215
+ 
+ Objects
+               Views:      101         ViewRootImpl:        4
+         AppContexts:        6           Activities:        1
+              Assets:        3        AssetManagers:        3
+       Local Binders:       10        Proxy Binders:       24
+    Death Recipients:        0
+     OpenSSL Sockets:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
