@@ -41,6 +41,7 @@ public class DNSManager {
 	}
 
 	public static boolean setDNSByNetType(Context c){
+		Log.d("DNSManager", "setDNSByNetType");
 		context = c;
 
             GetNetwork.init(context);
@@ -60,9 +61,11 @@ public class DNSManager {
             } else if (checkNetType(wimax_res)) {
                 getDNSByNetType(ConnectivityManager.TYPE_WIMAX);
             }
-            if (dnsList2set.isEmpty()) {
+
+        //If no network connected may be to there
+            /*if (dnsList2set.isEmpty()) {
                 return false;
-            }
+            }*/
         Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(0));
         Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(1));
 
