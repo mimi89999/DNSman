@@ -33,7 +33,7 @@ public class DNSManager {
 	};
 
 	private static boolean checkNetType(NetworkInfo ni){
-		if(ni != null && ni.isConnected()){
+        if(ni != null && ni.isConnected()){
 			return true;
 		} else {
 			return false;
@@ -50,48 +50,29 @@ public class DNSManager {
             NetworkInfo bt_res = GetNetwork.getBluetoothNetInfo();
             NetworkInfo eth_res = GetNetwork.getEthernetNetInfo();
             NetworkInfo wimax_res = GetNetwork.getWiMaxNetInfo();
-            if (checkNetType(mobi_res)) {
-                getDNSByNetType(ConnectivityManager.TYPE_MOBILE);
+
+		getDNSByPrefix("g");
+		if (checkNetType(mobi_res)) {
+			getDNSByPrefix("m");
             } else if (checkNetType(wifi_res)) {
-                getDNSByNetType(ConnectivityManager.TYPE_WIFI);
+                getDNSByPrefix("w");
             } else if (checkNetType(bt_res)) {
-                getDNSByNetType(ConnectivityManager.TYPE_BLUETOOTH);
+                getDNSByPrefix("b");
             } else if (checkNetType(eth_res)) {
-                getDNSByNetType(ConnectivityManager.TYPE_ETHERNET);
+                getDNSByPrefix("e");
             } else if (checkNetType(wimax_res)) {
-                getDNSByNetType(ConnectivityManager.TYPE_WIMAX);
+                getDNSByPrefix("wi");
             }
 
-        //If no network connected may be to there
-            /*if (dnsList2set.isEmpty()) {
+
+            if (dnsList2set.isEmpty()) {
                 return false;
-            }*/
+            }
         Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(0));
         Log.d("DNSManager[DATA]", "dnsList2set " + dnsList2set.get(1));
 
 		DNSManager.setDNS();
 		return true;
-	}
-
-	public static void getDNSByNetType(final int net_type) {
-		getDNSByPrefix("g");
-		switch (net_type) {
-			case ConnectivityManager.TYPE_WIFI:
-				getDNSByPrefix("w");
-				break;
-			case ConnectivityManager.TYPE_MOBILE:
-				getDNSByPrefix("m");
-				break;
-			case ConnectivityManager.TYPE_BLUETOOTH:
-				getDNSByPrefix("b");
-				break;
-			case ConnectivityManager.TYPE_ETHERNET:
-				getDNSByPrefix("e");
-				break;
-			case ConnectivityManager.TYPE_WIMAX:
-				getDNSByPrefix("wi");
-				break;
-		}
 	}
 
 	private static void setDNS(){

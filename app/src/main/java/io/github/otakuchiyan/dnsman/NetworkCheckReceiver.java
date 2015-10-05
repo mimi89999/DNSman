@@ -33,6 +33,10 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     private List<String> dnsList2set = new ArrayList<String>();
     private SharedPreferences sp;
 
+    private ConnectivityManager cm;
+    private NetworkInfo ni;
+    private boolean isFirstConnect = true;
+
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
@@ -63,8 +67,18 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             iFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
             LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted, iFilter);
 
-            if(!DNSManager.setDNSByNetType(context)) {
-               Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+            //Workaround to deal with multiple broadcast
+            cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ni = cm.getActiveNetworkInfo();
+            if(ni != null) {
+                if(isFirstConnect) {
+                    isFirstConnect = false;
+                    if (!DNSManager.setDNSByNetType(context)) {
+                        Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }else{
+                isFirstConnect = true;
             }
         }
 
