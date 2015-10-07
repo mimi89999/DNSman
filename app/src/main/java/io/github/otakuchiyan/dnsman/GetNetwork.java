@@ -6,8 +6,21 @@ import android.content.Context;
 
 public class GetNetwork
 {
-	private static ConnectivityManager cm;
+	private ConnectivityManager cm;
 
+    public NetworkInfo wifiNetInfo;
+    public NetworkInfo mobileNetInfo;
+    public NetworkInfo btNetInfo;
+    public NetworkInfo ethNetInfo;
+    public NetworkInfo wimaxNetInfo;
+    public boolean isSupportWifi;
+    public boolean isSupportMobile;
+    public boolean isSupportBluetooth;
+    public boolean isSupportEthernet;
+    public boolean isSupportWiMax;
+
+    public GetNetwork{
+    }
 
     public static void init(Context c){
 		cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
