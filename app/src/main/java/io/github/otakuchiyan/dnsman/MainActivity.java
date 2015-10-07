@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
 
-        GetNetwork.init(this);
+        GetNetwork gn = new GetNetwork(this);
 		mainActivity = new LinearLayout(this);
 		mainActivity.setOrientation(LinearLayout.VERTICAL);
 
@@ -103,35 +103,35 @@ public class MainActivity extends Activity {
         individual_category = setCategoryText(R.string.individual_category);
         mainActivity.addView(individual_category);
 
-        if(GetNetwork.isSupportWiFi()){
+        if(gn.isSupportWifi){
             wifi_category = new TextView(this);
             wifi_category.setText(R.string.wifi_category);
             mainActivity.addView(wifi_category);
             mainActivity.addView(setDNSTwopane(wdns1, wdns2, "w"));
         }
 
-        if(GetNetwork.isSupportMobile()){
+        if(gn.isSupportMobile){
             mobile_category = new TextView(this);
             mobile_category.setText(R.string.mobile_category);
             mainActivity.addView(mobile_category);
             mainActivity.addView(setDNSTwopane(mdns1, mdns2, "m"));
         }
 
-        if(GetNetwork.isSupportBluetooth()){
+        if(gn.isSupportBluetooth){
             bt_category = new TextView(this);
             bt_category.setText(R.string.bt_category);
             mainActivity.addView(bt_category);
             mainActivity.addView(setDNSTwopane(bdns1, bdns2, "b"));
         }
 
-        if(GetNetwork.isSupportEthernet()){
+        if(gn.isSupportEthernet){
             eth_category = new TextView(this);
             eth_category.setText(R.string.eth_category);
             mainActivity.addView(eth_category);
             mainActivity.addView(setDNSTwopane(edns1, edns2, "e"));
         }
        
-        if(GetNetwork.isSupportWiMax()){
+        if(gn.isSupportWimax){
             wimax_category = new TextView(this);
             wimax_category.setText(R.string.wimax_category);
             mainActivity.addView(wimax_category);

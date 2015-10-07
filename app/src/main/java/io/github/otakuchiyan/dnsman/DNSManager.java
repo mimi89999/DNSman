@@ -22,11 +22,11 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
 
-    final static String SETDNS_PREFIX = "setprop net.dns";
-	final static String GETDNS_PREFIX = "getprop net.dns";
-    final static String RULES_PREFIX = "iptables -t nat ";
-    final static String RULES_SUFFIX = " --dport 53 -j DNAT --to-destination ";
-    final static String CHKRULES_PREFIX = "iptables -t nat -L OUTPUT | grep ";
+    final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
+	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
+    final static String SETRULE_COMMAND_PREFIX = "iptables -t nat ";
+    final static String SETRULE_COMMAND_SUFFIX = " --dport 53 -j DNAT --to-destination ";
+    final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
     private static String hijackedLastDNS = "";
 	private static String hijackedLastPort = "";
@@ -34,11 +34,6 @@ public class DNSManager {
 	private static SharedPreferences.Editor sped;
 	private static Context context;
 	private static List<String> dnsList2set = new ArrayList<String>();
-
-	final static String[] chk_cmds = {
-		GETDNS_PREFIX + "1",
-		GETDNS_PREFIX + "2"
-	};
 
 	private static boolean checkNetType(NetworkInfo ni){
         if(ni != null && ni.isConnected()){
@@ -52,7 +47,6 @@ public class DNSManager {
 		Log.d("DNSManager", "setDNSByNetType");
 		context = c;
 
-            GetNetwork.init(context);
             NetworkInfo mobi_res = GetNetwork.getMobileNetInfo();
             NetworkInfo wifi_res = GetNetwork.getWiFiNetInfo();
             NetworkInfo bt_res = GetNetwork.getBluetoothNetInfo();
@@ -124,23 +118,33 @@ public class DNSManager {
 		if(dns2.equals("")){
 			dns2 = "";
 		}
-		String[] set_cmds = {
-			SETDNS_PREFIX + "1 \"" + dns1 + "\"",
-			SETDNS_PREFIX + "2 \"" + dns2 + "\""
+		String[] setCommands = {
+			SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",
+			SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + "\""
 		};
 
-        Log.d("DNSManager[CMD]", set_cmds[0]);
-        Log.d("DNSManager[CMD]", set_cmds[1]);
+        Log.d("DNSManager[CMD]", setCommands[0]);
+        Log.d("DNSManager[CMD]", setCommands[1]);
 		
-		List<String> result;
-		if(Shell.SU.available()){
-			Shell.SU.run(set_cmds);
-		}else{
-			Shell.SH.run(set_cmds);
+        RunCommandTask rct = new RunCommandTask();
+
+		if(!Shell.SU.available()){
+            rct.isRoot = false;
 		}
+        rct.execute(setCommands);
+
+		String[] checkCommands = {
+            CHECKRULE_COMMAND_PREFIX + "1",
+            CHECKRULE_COMMAND_PREFIX + "2"
+		};
+
+		List<String> result;
+
+        rct.isRoot = false;
+        rct.execute(checkCommands);
+        result = rct.result;
 		
 		//Check effect
-		result = Shell.SH.run(chk_cmds);
 		if(!result.get(0).equals(dns1) ||
 			!result.get(1).equals(dns2)){
 				return false;
@@ -269,7 +273,22 @@ public class DNSManager {
 	return sb.toString();
     }
 
-    private class DNSBackgroundIntentService extends IntentService{
+    private class RunCommandTask extends AsyncTask<ArrayList<String>, Void, Void>{
+        private boolean isRoot = true;
+        private ArrayList<String> result = new ArrayList<String>();
+
+        @Override
+        public Void doInBackground(ArrayList<String>... l){
+            if(isRoot){
+                result = Shell.SU.run(l[0]);
+            }else{
+                result = Shell.SH.run(l[0]);
+            }
+            return null;
+        }
+    }
+
+    private class runCMDService extends IntentService{
 
         public static void performAction(Context c, Bundle dnss){
             if(c == null){

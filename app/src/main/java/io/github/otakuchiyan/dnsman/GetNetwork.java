@@ -6,7 +6,7 @@ import android.content.Context;
 
 public class GetNetwork
 {
-	private ConnectivityManager cm;
+    private ConnectivityManager cm;
 
     public NetworkInfo wifiNetInfo;
     public NetworkInfo mobileNetInfo;
@@ -17,52 +17,21 @@ public class GetNetwork
     public boolean isSupportMobile;
     public boolean isSupportBluetooth;
     public boolean isSupportEthernet;
-    public boolean isSupportWiMax;
+    public boolean isSupportWimax;
 
-    public GetNetwork{
-    }
-
-    public static void init(Context c){
+    public GetNetwork(Context c){
 		cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-    }
-	
-	public static NetworkInfo getMobileNetInfo(){
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-    }
 
-    public static boolean isSupportMobile(){
-        return getMobileNetInfo() != null ? true : false;
-    }
-	
-	public static NetworkInfo getWiFiNetInfo(){
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	}
+        wifiNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		mobileNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		btNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH);
+		ethNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
+        wimaxNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX);
 
-    public static boolean isSupportWiFi(){
-        return getWiFiNetInfo() != null ? true : false;
-    }
-	
-	public static NetworkInfo getBluetoothNetInfo(){
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH);
-	}
-
-    public static boolean isSupportBluetooth(){
-        return getBluetoothNetInfo() != null ? true : false;
-    }
-	
-	public static NetworkInfo getEthernetNetInfo(){
-		return cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
-	}
-
-    public static boolean isSupportEthernet(){
-        return getEthernetNetInfo() != null ? true : false;
-    }
-
-    public static NetworkInfo getWiMaxNetInfo(){
-        return cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX);
-    }
-
-    public static boolean isSupportWiMax(){
-        return getWiMaxNetInfo() != null ? true : false;
+        isSupportWifi = wifiNetInfo != null ? true : false;
+        isSupportMobile = mobileNetInfo != null ? true : false;
+        isSupportBluetooth = btNetInfo != null ? true : false;
+        isSupportEthernet = ethNetInfo != null ? true : false;
+        isSupportWimax = wimaxNetInfo != null ? true : false;
     }
 }
