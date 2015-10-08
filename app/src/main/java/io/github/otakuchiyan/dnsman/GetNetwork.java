@@ -10,8 +10,8 @@ public class GetNetwork
 
     public NetworkInfo wifiNetInfo;
     public NetworkInfo mobileNetInfo;
-    public NetworkInfo btNetInfo;
-    public NetworkInfo ethNetInfo;
+    public NetworkInfo bluetoothNetInfo;
+    public NetworkInfo etherNetInfo;
     public NetworkInfo wimaxNetInfo;
     public boolean isSupportWifi;
     public boolean isSupportMobile;
@@ -24,14 +24,14 @@ public class GetNetwork
 
         wifiNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		mobileNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-		btNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH);
-		ethNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
+		bluetoothNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_BLUETOOTH);
+		etherNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
         wimaxNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX);
 
         isSupportWifi = wifiNetInfo != null ? true : false;
         isSupportMobile = mobileNetInfo != null ? true : false;
-        isSupportBluetooth = btNetInfo != null ? true : false;
-        isSupportEthernet = ethNetInfo != null ? true : false;
+        isSupportBluetooth = bluetoothNetInfo != null ? true : false;
+        isSupportEthernet = etherNetInfo != null ? true : false;
         isSupportWimax = wimaxNetInfo != null ? true : false;
     }
 }

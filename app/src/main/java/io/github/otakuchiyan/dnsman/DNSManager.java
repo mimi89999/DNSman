@@ -7,12 +7,16 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
+import android.content.Intent;
+import android.app.IntentService;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +32,18 @@ public class DNSManager {
     final static String SETRULE_COMMAND_SUFFIX = " --dport 53 -j DNAT --to-destination ";
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
+	final static String[] CHECKPROP_COMMANDS = {
+        CHECKRULE_COMMAND_PREFIX + "1",
+        CHECKRULE_COMMAND_PREFIX + "2"
+    };
+
     private static String hijackedLastDNS = "";
 	private static String hijackedLastPort = "";
 	private static SharedPreferences sp;
 	private static SharedPreferences.Editor sped;
 	private static Context context;
 	private static List<String> dnsList2set = new ArrayList<String>();
+    private List<String> commandsResult = new ArrayList<String>();
 
 	private static boolean checkNetType(NetworkInfo ni){
         if(ni != null && ni.isConnected()){
@@ -47,11 +57,12 @@ public class DNSManager {
 		Log.d("DNSManager", "setDNSByNetType");
 		context = c;
 
-            NetworkInfo mobi_res = GetNetwork.getMobileNetInfo();
-            NetworkInfo wifi_res = GetNetwork.getWiFiNetInfo();
-            NetworkInfo bt_res = GetNetwork.getBluetoothNetInfo();
-            NetworkInfo eth_res = GetNetwork.getEthernetNetInfo();
-            NetworkInfo wimax_res = GetNetwork.getWiMaxNetInfo();
+        GetNetwork gn = new GetNetwork(c);
+        NetworkInfo mobi_res = gn.mobileNetInfo;
+        NetworkInfo wifi_res = gn.wifiNetInfo;
+        NetworkInfo bt_res = gn.bluetoothNetInfo;
+        NetworkInfo eth_res = gn.etherNetInfo;
+        NetworkInfo wimax_res = gn.wimaxNetInfo;
 
 		getDNSByPrefix("g");
 		if (checkNetType(mobi_res)) {
@@ -85,7 +96,7 @@ public class DNSManager {
 			dns2suffix = "port";
 		}
 		dnss_bundle.putString(dns2suffix, dnsList2set.get(1));
-		DNSBackgroundIntentService.performAction(context, dnss_bundle);
+		//DNSBackgroundIntentService.performAction(context, dnss_bundle);
 	}
 
 	private static void getDNSByPrefix(final String net_prefix){
@@ -112,43 +123,27 @@ public class DNSManager {
 	}
 
 	public static boolean setDNSViaSetprop(String dns1, String dns2) {
-		if(dns1.equals("")){
-			dns1 = "";
-		}
-		if(dns2.equals("")){
-			dns2 = "";
-		}
 		String[] setCommands = {
-			SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",
-			SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + "\""
-		};
+            SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",
+            SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + "\""
+        };
 
         Log.d("DNSManager[CMD]", setCommands[0]);
         Log.d("DNSManager[CMD]", setCommands[1]);
-		
-        RunCommandTask rct = new RunCommandTask();
 
-		if(!Shell.SU.available()){
-            rct.isRoot = false;
-		}
-        rct.execute(setCommands);
+        if(Shell.SU.available()){
+            Shell.SU.run(setCommands);
+        }else{
+            Shell.SH.run(setCommands);
+        }
 
-		String[] checkCommands = {
-            CHECKRULE_COMMAND_PREFIX + "1",
-            CHECKRULE_COMMAND_PREFIX + "2"
-		};
+        List<String> result = Shell.SH.run(CHECKPROP_COMMANDS);
 
-		List<String> result;
-
-        rct.isRoot = false;
-        rct.execute(checkCommands);
-        result = rct.result;
-		
 		//Check effect
 		if(!result.get(0).equals(dns1) ||
 			!result.get(1).equals(dns2)){
-				return false;
-			}
+            return false;
+        }
 		
         return true;
     }
@@ -177,8 +172,8 @@ public class DNSManager {
 
         List<String> cmds = new ArrayList<String>();
         List<String> result;
-        cmds.add(RULES_PREFIX + "-A OUTPUT -p udp" + RULES_SUFFIX + dns + ":" + usedPort);
-        cmds.add(RULES_PREFIX + "-A OUTPUT -p tcp" + RULES_SUFFIX + dns + ":" + usedPort);
+        cmds.add(SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns + ":" + usedPort);
+        cmds.add(SETRULE_COMMAND_PREFIX + "-A OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns + ":" + usedPort);
         Log.d("DNSManager[CMD]", cmds.get(0));
         Log.d("DNSManager[CMD]", cmds.get(1));
 
@@ -199,8 +194,8 @@ public class DNSManager {
 
 
 		if(!hijackedLastDNS.equals("")) {
-			cmds.add(RULES_PREFIX + "-D OUTPUT -p udp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
-			cmds.add(RULES_PREFIX + "-D OUTPUT -p tcp" + RULES_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			cmds.add(SETRULE_COMMAND_PREFIX + "-D OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			cmds.add(SETRULE_COMMAND_PREFIX + "-D OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + hijackedLastDNS + ":" + hijackedLastPort);
 			Log.d("DNSManager[CMD]", cmds.get(0));
 			Log.d("DNSManager[CMD]", cmds.get(1));
 		}
@@ -220,89 +215,66 @@ public class DNSManager {
         }
 
 		if(!hijackedLastDNS.equals("")) {
-			cmds.add(CHKRULES_PREFIX + hijackedLastDNS + ":" + hijackedLastPort);
+			cmds.add(CHECKRULE_COMMAND_PREFIX + hijackedLastDNS + ":" + hijackedLastPort);
             Log.d("DNSManager[CMD]", cmds.get(0));
 		}
         return !Shell.SU.run(cmds).isEmpty();
     }
 	
-	public static String writeResolvConf(String dns1, String dns2){
+	public static List<String> writeResolvConf(String dns1, String dns2, String path){
         List<String> cmds = new ArrayList<String>();
 		List<String> result;
 		
 		cmds.add("mount -o remount,rw /system");
 		if(!dns1.equals("")){
-		    cmds.add("echo nameserver " + dns1 + " > /etc/resolv.conf");
+		    cmds.add("echo nameserver " + dns1 + " > " + path);
 		}
 		if(!dns2.equals("")){
-			cmds.add("echo nameserver " + dns2 + " >> /etc/resolv.conf");
+			cmds.add("echo nameserver " + dns2 + " >> " + path);
 		}
-        cmds.add("chmod 644 /etc/resolv.conf");
+        cmds.add("chmod 644 " + path);
         cmds.add("mount -o remount,ro /system");
-		result = Shell.SU.run(cmds);
-		if(!result.isEmpty()){
-		    return result.get(0);
-		}
-		return null;
+		return Shell.SU.run(cmds);
 	}
 	
-	public static String removeResolvConf(){
+	public static List<String> removeResolvConf(String path){
 		String[] cmds = {
 			"mount -o remount,rw /system",
-			"rm /etc/resolv.conf",
+			"rm " + path,
 			"mount -o remount,ro /system"
 		};
-		List<String> result;
-		result = Shell.SU.run(cmds);
-		if(!result.isEmpty()){
-		    return result.get(0);
-		}
-		return null;
+		return Shell.SU.run(cmds);
 	}
 	
 	public static List<String> getCurrentDNS(){
-		return Shell.SH.run(chk_cmds);
+		return Shell.SH.run(CHECKPROP_COMMANDS);
 	}
 
-    public static String getResolvConf(){
-	StringBuilder sb = new StringBuilder();
-	for(String s : Shell.SH.run("cat /etc/resolv.conf | grep 'nameserver'")){
-	    sb.append(s.replace("nameserver", ""));
-	    sb.append("\n");
-	}
-	return sb.toString();
-    }
-
-    private class RunCommandTask extends AsyncTask<ArrayList<String>, Void, Void>{
-        private boolean isRoot = true;
-        private ArrayList<String> result = new ArrayList<String>();
-
-        @Override
-        public Void doInBackground(ArrayList<String>... l){
-            if(isRoot){
-                result = Shell.SU.run(l[0]);
-            }else{
-                result = Shell.SH.run(l[0]);
-            }
-            return null;
+    public static String getResolvConf(String path){
+        StringBuilder sb = new StringBuilder();
+        for(String s : Shell.SH.run("cat " + path + " | grep 'nameserver'")){
+            sb.append(s.replace("nameserver", ""));
+            sb.append("\n");
         }
+        return sb.toString();
     }
 
-    private class runCMDService extends IntentService{
+    private class RunCommandService extends IntentService{
+        public RunCommandService(){
+            super("RunCommandService");
+        }
 
         public static void performAction(Context c, Bundle dnss){
             if(c == null){
                 return;
             }
-
+/*
             Intent i = new Intent(c, DNSBackgroundIntentService.class);
             i.putExtras(dnss);
             c.startService(i);
+            */
         }
 
-        public DNSBackgroundIntentService(){
-            super("DNSBackgroundIntentService");
-        }
 
         @Override
         protected void onHandleIntent(Intent i){

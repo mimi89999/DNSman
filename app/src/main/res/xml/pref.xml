@@ -7,6 +7,18 @@
         android:entries="@array/mode"
         android:entryValues="@array/mode_values"
         />
+	
+	<EditPreference
+		android:key="conf1_path"
+		android:defaultValue="/etc/resolv.conf"
+        android:title="@string/pref_config1"
+		/>
+	<EditPreference
+		android:key="config2_path"
+		android:defaultValue="/etc/resolv.conf"
+        android:title="@string/pref_config2"
+		
+		/>
 
   <ListPreference
       android:key="toast"

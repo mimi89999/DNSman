@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+		if(i.getAction().equals(DNSManager.ACTION_SETDNS_DONE)){
 		    if(i.getBooleanExtra("result", false)){
 			(new getDNSAsync()).execute();
 		    }
@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 		}
 
 		IntentFilter setFilter = new IntentFilter();
-		setFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
+		setFilter.addAction(DNSManager.ACTION_SETDNS_DONE);
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted, setFilter);
 
 		IntentFilter getFilter = new IntentFilter();

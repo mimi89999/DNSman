@@ -20,7 +20,6 @@ import android.content.res.Resources;
 
 import io.github.otakuchiyan.dnsman.DNSManager;
 import io.github.otakuchiyan.dnsman.MainActivity;
-import io.github.otakuchiyan.dnsman.DNSBackgroundIntentService;
 import io.github.otakuchiyan.dnsman.GetNetwork;
 
 import android.app.*;
@@ -40,7 +39,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
-            if(i.getAction().equals(DNSBackgroundIntentService.ACTION_SETDNS_DONE)){
+            if(i.getAction().equals(DNSManager.ACTION_SETDNS_DONE)){
                 sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
                 String dnsToast = sp.getString("toast", "0");
                 if(sp.getString("mode", "0").equals("0")) {
@@ -64,7 +63,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		
 		if(sp.getBoolean("firstbooted", false)){
             IntentFilter iFilter = new IntentFilter();
-            iFilter.addAction(DNSBackgroundIntentService.ACTION_SETDNS_DONE);
+            iFilter.addAction(DNSManager.ACTION_SETDNS_DONE);
             LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted, iFilter);
 
             //Workaround to deal with multiple broadcast

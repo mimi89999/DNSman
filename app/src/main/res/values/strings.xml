@@ -26,6 +26,9 @@
     <string name="pref_toast_show">Show</string>
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
+	
+	<string name="pref_config1">Path of resolv.conf</string>
+	<string name="pref_config2">Path of another resolv.conf</string>
 
     <string name="invalid_dns">Invalid DNS</string>
 	
