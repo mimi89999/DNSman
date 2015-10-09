@@ -72,9 +72,8 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             if(ni != null) {
                 if(isFirstConnect) {
                     isFirstConnect = false;
-                    if (!DNSManager.setDNSByNetType(context)) {
+                    DNSManager.setDNS(context);
                         Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
-                    }
                 }
             }else{
                 isFirstConnect = true;
