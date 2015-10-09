@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:key="mode"
-        android:title="@string/pref_mode"
-        android:defaultValue="0"
-        android:entries="@array/mode"
-        android:entryValues="@array/mode_values"
-        />
-	
-	<EditPreference
-		android:key="conf1_path"
-		android:defaultValue="/etc/resolv.conf"
-        android:title="@string/pref_config1"
-		/>
-	<EditPreference
-		android:key="config2_path"
-		android:defaultValue="/etc/resolv.conf"
-        android:title="@string/pref_config2"
-		
-		/>
-
-  <ListPreference
-      android:key="toast"
-      android:title="@string/pref_toast"
-      android:defaultValue="0"
-        android:entries="@array/toast"
-        android:entryValues="@array/toast_values"
-        />
-	<PreferenceScreen android:title="@string/opensource"
-			android:summary="@string/opensource_hint">
-			<intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/otakuchiyan/DNSman"
+    <PreferenceCategory android:title="@string/pref_category_function">
+        <ListPreference
+            android:key="mode"
+            android:title="@string/pref_mode"
+            android:defaultValue="0"
+            android:entries="@array/mode"
+            android:entryValues="@array/mode_values"
             />
-	</PreferenceScreen>
+        
+        <PreferenceScreen android:title="@string/pref_config">
+            <EditTextPreference
+                android:key="config1_path"
+                android:defaultValue="/etc/resolv.conf"
+                android:title="@string/pref_config1"
+                />
+            <EditTextPreference
+                android:key="config2_path"
+                android:defaultValue="/etc/resolv.conf"
+                android:title="@string/pref_config2"
+                
+                />
+        </PreferenceScreen>
+        <PreferenceScreen android:title="@string/pref_misc">
+            <CheckBoxPreference android:id="checkprop"
+                android:title="@string/pref_misc_checkprop"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_appearance">
+        <ListPreference
+          android:key="toast"
+          android:title="@string/pref_toast"
+          android:defaultValue="0"
+            android:entries="@array/toast"
+            android:entryValues="@array/toast_values"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_about">
+        <PreferenceScreen android:title="@string/opensource"
+                android:summary="@string/opensource_hint">
+                <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/otakuchiyan/DNSman"
+                />
+        </PreferenceScreen>
+    </PreferenceCategory>
 </PreferenceScreen>

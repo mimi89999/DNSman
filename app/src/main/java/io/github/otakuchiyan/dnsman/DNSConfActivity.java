@@ -60,8 +60,7 @@ public class DNSConfActivity extends Activity{
         LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
 		
         setContentView(dnsConfActivity);
-        (new getConfAsync()).execute();
-		}
+        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -73,13 +72,10 @@ public class DNSConfActivity extends Activity{
     public boolean onOptionsItemSelected(MenuItem item){
 	switch(item.getItemId()){
 	case R.id.write_conf:
-	    writeConf();
 	    break;
 	case R.id.default_conf:
-	    defaultConf();
 	    break;
 	case R.id.delete_conf:
-	    deleteConf();
 	    break;
 	}
 	return super.onOptionsItemSelected(item);
@@ -111,74 +107,6 @@ public class DNSConfActivity extends Activity{
 	    }
 	};
 	
-	
-	public void writeConf(){
-		final String rdns1ip = rdns1.getText().toString();
-		final String rdns2ip = rdns2.getText().toString();
-		
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setMessage(R.string.write_conf_msg)
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface di, int which){
-				    (new writeConfAsync()).execute(rdns1ip, rdns2ip);
-                    (new getConfAsync()).execute();
-				}
-			})
-			.setNegativeButton(android.R.string.cancel, null);
-		adb.create().show();
-	}
-	
-	public void defaultConf(){
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setMessage(R.string.default_conf_msg)
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface di, int which){
-				    (new writeConfAsync()).execute("8.8.8.8", "8.8.4.4");
-                    (new getConfAsync()).execute();
-					}
-			})
-			.setNegativeButton(android.R.string.cancel, null);
-		adb.create().show();
-	}
-	
-    public void deleteConf(){
-	AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setMessage(R.string.delete_conf_msg)
-		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-			public void onClick(DialogInterface di, int which){
-			    (new deleteConfAsync()).execute();
-				}
-		})
-		.setNegativeButton(android.R.string.cancel, null);
-		adb.create().show();
-	}
-	
-    private class writeConfAsync extends AsyncTask<String, Void, Void>{
-	@Override
-	protected Void doInBackground(String... dnss){
-	    String err = DNSManager.writeResolvConf(dnss[0], dnss[1]);
-	    Intent i = new Intent(ACTION_CONFOPERATION);
-		if(err != null){
-		i.putExtra("err", err);
-	    }
-	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
-
-	    return null;
-	}
-    }
-
-    private class deleteConfAsync extends AsyncTask<Void, Void, Void>{
-	@Override
-	protected Void doInBackground(Void[] p1){
-	    String err = DNSManager.removeResolvConf();
-	    Intent i = new Intent(ACTION_CONFOPERATION);
-	    if(err != null){
-		i.putExtra("err", err);
-	    }
-	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
-		    return null;
-	}
-    }
 
     private BroadcastReceiver gettedConf = new BroadcastReceiver(){
 	    @Override
@@ -189,14 +117,6 @@ public class DNSConfActivity extends Activity{
 	    }
 	};
 
-    private class getConfAsync extends AsyncTask<Void, Void, Void>{
-	@Override
-	protected Void doInBackground(Void[] p1){
-	    Intent i = new Intent(ACTION_CONF_GETTED);
-	    i.putExtra("confDNS", DNSManager.getResolvConf());
-	    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
-	    return null;
-	}
-    }
+    
 
 }

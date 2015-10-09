@@ -264,7 +264,7 @@ public class DNSManager {
             super("RunCommandService");
         }
 
-        public static void performAction(Context c, Bundle dnss){
+        public void performAction(Context c, Bundle dnss){
             if(c == null){
                 return;
             }

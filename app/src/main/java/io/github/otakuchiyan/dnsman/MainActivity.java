@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 	    public void onReceive(Context c, Intent i){
 		if(i.getAction().equals(DNSManager.ACTION_SETDNS_DONE)){
 		    if(i.getBooleanExtra("result", false)){
-			(new getDNSAsync()).execute();
+			//(new getDNSAsync()).execute();
 		    }
 		}
 	    }
@@ -154,8 +154,6 @@ public class MainActivity extends Activity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
 
 		setContentView(mainActivity);
-		
-        (new getDNSAsync()).execute();
 	}
 
 	@Override
@@ -241,22 +239,13 @@ public class MainActivity extends Activity {
 	};
 
 	private void getCurrentDNS(){
-		List<String> currentDNSs = DNSManager.getCurrentDNS();
+/*		List<String> currentDNSs = DNSManager.getCurrentDNS();
 
 		Intent i = new Intent(ACTION_GETDNS);
 		i.putExtra("dns1", currentDNSs.get(0));
 		i.putExtra("dns2", currentDNSs.get(1));
 		LocalBroadcastManager.getInstance(this).sendBroadcast(i);
+        */
 	}
 	
-	private class getDNSAsync extends AsyncTask<Void, Void, Void>
-	{
-		@Override
-		protected Void doInBackground(Void[] p1)
-		{
-			getCurrentDNS();
-			return null;
-		}
-	}
-
 }

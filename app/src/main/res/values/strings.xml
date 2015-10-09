@@ -18,6 +18,10 @@
 	<string name="action_edit_resolv">DNS config file</string>
 	<string name="action_settings">Settings</string>
 
+    <string name="pref_category_function">FUNCTION</string>
+    <string name="pref_category_appearance">APPEARANCE</string>
+    <string name="pref_category_about">ABOUT</string>
+
 	<string name="pref_mode">Operating mode</string>
 	<string name="pref_mode_prop">System properties</string>
 	<string name="pref_mode_iptables">Firewall rules</string>
@@ -27,8 +31,12 @@
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
 	
+    <string name="pref_config">System DNS config file</string>
 	<string name="pref_config1">Path of resolv.conf</string>
 	<string name="pref_config2">Path of another resolv.conf</string>
+
+    <string name="pref_misc">Misc</string>
+    <string name="pref_misc_checkprop">Check system properities</string>
 
     <string name="invalid_dns">Invalid DNS</string>
 	
