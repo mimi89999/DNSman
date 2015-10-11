@@ -9,7 +9,7 @@
     <string name="eth_category">Ethernet</string>
 	<string name="wimax_category">WiMax</string>
 
-	<string name="default_port">Default port:</string>
+	<string name="default_port">Port</string>
 	
 	<string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed, May need root your phone</string>

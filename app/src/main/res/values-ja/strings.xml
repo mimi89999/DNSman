@@ -38,5 +38,5 @@
     <string name="pref_toast_show">表示</string>
     <string name="individual_category">個別</string>
     <string name="invalid_dns">無効の DNS</string>
-    <string name="default_port">デフォルトポート</string>
+    <string name="default_port">ポート</string>
 </resources>

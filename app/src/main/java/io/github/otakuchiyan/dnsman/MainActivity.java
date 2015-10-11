@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
+import android.util.Log;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class MainActivity extends Activity {
         cdnstext = setCategoryText(R.string.cdnstext);
 		propdnstext = new TextView(this);
         cdns1 = new TextView(this);
-		cdns2 = new TextView(this);
+        cdns2 = new TextView(this);
 		propdnstext.setText(R.string.pref_mode_prop);
         cdns1.setLayoutParams(edittext_params);
         cdns2.setLayoutParams(edittext_params);
@@ -149,9 +150,7 @@ public class MainActivity extends Activity {
 		setFilter.addAction(DNSManager.ACTION_SETDNS_DONE);
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted, setFilter);
 
-		IntentFilter getFilter = new IntentFilter();
-		getFilter.addAction(ACTION_GETDNS);
-		LocalBroadcastManager.getInstance(this).registerReceiver(getDNSFinished, getFilter);
+        (new getDNSTask()).execute();
 
 		setContentView(mainActivity);
 	}
@@ -194,8 +193,6 @@ public class MainActivity extends Activity {
         return tv;
     }
 
-		
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -227,25 +224,18 @@ public class MainActivity extends Activity {
 			.setPositiveButton(android.R.string.ok, null);
 		adb.create().show();
 	}
-	
-    private BroadcastReceiver getDNSFinished = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(ACTION_GETDNS)){
-		    cdns1.setText(i.getStringExtra("dns1"));
-		    cdns2.setText(i.getStringExtra("dns2"));
-		}
-	    }
-	};
 
-	private void getCurrentDNS(){
-/*		List<String> currentDNSs = DNSManager.getCurrentDNS();
+    private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
+        protected List<String> doInBackground(Void[] p1){
+			Log.d("MA", "getDNS");
+            return DNSManager.getCurrentDNS();
+        }
 
-		Intent i = new Intent(ACTION_GETDNS);
-		i.putExtra("dns1", currentDNSs.get(0));
-		i.putExtra("dns2", currentDNSs.get(1));
-		LocalBroadcastManager.getInstance(this).sendBroadcast(i);
-        */
-	}
+        protected void onPostExecute(List<String> dnss){
+            cdns1.setText(dnss.get(0));
+            cdns2.setText(dnss.get(1));
+        }
+
+    }
 	
 }

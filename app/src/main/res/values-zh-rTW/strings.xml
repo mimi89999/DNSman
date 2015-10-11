@@ -41,5 +41,5 @@
     <string name="pref_mode_iptables">防火牆規則</string>
     <string name="pref_mode_prop">系統屬性</string>
     <string name="pref_toast">懸浮通知</string>
-    <string name="default_port">預設埠口</string>
+    <string name="default_port">埠口</string>
 </resources>

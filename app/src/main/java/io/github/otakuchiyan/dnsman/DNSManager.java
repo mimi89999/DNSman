@@ -34,8 +34,8 @@ public class DNSManager {
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
 	final static String[] CHECKPROP_COMMANDS = {
-        CHECKRULE_COMMAND_PREFIX + "1",
-        CHECKRULE_COMMAND_PREFIX + "2"
+        GETPROP_COMMAND_PREFIX + "1",
+        GETPROP_COMMAND_PREFIX + "2"
     };
 
     private static String hijackedLastDNS = "";
@@ -50,7 +50,7 @@ public class DNSManager {
     private static String dns1;
     private static String dns2;
     private static String port;
-    private boolean checkProp;
+    private static boolean checkProp;
 
 
 	private static boolean checkNetType(NetworkInfo ni){
@@ -61,9 +61,7 @@ public class DNSManager {
 		}
 	}
 
-	public static boolean setDNSByNetType(){
-		Log.d("DNSManager", "setDNSByNetType");
-
+	public static boolean getDNS(){
         GetNetwork gn = new GetNetwork(context);
         NetworkInfo mobi_res = gn.mobileNetInfo;
         NetworkInfo wifi_res = gn.wifiNetInfo;
@@ -97,9 +95,11 @@ public class DNSManager {
 	public static void setDNS(Context c){
 		context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        getDNS();
 
         dns1 = dnsList2set.get(0);
         mode = sp.getString("mode", "0");
+        checkProp = sp.getBoolean("checkProp", true);
         switch(mode){
             case "0":
                 dns2 = dnsList2set.get(1);
@@ -171,14 +171,19 @@ public class DNSManager {
         if(!hijackedLastDNS.equals(dns)) {
             deleteRules();
 			hijackedLastDNS = dns;
-			//hijackedLastPort = usedPort;
         }
-
 
         List<String> cmds = new ArrayList<String>();
         List<String> result;
-        //cmds.add(SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns + ":" + usedPort);
-        //cmds.add(SETRULE_COMMAND_PREFIX + "-A OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns + ":" + usedPort);
+        String cmd1 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
+        String cmd2 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns;
+
+        if(!port.equals("")){
+            cmd1 += ":" + port;
+            cmd2 += ":" + port;
+        }
+
+
         Log.d("DNSManager[CMD]", cmds.get(0));
         Log.d("DNSManager[CMD]", cmds.get(1));
 
@@ -274,6 +279,7 @@ public class DNSManager {
 
         @Override
         protected void onHandleIntent(Intent i){
+            Log.d("DNSManager", "onHandleIntent");
 			boolean result = false;
             switch(mode){
                 case "0":
@@ -283,8 +289,6 @@ public class DNSManager {
                     result = setDNSViaIPtables(dns1, port);
                     break;
             }
-
-
         }
     }
     
