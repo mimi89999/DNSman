@@ -29,10 +29,11 @@ public class DNSConfActivity extends Activity{
     
 	private SharedPreferences sp;
     private LinearLayout dnsConfActivity;
-    private TextView confPath;
+    private TextView configPathText;
     private TextView confDNS;
 	private EditText rdns1;
 	private EditText rdns2;
+    private String configPath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -41,13 +42,17 @@ public class DNSConfActivity extends Activity{
         getActionBar().setTitle(R.string.action_edit_resolv);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        configPath = sp.getString("config_path", "/etc/resolv.conf");
+        if(configPath.equals("")){
+            return;
+        }
         dnsConfActivity = new LinearLayout(this);
         dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
-	confPath = new TextView(this);
+	configPathText = new TextView(this);
 	confDNS = new TextView(this);
-	confPath.setText("/etc/resolv.conf:");
+	configPathText.setText(configPath);
 
-	dnsConfActivity.addView(confPath);
+	dnsConfActivity.addView(configPathText);
 	dnsConfActivity.addView(confDNS);
         dnsConfActivity.addView(setDNSTwopane());
 
@@ -58,6 +63,8 @@ public class DNSConfActivity extends Activity{
         IntentFilter confFilter = new IntentFilter();
         confFilter.addAction(ACTION_CONF_GETTED);
         LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
+
+        (new getConfTask()).execute();
 		
         setContentView(dnsConfActivity);
         }
@@ -71,12 +78,12 @@ public class DNSConfActivity extends Activity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 	switch(item.getItemId()){
-	case R.id.write_conf:
-	    break;
-	case R.id.default_conf:
-	    break;
-	case R.id.delete_conf:
-	    break;
+        case R.id.write_conf:
+            break;
+        case R.id.default_conf:
+            break;
+        case R.id.delete_conf:
+            break;
 	}
 	return super.onOptionsItemSelected(item);
     }
@@ -117,6 +124,18 @@ public class DNSConfActivity extends Activity{
 	    }
 	};
 
-    
+    private class getConfTask extends AsyncTask<Void, Void, String>{
+        protected String doInBackground(Void... p1){
+            sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            if(configPath.equals("")){
+                return "";
+            }
+            return DNSManager.getResolvConf(configPath);
+        }
+
+        protected void onPostExecute(String data){
+            confDNS.setText(data);
+        }
+    }
 
 }

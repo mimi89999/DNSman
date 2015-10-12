@@ -9,19 +9,11 @@
             android:entryValues="@array/mode_values"
             />
         
-        <PreferenceScreen android:title="@string/pref_config">
-            <EditTextPreference
-                android:key="config1_path"
-                android:defaultValue="/etc/resolv.conf"
-                android:title="@string/pref_config1"
-                />
-            <EditTextPreference
-                android:key="config2_path"
-                android:defaultValue="/etc/resolv.conf"
-                android:title="@string/pref_config2"
-                
-                />
-        </PreferenceScreen>
+        <EditTextPreference
+            android:key="config_path"
+            android:defaultValue="/etc/resolv.conf"
+            android:title="@string/pref_config"
+            />
         <PreferenceScreen android:title="@string/pref_misc">
             <CheckBoxPreference android:key="checkprop"
                 android:defaultValue="true"
