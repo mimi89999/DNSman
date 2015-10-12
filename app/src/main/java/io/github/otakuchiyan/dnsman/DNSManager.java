@@ -212,7 +212,7 @@ public class DNSManager {
         return !Shell.SU.run(cmds).isEmpty();
     }
 	
-	public static List<String> writeResolvConf(String dns1, String dns2, String path){
+	public static List<String> writeResolvConfig(String dns1, String dns2, String path){
         List<String> cmds = new ArrayList<String>();
 		List<String> result;
         boolean isSystem = true;
@@ -237,7 +237,7 @@ public class DNSManager {
 		return Shell.SU.run(cmds);
 	}
 	
-	public static List<String> removeResolvConf(String path){
+	public static List<String> removeResolvConfig(String path){
         List<String> cmds = new ArrayList<String>();
         boolean isSystem = true;
 

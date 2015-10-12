@@ -30,7 +30,7 @@ public class DNSConfActivity extends Activity{
 	private SharedPreferences sp;
     private LinearLayout dnsConfActivity;
     private TextView configPathText;
-    private TextView confDNS;
+    private TextView configDNS;
 	private EditText rdns1;
 	private EditText rdns2;
     private String configPath;
@@ -44,16 +44,25 @@ public class DNSConfActivity extends Activity{
 
         configPath = sp.getString("config_path", "/etc/resolv.conf");
         if(configPath.equals("")){
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+			adb.setMessage(R.string.no_conf);
+            adb.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface di, int choice){
+                    finish();
+                }
+            });
+			adb.show();
             return;
         }
         dnsConfActivity = new LinearLayout(this);
         dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
-	configPathText = new TextView(this);
-	confDNS = new TextView(this);
-	configPathText.setText(configPath);
+        configPathText = new TextView(this);
+        configDNS = new TextView(this);
+        configPathText.setText(configPath);
 
-	dnsConfActivity.addView(configPathText);
-	dnsConfActivity.addView(confDNS);
+        dnsConfActivity.addView(configPathText);
+        dnsConfActivity.addView(configDNS);
         dnsConfActivity.addView(setDNSTwopane());
 
 		IntentFilter operationFilter = new IntentFilter();
@@ -64,7 +73,7 @@ public class DNSConfActivity extends Activity{
         confFilter.addAction(ACTION_CONF_GETTED);
         LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
 
-        (new getConfTask()).execute();
+        (new getConfigTask()).execute();
 		
         setContentView(dnsConfActivity);
         }
@@ -79,10 +88,13 @@ public class DNSConfActivity extends Activity{
     public boolean onOptionsItemSelected(MenuItem item){
 	switch(item.getItemId()){
         case R.id.write_conf:
+            onClickWriteConfig();
             break;
         case R.id.default_conf:
+            onClickDefaultConfig();
             break;
         case R.id.delete_conf:
+            onClickDeleteConfig();
             break;
 	}
 	return super.onOptionsItemSelected(item);
@@ -119,12 +131,12 @@ public class DNSConfActivity extends Activity{
 	    @Override
 	    public void onReceive(Context c, Intent i){
             if(i.getAction().equals(ACTION_CONF_GETTED)){
-                confDNS.setText(i.getStringExtra("confDNS"));
+                (new getConfigTask()).execute();
             }
 	    }
 	};
 
-    private class getConfTask extends AsyncTask<Void, Void, String>{
+    private class getConfigTask extends AsyncTask<Void, Void, String>{
         protected String doInBackground(Void... p1){
             sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             if(configPath.equals("")){
@@ -134,8 +146,44 @@ public class DNSConfActivity extends Activity{
         }
 
         protected void onPostExecute(String data){
-            confDNS.setText(data);
+            configDNS.setText(data);
         }
     }
 
+    private class writeConfigTask extends AsyncTask<String, Void, String>{
+        protected String doInBackground(String... dnss){
+            //return DNSManager.writeResolvConfig(dnss[0], dnss[1], configPath);
+            return "";
+        }
+        protected void onPostExecuted(String error){
+            //if(!error.equals("")){
+                AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                adb.setMessage(error);
+                adb.setPositiveButton(android.R.string.ok, null);
+            //}
+        }
+    }
+
+    private void onClickWriteConfig(){
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		adb.setTitle(R.string.write_conf)
+		.setMessage(R.string.write_conf_msg)
+		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface di, int choice){
+				String dns1 = rdns1.getText().toString();
+				String dns2 = rdns2.getText().toString();
+				(new writeConfigTask()).execute(dns1, dns2);
+			}	
+		})
+		.setNegativeButton(android.R.string.cancel, null);
+	}
+
+    private void onClickDefaultConfig(){
+        
+    }
+
+    private void onClickDeleteConfig(){
+        
+    }
 }
