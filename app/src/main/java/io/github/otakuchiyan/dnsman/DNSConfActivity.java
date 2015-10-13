@@ -126,7 +126,6 @@ public class DNSConfActivity extends Activity{
 		}
 	    }
 	};
-	
 
     private BroadcastReceiver gettedConf = new BroadcastReceiver(){
 	    @Override
@@ -153,39 +152,70 @@ public class DNSConfActivity extends Activity{
 
     private class writeConfigTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... dnss){
-            //return DNSManager.writeResolvConfig(dnss[0], dnss[1], configPath);
-            return "NO";
+            return DNSManager.writeResolvConfig(dnss[0], dnss[1], configPath);
         }
         protected void onPostExecuted(String error){
-            //if(!error.equals("")){
+            if(!error.equals("")){
                 AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
-                adb.setMessage(error);
-                adb.setPositiveButton(android.R.string.ok, null);
-            //}
+                adb.setMessage(error)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+            }else{
+                (new getConfigTask()).execute();
+            }
         }
+    }
+
+    private class deleteConfigTask extends AsyncTask<Void, Void, String>{
+        protected String doInBackground(Void... p1){
+            return DNSManager.removeResolvConfig(configPath);
+        }
+        protected void onPostExecuted(String error){
+            if(!error.equals("")){
+                AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                adb.setMessage(error)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+            }
+        }
+    }
+
+    private void onClickConfigCore(int titleId, int messageId, DialogInterface.OnClickListener listener){
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		adb.setTitle(titleId)
+		.setMessage(messageId)
+		.setPositiveButton(android.R.string.ok, listener)
+		.setNegativeButton(android.R.string.cancel, null)
+        .show();
     }
 
     private void onClickWriteConfig(){
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setTitle(R.string.write_conf)
-		.setMessage(R.string.write_conf_msg)
-		.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface di, int choice){
-				String dns1 = rdns1.getText().toString();
-				String dns2 = rdns2.getText().toString();
-				(new writeConfigTask()).execute(dns1, dns2);
-			}	
-		})
-		.setNegativeButton(android.R.string.cancel, null)
-        .show();
-	}
+        onClickConfigCore(R.string.write_conf, R.string.write_conf_msg, 
+            new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface di, int choice){
+                    String dns1 = rdns1.getText().toString();
+                    String dns2 = rdns2.getText().toString();
+                    (new writeConfigTask()).execute(dns1, dns2);
+                }
+            });
+    }
 
     private void onClickDefaultConfig(){
-        
+        onClickConfigCore(R.string.default_conf, R.string.default_conf_msg, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface di, int choice){
+                (new writeConfigTask()).execute("8.8.8.8", "8.8.4.4");
+            }
+        });
     }
 
     private void onClickDeleteConfig(){
-        
+        onClickConfigCore(R.string.delete_conf, R.string.delete_conf_msg, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface di, int choice){
+                (new deleteConfigTask()).execute();
+            }
+        });
     }
 }

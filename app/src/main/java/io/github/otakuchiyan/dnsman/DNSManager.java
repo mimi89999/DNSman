@@ -217,7 +217,7 @@ public class DNSManager {
         return !Shell.SU.run(cmds).isEmpty();
     }
 	
-	public static List<String> writeResolvConfig(String dns1, String dns2, String path){
+	public static String writeResolvConfig(String dns1, String dns2, String path){
         List<String> cmds = new ArrayList<String>();
 		List<String> result;
         boolean isSystem = true;
@@ -239,10 +239,16 @@ public class DNSManager {
         if(isSystem){
             cmds.add("mount -o remount,ro /system");
         }
-		return Shell.SU.run(cmds);
+
+        StringBuilder sb = new StringBuilder();
+		for(String s : Shell.SU.run(cmds)){
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb.toString();
 	}
 	
-	public static List<String> removeResolvConfig(String path){
+	public static String removeResolvConfig(String path){
         List<String> cmds = new ArrayList<String>();
         boolean isSystem = true;
 
@@ -261,7 +267,12 @@ public class DNSManager {
 			cmds.add("mount -o remount,ro /system");
         }
 
-		return Shell.SU.run(cmds);
+        StringBuilder sb = new StringBuilder();
+		for(String s : Shell.SU.run(cmds)){
+            sb.append(s);
+            sb.append("\n");
+        }
+        return sb.toString();
 	}
 	
 	public static List<String> getCurrentDNS(){
