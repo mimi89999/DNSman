@@ -92,11 +92,15 @@ public class DNSManager {
 		return true;
 	}
 
-	public static void setDNS(Context c){
+	public static boolean setDNS(Context c){
 		context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         getDNS();
 
+		if(dnsList2set.isEmpty()){
+			return false;
+		}
+		
         dns1 = dnsList2set.get(0);
         mode = sp.getString("mode", "0");
         checkProp = sp.getBoolean("checkProp", true);
@@ -110,6 +114,7 @@ public class DNSManager {
 
         Intent i = new Intent(context, RunCommandService.class);
         context.startService(i);
+        return true;
 	}
 
 	private static void getDNSByPrefix(final String net_prefix){

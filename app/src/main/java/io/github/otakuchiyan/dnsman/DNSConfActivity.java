@@ -21,6 +21,7 @@ import io.github.otakuchiyan.dnsman.DNSEditText;
 import android.view.View.*;
 import android.content.*;
 import android.view.*;
+import android.util.Log;
 
 
 public class DNSConfActivity extends Activity{
@@ -153,7 +154,7 @@ public class DNSConfActivity extends Activity{
     private class writeConfigTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... dnss){
             //return DNSManager.writeResolvConfig(dnss[0], dnss[1], configPath);
-            return "";
+            return "NO";
         }
         protected void onPostExecuted(String error){
             //if(!error.equals("")){
@@ -176,7 +177,8 @@ public class DNSConfActivity extends Activity{
 				(new writeConfigTask()).execute(dns1, dns2);
 			}	
 		})
-		.setNegativeButton(android.R.string.cancel, null);
+		.setNegativeButton(android.R.string.cancel, null)
+        .show();
 	}
 
     private void onClickDefaultConfig(){

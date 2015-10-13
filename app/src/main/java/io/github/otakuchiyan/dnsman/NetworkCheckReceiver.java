@@ -48,7 +48,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                             Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        if (dnsToast.equals("2")) {
+                        if (!dnsToast.equals("2")) {
                             Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -72,8 +72,12 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             if(ni != null) {
                 if(isFirstConnect) {
                     isFirstConnect = false;
-                    DNSManager.setDNS(context);
+                    if(!DNSManager.setDNS(context)){
+                        String dnsToast = sp.getString("toast", "0");
+                        if (!dnsToast.equals("2")) {
                         Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
             }else{
                 isFirstConnect = true;
