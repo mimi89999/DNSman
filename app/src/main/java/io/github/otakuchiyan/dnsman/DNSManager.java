@@ -25,7 +25,6 @@ import eu.chainfire.libsuperuser.Shell;
 
 public class DNSManager {
     final static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
-    final static String ACTION_NODNS = "io.github.otakuchiyan.dnsman.NODNS";
 
     final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
 	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
@@ -219,12 +218,11 @@ public class DNSManager {
 	
 	public static String writeResolvConfig(String dns1, String dns2, String path){
         List<String> cmds = new ArrayList<String>();
-		List<String> result;
-        boolean isSystem = true;
+        boolean isSystem = false;
 		
-        if(!path.substring(0, 7).equals("/system") ||
-            !path.substring(0, 4).equals("/etc")){
-            isSystem = false;
+        if(path.substring(0, 7).equals("/system") ||
+            path.substring(0, 4).equals("/etc")){
+            isSystem = true;
         }
         if(isSystem){
             cmds.add("mount -o remount,rw /system");
@@ -250,11 +248,11 @@ public class DNSManager {
 	
 	public static String removeResolvConfig(String path){
         List<String> cmds = new ArrayList<String>();
-        boolean isSystem = true;
+        boolean isSystem = false;
 
-        if(!path.substring(0, 7).equals("/system") ||
-            !path.substring(0, 4).equals("/etc")){
-            isSystem = false;
+        if(path.substring(0, 7).equals("/system") ||
+            path.substring(0, 4).equals("/etc")){
+            isSystem = true;
         }
 
         if(isSystem){
@@ -305,6 +303,9 @@ public class DNSManager {
                     result = setDNSViaIPtables(dns1, port);
                     break;
             }
+			Intent result_intent = new Intent(ACTION_SETDNS_DONE);
+            i.putExtra("result", result);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(result_intent);
         }
     }
     

@@ -8,8 +8,8 @@ android {
         applicationId "io.github.otakuchiyan.dnsman"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 80
-        versionName "0.8"
+        versionCode 100
+        versionName "1.0"
     }
     buildTypes {
         release {

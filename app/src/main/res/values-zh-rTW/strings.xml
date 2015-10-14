@@ -24,15 +24,19 @@
     <string name="nodns_noti">沒有可用 DNS</string>
     <string name="nodns_noti_text">點選以進行設定</string>
 
-    <string name="write_conf">寫入至 /etc/resolv.conf</string>
+    <string name="write_conf">寫入至</string>
     <string name="default_conf">使用 Google public DNS</string>
-    <string name="delete_conf">刪除 /etc/resolv.conf</string>
+    <string name="delete_conf">刪除</string>
 
     <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
     <string name="default_conf_msg">真的要使用 Google public DNS?</string>
     <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
     <string name="opensource">程式碼</string>
     <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
+
+    <string name="pref_category_function">功能</string>
+    <string name="pref_category_appearance">外觀</string>
+    <string name="pref_category_about">關於</string>
 
     <string name="pref_toast_error">僅顯示錯誤</string>
     <string name="pref_toast_never">不顯示</string>
@@ -41,5 +45,11 @@
     <string name="pref_mode_iptables">防火牆規則</string>
     <string name="pref_mode_prop">系統屬性</string>
     <string name="pref_toast">懸浮通知</string>
+
+    <string name="pref_config">resolv.conf 路徑</string>
+
+    <string name="pref_misc">其他</string>
+    <string name="pref_misc_checkprop">檢查系統屬性</string>
+
     <string name="default_port">埠口</string>
 </resources>
