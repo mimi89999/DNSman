@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="cdnstext">Current DNS:</string>
 	<string name="global_category">Global</string>
@@ -45,7 +46,7 @@
     <string name="nodns_noti_text">Click to set DNS</string>
 	<string name="nodns_noti">No alivable DNS</string>
 
-    <string name="no_conf">resolv.conf was not found.</string>
+    <string name="no_conf">resolv.conf was not found</string>
 	
 	<string name="write_conf">Write DNS resolver</string>
 	<string name="default_conf">Use Google public DNS</string>

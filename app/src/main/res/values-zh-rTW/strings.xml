@@ -6,50 +6,51 @@
 
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">行動網路</string>
-    <string name="bt_category">藍牙</string>
+    <string name="bt_category">藍芽</string>
     <string name="eth_category">有線</string>
+	<string name="default_port">埠</string>
 
-    <string name="set_succeed">設定 DNS 成功。</string>
-    <string name="set_failed">設定 DNS 失败。</string>
-    <string name="operation_succeed">操作成功。</string>
-
-    <string name="action_edit_resolv">DNS 設定檔</string>
+    <string name="set_succeed">設定 DNS 成功</string>
+    <string name="set_failed">設定 DNS 失敗</string>
+    <string name="operation_succeed">操作成功</string>
+	
+    <string name="action_edit_resolv">DNS 配置檔案</string>
     <string name="action_settings">設定</string>
-
-    <string name="invalid_dns">無效的 DNS</string>
-
-    <string name="welcome">歡迎</string>
-    <string name="welcome_msg">歡迎使用 DNS man! 當開關網路的時候，它就會自動設置 DNS.</string>
-
-    <string name="nodns_noti">沒有可用 DNS</string>
-    <string name="nodns_noti_text">點選以進行設定</string>
-
-    <string name="write_conf">寫入至</string>
-    <string name="default_conf">使用 Google public DNS</string>
-    <string name="delete_conf">刪除</string>
-
-    <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
-    <string name="default_conf_msg">真的要使用 Google public DNS?</string>
-    <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
-    <string name="opensource">程式碼</string>
-    <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
 
     <string name="pref_category_function">功能</string>
     <string name="pref_category_appearance">外觀</string>
     <string name="pref_category_about">關於</string>
 
-    <string name="pref_toast_error">僅顯示錯誤</string>
-    <string name="pref_toast_never">不顯示</string>
-    <string name="pref_toast_show">顯示</string>
-    <string name="pref_mode">運作模式</string>
+    <string name="pref_mode">執行模式</string>
     <string name="pref_mode_iptables">防火牆規則</string>
     <string name="pref_mode_prop">系統屬性</string>
+
     <string name="pref_toast">懸浮通知</string>
+    <string name="pref_toast_show">顯示</string>
+    <string name="pref_toast_error">僅顯示錯誤</string>
+    <string name="pref_toast_never">不顯示</string>
 
     <string name="pref_config">resolv.conf 路徑</string>
 
-    <string name="pref_misc">其他</string>
+    <string name="pref_misc">雜項</string>
     <string name="pref_misc_checkprop">檢查系統屬性</string>
 
-    <string name="default_port">埠口</string>
+    <string name="invalid_dns">無效的 DNS</string>
+
+    <string name="welcome">歡迎</string>
+    <string name="welcome_msg">歡迎使用 DNS man！當開關網路的時候，它就會自動更改 DNS.</string>
+
+    <string name="nodns_noti">沒有可用 DNS</string>
+	<string name="nodns_noti_text">點選以進行設定</string>
+
+    <string name="no_conf">resolv.conf 未找到</string>
+    <string name="write_conf">寫入至 /etc/resolv.conf</string>
+    <string name="default_conf">使用 Google public DNS</string>
+    <string name="delete_conf">刪除 /etc/resolv.conf</string>
+
+    <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
+    <string name="default_conf_msg">真的要使用 Google public DNS?</string>
+    <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
+    <string name="opensource">原始碼</string>
+    <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
 </resources>

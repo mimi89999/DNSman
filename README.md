@@ -14,9 +14,11 @@ How to build
     $ ./gradlew build
 
 
-Used opensource library:
+Thanks to
+===
 
 [libsuperuser](https://github.com/Chainfire/libsuperuser)
+[OpenCC](https://github.com/BYVoid/OpenCC)
 
 License: GNU GPL v3
 
