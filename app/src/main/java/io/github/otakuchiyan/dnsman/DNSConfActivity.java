@@ -23,7 +23,6 @@ import android.content.*;
 import android.view.*;
 import android.util.Log;
 
-
 public class DNSConfActivity extends Activity{
     final static String ACTION_CONFOPERATION = "io.github.otakuchiyan.dnsman.ACTION_CONFOPERATION";
     final static String ACTION_CONF_GETTED = "io.github.otakuchiyan.dnsman.ACTION_CONF_GETTED";
@@ -161,7 +160,7 @@ public class DNSConfActivity extends Activity{
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
             }else{
-                (new getConfigTask()).execute();
+                new getConfigTask().execute();
             }
         }
     }

@@ -17,7 +17,9 @@
         <PreferenceScreen android:title="@string/pref_misc">
             <CheckBoxPreference android:key="checkprop"
                 android:defaultValue="true"
-                android:title="@string/pref_misc_checkprop"/>
+                android:title="@string/pref_misc_checkprop"
+                android:summary="@string/pref_misc_checkprop_summary"
+                />
         </PreferenceScreen>
     </PreferenceCategory>
 

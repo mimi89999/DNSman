@@ -3,6 +3,9 @@
     <string name="global_category">全域</string>
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">モバイルネットワーク</string>
+    <string name="eth_category">イーサネット</string>
+
+    <string name="default_port">ポート</string>
 
     <string name="set_succeed">DNS 設定は成功しました</string>
     <string name="set_failed">DNS 設定は失敗しました</string>
@@ -38,5 +41,4 @@
     <string name="pref_toast_show">表示</string>
     <string name="individual_category">個別</string>
     <string name="invalid_dns">無効の DNS</string>
-    <string name="default_port">ポート</string>
 </resources>
