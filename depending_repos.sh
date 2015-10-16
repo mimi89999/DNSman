@@ -9,5 +9,5 @@ if [ ! -e 'libsuperuser' ]; then
     mv libsuperuser/libsuperuser tmp
     rm -rf libsuperuser
     mv tmp libsuperuser
-    mv ./build.gradle.libsuperuser ./libsuperuser/build.gradle
+    cp ./build.gradle.libsuperuser ./libsuperuser/build.gradle
 fi

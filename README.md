@@ -13,6 +13,10 @@ How to build
     $ ./depending_repos.sh
     $ ./gradlew build
 
+Donation
+===
+
+Alipay: otakuchiyan
 
 Thanks to
 ===
