@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.preference.ListPreference;
 import android.content.SharedPreferences;
 
-
-
 public class SettingsActivity extends PreferenceActivity{
 	@Override
 	public void onCreate(final Bundle savedInstanceState){
@@ -31,7 +29,6 @@ public class SettingsActivity extends PreferenceActivity{
 	    //	    ListPreference dnsToastPref = getPreference("dns
 	    
         }
-
 
     }
 }

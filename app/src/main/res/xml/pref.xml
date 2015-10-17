@@ -33,11 +33,19 @@
             />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_about">
-        <PreferenceScreen android:title="@string/opensource"
-                android:summary="@string/opensource_hint">
+	    <Preference android:title="@string/developer"
+		    android:summary="@string/developer_summary"/>
+        <Preference android:title="@string/license"
+                android:summary="@string/license_summary">
+                <intent android:action="android.intent.action.VIEW"
+			android:data="https://www.gnu.org/licenses/gpl.html"
+                />
+        </Preference>
+        <Preference android:title="@string/opensource"
+                android:summary="@string/opensource_summary">
                 <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/otakuchiyan/DNSman"
                 />
-        </PreferenceScreen>
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

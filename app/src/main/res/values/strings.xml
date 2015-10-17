@@ -56,6 +56,10 @@
 	<string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf?</string>
 	<string name="default_conf_msg">Do you want to use Google public DNS?</string>
 	<string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
+	<string name="developer">Developer</string>
+	<string name="developer_summary">西行寺幽玄(otakuchiyan)</string>
+	<string name="license">License</string>
+	<string name="license_summary">GNU GPLv3</string>
 	<string name="opensource">Source</string>
-    <string name="opensource_hint">Author: otakuchiyan Licence: GNU GPLv3</string>
+    <string name="opensource_summary">View source code on GitHub</string>
 </resources>

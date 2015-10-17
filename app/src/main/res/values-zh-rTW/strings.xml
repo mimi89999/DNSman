@@ -51,6 +51,8 @@
     <string name="write_conf_msg">真的要寫入 DNS 伺服器到 /etc/resolv.conf 中？</string>
     <string name="default_conf_msg">真的要使用 Google public DNS?</string>
     <string name="delete_conf_msg">真的要刪除 /etc/resolv.conf? 這可能會導致網路問題！！</string>
+    <string name="developer">開發者</string>
+    <string name="licence">許可證</string>
     <string name="opensource">原始碼</string>
-    <string name="opensource_hint">作者： otakuchiyan 許可證： GNU GPLv3</string>
+    <string name="opensource_summary">到 GitHub 檢視原始碼</string>
 </resources>

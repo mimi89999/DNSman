@@ -23,6 +23,7 @@ Thanks to
 
 [libsuperuser](https://github.com/Chainfire/libsuperuser)
 [OpenCC](https://github.com/BYVoid/OpenCC)
+[GNOME](https://www.gnome.org)
 
 License: GNU GPL v3
 
