@@ -13,6 +13,11 @@ public class GetNetwork
     public NetworkInfo bluetoothNetInfo;
     public NetworkInfo etherNetInfo;
     public NetworkInfo wimaxNetInfo;
+    public String wifiName;
+    public String mobileName;
+    public String bluetoothName;
+    public String etherName;
+    public String wimaxName;
     public boolean isSupportWifi;
     public boolean isSupportMobile;
     public boolean isSupportBluetooth;
@@ -33,5 +38,11 @@ public class GetNetwork
         isSupportBluetooth = bluetoothNetInfo != null ? true : false;
         isSupportEthernet = etherNetInfo != null ? true : false;
         isSupportWimax = wimaxNetInfo != null ? true : false;
+
+	wifiName = wifiNetInfo != null ? wifiNetInfo.getTypeName() : null;
+	mobileName = mobileNetInfo != null ? mobileNetInfo.getTypeName() : null;
+	bluetoothName = bluetoothNetInfo != null ? bluetoothNetInfo.getTypeName() : null;
+	etherName = etherNetInfo != null ? etherNetInfo.getTypeName() : null;
+	wimaxName = wimaxNetInfo != null ? wimaxNetInfo.getTypeName() : null;
     }
 }

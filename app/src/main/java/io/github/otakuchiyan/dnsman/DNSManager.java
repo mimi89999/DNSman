@@ -24,8 +24,6 @@ import java.util.List;
 import eu.chainfire.libsuperuser.Shell;
 
 public class DNSManager {
-    final static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
-
     final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
 	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
     final static String SETRULE_COMMAND_PREFIX = "iptables -t nat ";

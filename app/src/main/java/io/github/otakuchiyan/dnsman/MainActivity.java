@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(DNSManager.ACTION_SETDNS_DONE)){
+		if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
 		    if(i.getBooleanExtra("result", false)){
 			//(new getDNSAsync()).execute();
 		    }
@@ -73,24 +73,24 @@ public class MainActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
-		sped = sp.edit();
+	sp = PreferenceManager.getDefaultSharedPreferences(this);
+	sped = sp.edit();
 
         GetNetwork gn = new GetNetwork(this);
-		mainActivity = new LinearLayout(this);
-		mainActivity.setOrientation(LinearLayout.VERTICAL);
+	mainActivity = new LinearLayout(this);
+	mainActivity.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout cdnsView = new LinearLayout(this);
         cdnsView.setOrientation(LinearLayout.HORIZONTAL);
         cdnstext = setCategoryText(R.string.cdnstext);
-		propdnstext = new TextView(this);
+	propdnstext = new TextView(this);
         cdns1 = new TextView(this);
         cdns2 = new TextView(this);
-		propdnstext.setText(R.string.pref_mode_prop);
+	propdnstext.setText(R.string.pref_mode_prop);
         cdns1.setLayoutParams(edittext_params);
         cdns2.setLayoutParams(edittext_params);
 
-		cdnsView.addView(propdnstext);
+	cdnsView.addView(propdnstext);
         cdnsView.addView(cdns1);
         cdnsView.addView(cdns2);
 		mainActivity.addView(cdnstext);
@@ -108,35 +108,35 @@ public class MainActivity extends Activity {
             wifi_category = new TextView(this);
             wifi_category.setText(R.string.wifi_category);
             mainActivity.addView(wifi_category);
-            mainActivity.addView(setDNSTwopane(wdns1, wdns2, "w"));
+            mainActivity.addView(setDNSTwopane(wdns1, wdns2, gn.wifiName));
         }
 
         if(gn.isSupportMobile){
             mobile_category = new TextView(this);
             mobile_category.setText(R.string.mobile_category);
             mainActivity.addView(mobile_category);
-            mainActivity.addView(setDNSTwopane(mdns1, mdns2, "m"));
+            mainActivity.addView(setDNSTwopane(mdns1, mdns2, gn.mobileName));
         }
 
         if(gn.isSupportBluetooth){
             bt_category = new TextView(this);
             bt_category.setText(R.string.bt_category);
             mainActivity.addView(bt_category);
-            mainActivity.addView(setDNSTwopane(bdns1, bdns2, "b"));
+            mainActivity.addView(setDNSTwopane(bdns1, bdns2, gn.bluetoothName));
         }
 
         if(gn.isSupportEthernet){
             eth_category = new TextView(this);
             eth_category.setText(R.string.eth_category);
             mainActivity.addView(eth_category);
-            mainActivity.addView(setDNSTwopane(edns1, edns2, "e"));
+            mainActivity.addView(setDNSTwopane(edns1, edns2, gn.etherName));
         }
        
         if(gn.isSupportWimax){
             wimax_category = new TextView(this);
             wimax_category.setText(R.string.wimax_category);
             mainActivity.addView(wimax_category);
-            mainActivity.addView(setDNSTwopane(widns1, widns2, "wi"));
+            mainActivity.addView(setDNSTwopane(widns1, widns2, gn.wimaxName));
         }
 
 		
@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
 		}
 
 		IntentFilter setFilter = new IntentFilter();
-		setFilter.addAction(DNSManager.ACTION_SETDNS_DONE);
+		setFilter.addAction(DNSBackgroundService.ACTION_SETDNS_DONE);
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted, setFilter);
 
         (new getDNSTask()).execute();
