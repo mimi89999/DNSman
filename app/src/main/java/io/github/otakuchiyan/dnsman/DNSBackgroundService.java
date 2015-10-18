@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 import android.app.IntentService;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -29,22 +30,24 @@ public class DNSBackgroundService extends IntentService{
 
     public static boolean start(Context c, NetworkInfo info){
 	    sp = PreferenceManager.getDefaultSharedPreferences(
-			    context.getApplicationContext());
+			    c.getApplicationContext());
         context = c;
+	checkProp = sp.getBoolean("checkprop", true);
+	mode = sp.getString("mode", "0");
+
 	getDNSByNetType(info);
 	if(dnsList.isEmpty()){
 		return false;
 	}
-	checkProp = sp.getBoolean("checkprop", true);
-	mode = sp.getString("mode", "0");
+	Log.d("DNSBackgroundService", "dnsList.0 " + dnsList.get(0));
+	Log.d("DNSBackgroundService", "dnsList.1 " + dnsList.get(1));
+
 	Intent i = new Intent(c, DNSBackgroundService.class);
 	c.startService(i);
 	return true;
     }
 
     private static void getDNSByNetType(NetworkInfo info){
-	    sp = PreferenceManager.getDefaultSharedPreferences(
-			    context.getApplicationContext());
 	    String dns1 = sp.getString(info.getTypeName() + "dns1", "");
 	    String dns2suffix = "dns2";
 	    //dns2 was used for port when mode is 1
@@ -53,11 +56,17 @@ public class DNSBackgroundService extends IntentService{
 	    }
 	    String dns2 = sp.getString(info.getTypeName() + dns2suffix, "");
 	    
+		dnsList.clear();
 	    if(!dns1.equals("") || !dns2.equals("")){
-		    dnsList.clear();
 		    dnsList.add(dns1);
 		    dnsList.add(dns2);
-	    }
+	    }else{
+			//Fallback to global DNS
+			dns1 = sp.getString("gdns1", "");
+			dns2 = sp.getString("g" + dns2suffix, "");
+			dnsList.add(dns1);
+			dnsList.add(dns2);
+		}
     }
 
     @Override

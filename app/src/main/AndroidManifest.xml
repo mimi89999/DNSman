@@ -41,7 +41,7 @@
             </intent-filter>
         </receiver>
 		
-		<service android:name=".DNSBackgroundIntentService" />
+		<service android:name=".DNSBackgroundService" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>

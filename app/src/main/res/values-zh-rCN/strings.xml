@@ -34,6 +34,7 @@
 
     <string name="pref_misc">杂项</string>
     <string name="pref_misc_checkprop">检查系统属性</string>
+    <string name="pref_misc_checkprop_summary">用于确定系统属性是否已修改，关闭可以提高些许性能</string>
 
     <string name="invalid_dns">无效的 DNS</string>
 
@@ -52,7 +53,7 @@
     <string name="default_conf_msg">真的要使用 Google public DNS?</string>
     <string name="delete_conf_msg">真的要删除 /etc/resolv.conf? 这可能会导致网络问题！！</string>
     <string name="developer">开发者</string>
-    <string name="licence">许可证</string>
+    <string name="license">许可证</string>
     <string name="opensource">源代码</string>
     <string name="opensource_summary">到 GitHub 查看源代码</string>
 </resources>
