@@ -215,8 +215,6 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	
-	
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle(R.string.welcome)

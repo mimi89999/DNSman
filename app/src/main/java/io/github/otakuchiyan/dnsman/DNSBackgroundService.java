@@ -28,7 +28,7 @@ public class DNSBackgroundService extends IntentService{
         super("DNSBackgroundService");
     }
 
-    public static boolean start(Context c, NetworkInfo info){
+    public static boolean set(Context c, NetworkInfo info){
 	    sp = PreferenceManager.getDefaultSharedPreferences(
 			    c.getApplicationContext());
         context = c;

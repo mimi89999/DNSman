@@ -72,6 +72,9 @@ public class DNSManager {
     }
 
 	public static boolean setDNSViaIPtables(String dns, String port){
+		if(isRulesAlivable(dns, port)){
+			return true;
+		}
         List<String> cmds = new ArrayList<String>();
         List<String> result;
         String cmd1 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
@@ -84,12 +87,21 @@ public class DNSManager {
         cmds.add(cmd1);
         cmds.add(cmd2);
 
-        Log.d("DNSManager[CMD]", cmds.get(0));
-        Log.d("DNSManager[CMD]", cmds.get(1));
+        Log.d("DNSManager[CMD]", cmd1);
+        Log.d("DNSManager[CMD]", cmd2);
 
-        result = Shell.SU.run(cmds);
-        return result.isEmpty();
+        return Shell.SU.run(cmds).isEmpty();
     }
+	public static boolean isRulesAlivable(String dns, String port){
+		String cmd = CHECKRULE_COMMAND_PREFIX + dns;
+
+		if(!port.equals("")){
+			cmd += ":" + port;
+		}
+
+		Log.d("DNSManager[CMD]", cmd);
+		return !Shell.SU.run(cmd).isEmpty();
+	}
 
     private static List<String> deleteRules(String dns, String port){
         List<String> cmds = new ArrayList<String>();
@@ -103,19 +115,9 @@ public class DNSManager {
         cmds.add(cmd1);
         cmds.add(cmd2);
 
-        Log.d("DNSManager[CMD]", cmds.get(0));
-        Log.d("DNSManager[CMD]", cmds.get(1));
+        Log.d("DNSManager[CMD]", cmd1);
+        Log.d("DNSManager[CMD]", cmd2);
         return Shell.SU.run(cmds);
-    }
-
-    private static boolean isRulesAlivable(String dns, String port){
-        List<String> cmds = new ArrayList<String>();
-        String cmd = CHECKRULE_COMMAND_PREFIX + dns;
-        if(!port.equals("")){
-            cmd += ":" + port;
-        }
-        Log.d("DNSManager[CMD]", cmds.get(0));
-        return !Shell.SU.run(cmds).isEmpty();
     }
 	
 	public static String writeResolvConfig(String dns1, String dns2, String path){
