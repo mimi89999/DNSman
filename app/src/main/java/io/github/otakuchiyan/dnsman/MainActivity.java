@@ -1,11 +1,17 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
-import android.content.SharedPreferences; 
+import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
@@ -17,12 +23,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.widget.*;
 import android.widget.Toolbar.*;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
 	final private String ACTION_DELETE_RULES = "io.github.otakuchiyan.dnsman.ACTION_DELETE_RULES";
     
@@ -73,6 +80,8 @@ public class MainActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        /*
 	sp = PreferenceManager.getDefaultSharedPreferences(this);
 	sped = sp.edit();
 
@@ -142,16 +151,29 @@ public class MainActivity extends Activity {
 		
 		if(!sp.getBoolean("firstbooted", false)){
 			showWelcomeDialog();
-			sped.putBoolean("firstbooted", true);
-			sped.apply();
-		}
+            sped.putBoolean("firstbooted", true);
+            sped.apply();
+		}*/
+
+
+
+        /*ArrayList<String> netList = new ArrayList<String>();
+        netList.add("Global");*/
+        String[] netList = {
+                "Global",
+                "Dividual"
+        };
+
+        //final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netList);
+
+        //setListAdapter(adapter);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(ACTION_GETDNS));
 
         (new getDNSTask()).execute();
 
-		setContentView(mainActivity);
+        		//setContentView(mainActivity);
 	}
 
 	@Override
@@ -231,6 +253,32 @@ public class MainActivity extends Activity {
         protected void onPostExecute(List<String> dnss){
             getActionBar().setTitle(dnss.get(0) + " & " + dnss.get(1));
         }
+
+    }
+
+    private class CustomArrayAdapter extends ArrayAdapter<String>{
+        private Context context;
+        private String[] values;
+        public CustomArrayAdapter(Context c, String[] values){
+            super(c, -1, values);
+            this.context = c;
+            this.values = values;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            LayoutInflater inflater = (LayoutInflater) context.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.activity_main_list, parent);
+            TextView netText = (TextView) findViewById(R.id.net_text);
+            TextView statusText = (TextView) findViewById(R.id.status_text);
+            ImageView statusIcon = (ImageView) findViewById(R.id.status_icon);
+            Button applyButton = (Button) findViewById(R.id.apply_button);
+            Button unapplyButton = (Button) findViewById(R.id.unapply_button);
+
+            return rowView;
+        }
+
 
     }
 	
