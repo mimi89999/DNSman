@@ -31,7 +31,6 @@
     <string name="opensource">ソースコード</string>
     <string name="opensource_hint">作者： otakuchiyan ライセンス： GNU GPLv3</string>
     <string name="cdnstext">現在の DNS:</string>
-    <string name="eth_category">イーサネット</string>
     <string name="pref_mode">実行モード</string>
     <string name="pref_mode_iptables">ファイアウォール　ルール</string>
     <string name="pref_mode_prop">システム　プロパティ</string>

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import io.github.otakuchiyan.dnsman.DNSManager;
 
 public class DNSBackgroundService extends IntentService{
-    final static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
+    final public static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
 
     private static Context context;
     private static SharedPreferences sp;

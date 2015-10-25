@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.lang.Integer;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
-	private NotificationManager nm;
-    private List<String> dnsList2set = new ArrayList<String>();
     private SharedPreferences sp;
 
     private ConnectivityManager cm;
@@ -41,7 +39,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
                 sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
                 String dnsToast = sp.getString("toast", "0");
-                if(sp.getString("mode", "0").equals("0")) {
+                // if(sp.getString("mode", "0").equals("0")) {
                     if (i.getBooleanExtra("result", false)) {
                         if (dnsToast.equals("0")) {
                             Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
@@ -51,7 +49,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                             Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
+                //}
             }
 	    }
 	};
@@ -61,9 +59,8 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 			context.getApplicationContext());
 		
 		if(sp.getBoolean("firstbooted", false)){
-            IntentFilter iFilter = new IntentFilter();
-            iFilter.addAction(DNSBackgroundService.ACTION_SETDNS_DONE);
-            LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted, iFilter);
+            LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted,
+                    new IntentFilter(DNSBackgroundService.ACTION_SETDNS_DONE));
 
             //Workaround to deal with multiple broadcast
             cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -82,9 +79,6 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 isFirstConnect = true;
             }
         }
-
     }
-
-
 }
 

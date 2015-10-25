@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 	    public void onReceive(Context c, Intent i){
 		if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
 		    if(i.getBooleanExtra("result", false)){
-			//(new getDNSAsync()).execute();
+                new getDNSTask().execute();
 		    }
 		}
 	    }
@@ -93,8 +93,8 @@ public class MainActivity extends Activity {
 	cdnsView.addView(propdnstext);
         cdnsView.addView(cdns1);
         cdnsView.addView(cdns2);
-		mainActivity.addView(cdnstext);
-        mainActivity.addView(cdnsView);
+		//mainActivity.addView(cdnstext);
+        //mainActivity.addView(cdnsView);
 
 
         global_category = setCategoryText(R.string.global_category);
@@ -146,9 +146,8 @@ public class MainActivity extends Activity {
 			sped.apply();
 		}
 
-		IntentFilter setFilter = new IntentFilter();
-		setFilter.addAction(DNSBackgroundService.ACTION_SETDNS_DONE);
-		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted, setFilter);
+		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
+                new IntentFilter(ACTION_GETDNS));
 
         (new getDNSTask()).execute();
 
@@ -230,8 +229,7 @@ public class MainActivity extends Activity {
         }
 
         protected void onPostExecute(List<String> dnss){
-            cdns1.setText(dnss.get(0));
-            cdns2.setText(dnss.get(1));
+            getActionBar().setTitle(dnss.get(0) + " & " + dnss.get(1));
         }
 
     }
