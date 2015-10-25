@@ -2,6 +2,7 @@ package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
@@ -81,99 +82,58 @@ public class MainActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
-        /*
+
 	sp = PreferenceManager.getDefaultSharedPreferences(this);
 	sped = sp.edit();
 
         GetNetwork gn = new GetNetwork(this);
-	mainActivity = new LinearLayout(this);
-	mainActivity.setOrientation(LinearLayout.VERTICAL);
-
-        LinearLayout cdnsView = new LinearLayout(this);
-        cdnsView.setOrientation(LinearLayout.HORIZONTAL);
-        cdnstext = setCategoryText(R.string.cdnstext);
-	propdnstext = new TextView(this);
-        cdns1 = new TextView(this);
-        cdns2 = new TextView(this);
-	propdnstext.setText(R.string.pref_mode_prop);
-        cdns1.setLayoutParams(edittext_params);
-        cdns2.setLayoutParams(edittext_params);
-
-	cdnsView.addView(propdnstext);
-        cdnsView.addView(cdns1);
-        cdnsView.addView(cdns2);
-		//mainActivity.addView(cdnstext);
-        //mainActivity.addView(cdnsView);
 
 
-        global_category = setCategoryText(R.string.global_category);
-        mainActivity.addView(global_category);
-        mainActivity.addView(setDNSTwopane(gdns1, gdns2, "g"));
+        ArrayList<String> netList = new ArrayList<>();
+        netList.add(getText(R.string.global_category).toString());
 
-        individual_category = setCategoryText(R.string.individual_category);
-        mainActivity.addView(individual_category);
 
         if(gn.isSupportWifi){
-            wifi_category = new TextView(this);
-            wifi_category.setText(R.string.wifi_category);
-            mainActivity.addView(wifi_category);
-            mainActivity.addView(setDNSTwopane(wdns1, wdns2, gn.wifiName));
+            netList.add(getText(R.string.wifi_category).toString());
+//            mainActivity.addView(setDNSTwopane(wdns1, wdns2, gn.wifiName));
         }
 
         if(gn.isSupportMobile){
-            mobile_category = new TextView(this);
-            mobile_category.setText(R.string.mobile_category);
-            mainActivity.addView(mobile_category);
-            mainActivity.addView(setDNSTwopane(mdns1, mdns2, gn.mobileName));
+            netList.add(getText(R.string.mobile_category).toString());
+
+//            mainActivity.addView(setDNSTwopane(mdns1, mdns2, gn.mobileName));
         }
 
         if(gn.isSupportBluetooth){
-            bt_category = new TextView(this);
-            bt_category.setText(R.string.bt_category);
-            mainActivity.addView(bt_category);
-            mainActivity.addView(setDNSTwopane(bdns1, bdns2, gn.bluetoothName));
-        }
+            netList.add(getText(R.string.bt_category).toString());
+                    }
 
         if(gn.isSupportEthernet){
-            eth_category = new TextView(this);
-            eth_category.setText(R.string.eth_category);
-            mainActivity.addView(eth_category);
-            mainActivity.addView(setDNSTwopane(edns1, edns2, gn.etherName));
+            netList.add(getText(R.string.eth_category).toString());
+
         }
        
         if(gn.isSupportWimax){
-            wimax_category = new TextView(this);
-            wimax_category.setText(R.string.wimax_category);
-            mainActivity.addView(wimax_category);
-            mainActivity.addView(setDNSTwopane(widns1, widns2, gn.wimaxName));
+
+            netList.add(getText(R.string.wimax_category).toString());
         }
 
 		
-		if(!sp.getBoolean("firstbooted", false)){
-			showWelcomeDialog();
+		if(!sp.getBoolean("firstbooted", false)) {
+            showWelcomeDialog();
             sped.putBoolean("firstbooted", true);
             sped.apply();
-		}*/
+        }
 
 
+        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netList);
 
-        /*ArrayList<String> netList = new ArrayList<String>();
-        netList.add("Global");*/
-        String[] netList = {
-                "Global",
-                "Dividual"
-        };
-
-        //final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netList);
-
-        //setListAdapter(adapter);
+        setListAdapter(adapter);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(ACTION_GETDNS));
 
         (new getDNSTask()).execute();
-
-        		//setContentView(mainActivity);
 	}
 
 	@Override
@@ -205,13 +165,6 @@ public class MainActivity extends ListActivity {
         ll.addView(e1);
         ll.addView(e2);
         return ll;
-    }
-
-    private TextView setCategoryText(int res){
-        TextView tv = new TextView(this);
-        tv.setText(res);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        return tv;
     }
 
 	@Override
@@ -246,7 +199,6 @@ public class MainActivity extends ListActivity {
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
         protected List<String> doInBackground(Void[] p1){
-			Log.d("MA", "getDNS");
             return DNSManager.getCurrentDNS();
         }
 
@@ -258,8 +210,8 @@ public class MainActivity extends ListActivity {
 
     private class CustomArrayAdapter extends ArrayAdapter<String>{
         private Context context;
-        private String[] values;
-        public CustomArrayAdapter(Context c, String[] values){
+        private ArrayList<String> values;
+        public CustomArrayAdapter(Context c, ArrayList<String> values){
             super(c, -1, values);
             this.context = c;
             this.values = values;
@@ -269,12 +221,13 @@ public class MainActivity extends ListActivity {
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.activity_main_list, parent);
-            TextView netText = (TextView) findViewById(R.id.net_text);
-            TextView statusText = (TextView) findViewById(R.id.status_text);
-            ImageView statusIcon = (ImageView) findViewById(R.id.status_icon);
-            Button applyButton = (Button) findViewById(R.id.apply_button);
-            Button unapplyButton = (Button) findViewById(R.id.unapply_button);
+            View rowView = inflater.inflate(R.layout.net_item, parent, false);
+            TextView netText = (TextView) rowView.findViewById(R.id.net_text);
+            TextView statusText = (TextView) rowView.findViewById(R.id.status_text);
+            ImageView statusIcon = (ImageView) rowView.findViewById(R.id.status_icon);
+            Button applyButton = (Button) rowView.findViewById(R.id.apply_button);
+            Button unapplyButton = (Button) rowView.findViewById(R.id.unapply_button);
+            netText.setText(values.get(position));
 
             return rowView;
         }

@@ -53,12 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:text="@string/button_apply"
                 android:id="@+id/apply_button" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
+                android:text="@string/button_unapply"
                 android:id="@+id/unapply_button"/>
 
         </LinearLayout>
