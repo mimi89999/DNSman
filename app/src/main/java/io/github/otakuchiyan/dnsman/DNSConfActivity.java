@@ -102,12 +102,12 @@ public class DNSConfActivity extends Activity{
 
     private LinearLayout setDNSTwopane(){
         LinearLayout ll = new LinearLayout(this);
-	rdns1 = new DNSEditText(this, "rdns1", false);
-	rdns2 = new DNSEditText(this, "rdns2", false);
+	//rdns1 = new DNSEditText(this, "rdns1", false);
+	//rdns2 = new DNSEditText(this, "rdns2", false);
 
         ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.addView(rdns1);
-        ll.addView(rdns2);
+//        ll.addView(rdns1);
+  //      ll.addView(rdns2);
 
         return ll;
     }

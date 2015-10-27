@@ -37,36 +37,6 @@ public class MainActivity extends ListActivity {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
 
-    //Layouts
-    private LinearLayout mainActivity;
-	private LinearLayout.LayoutParams edittext_params = new LinearLayout.LayoutParams(
-			LayoutParams.MATCH_PARENT,
-			LayoutParams.WRAP_CONTENT,
-            1.0f);
-    private TextView cdnstext;
-	private TextView propdnstext;
-	private TextView cdns1;
-	private TextView cdns2;
-    private TextView global_category;
-    private EditText gdns1;
-    private EditText gdns2;
-    private TextView individual_category;
-	private TextView wifi_category;
-	private EditText wdns1;
-	private EditText wdns2;
-	private TextView mobile_category;
-	private EditText mdns1;
-	private EditText mdns2;
-    private TextView bt_category;
-    private EditText bdns1;
-    private EditText bdns2;
-    private TextView eth_category;
-    private EditText edns1;
-    private EditText edns2;
-    private TextView wimax_category;
-    private EditText widns1;
-    private EditText widns2;
-	
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context c, Intent i){
@@ -158,12 +128,12 @@ public class MainActivity extends ListActivity {
 			isPort = true;
 			e2Suffix = "port";
 		}
-		e1 = new DNSEditText(this, keyprefix + "dns1", false);
-		e2 = new DNSEditText(this, keyprefix + e2Suffix, isPort);
+		//e1 = new DNSEditText(this, keyprefix + "dns1", false);
+		//e2 = new DNSEditText(this, keyprefix + e2Suffix, isPort);
 
         ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.addView(e1);
-        ll.addView(e2);
+        //ll.addView(e1);
+        //ll.addView(e2);
         return ll;
     }
 
@@ -223,10 +193,7 @@ public class MainActivity extends ListActivity {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.net_item, parent, false);
             TextView netText = (TextView) rowView.findViewById(R.id.net_text);
-            TextView statusText = (TextView) rowView.findViewById(R.id.status_text);
-            ImageView statusIcon = (ImageView) rowView.findViewById(R.id.status_icon);
-            Button applyButton = (Button) rowView.findViewById(R.id.apply_button);
-            Button unapplyButton = (Button) rowView.findViewById(R.id.unapply_button);
+
             netText.setText(values.get(position));
 
             return rowView;
