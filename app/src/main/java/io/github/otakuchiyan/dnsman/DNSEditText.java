@@ -16,11 +16,6 @@ import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 public class DNSEditText extends EditText{
     private SharedPreferences sp;
 
-    private LinearLayout.LayoutParams edittext_params = new LinearLayout.LayoutParams(
-			LayoutParams.MATCH_PARENT,
-			LayoutParams.WRAP_CONTENT,
-            1.0f);
-
     private Context context;
     private String key;
     private boolean isPort = false;
@@ -35,9 +30,7 @@ public class DNSEditText extends EditText{
         context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(c);
         setSingleLine(true);
-
         setRawInputType(InputType.TYPE_CLASS_NUMBER);
-        setLayoutParams(edittext_params);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
     }
 
