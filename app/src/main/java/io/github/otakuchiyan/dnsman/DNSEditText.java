@@ -29,14 +29,18 @@ public class DNSEditText extends EditText{
         super(c, attr);
         context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(c);
-        setSingleLine(true);
+
         setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        setSingleLine(true);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
     }
 
     public void setKey(String key){
-        setText(sp.getString(key, ""));
         this.key = key;
+    }
+
+    public void setText(){
+        setText(sp.getString(key, ""));
     }
 
     public void setFirewallMode(){

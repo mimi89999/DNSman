@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -58,34 +59,35 @@ public class MainActivity extends ListActivity {
 
         GetNetwork gn = new GetNetwork(this);
 
-
-        ArrayList<String> netList = new ArrayList<>();
-        netList.add(getText(R.string.global_category).toString());
+        ArrayList<String> netLabelList = new ArrayList<>();
+        ArrayList<String> netNameList = new ArrayList<>();
+        netLabelList.add(getText(R.string.global_category).toString());
+        netNameList.add("g");
 
 
         if(gn.isSupportWifi){
-            netList.add(getText(R.string.wifi_category).toString());
-//            mainActivity.addView(setDNSTwopane(wdns1, wdns2, gn.wifiName));
+            netLabelList.add(getText(R.string.wifi_category).toString());
+            netNameList.add(gn.wifiName);
         }
 
         if(gn.isSupportMobile){
-            netList.add(getText(R.string.mobile_category).toString());
-
-//            mainActivity.addView(setDNSTwopane(mdns1, mdns2, gn.mobileName));
+            netLabelList.add(getText(R.string.mobile_category).toString());
+            netNameList.add(gn.mobileName);
         }
 
         if(gn.isSupportBluetooth){
-            netList.add(getText(R.string.bt_category).toString());
-                    }
+            netLabelList.add(getText(R.string.bt_category).toString());
+            netNameList.add(gn.bluetoothName);
+        }
 
         if(gn.isSupportEthernet){
-            netList.add(getText(R.string.eth_category).toString());
-
+            netLabelList.add(getText(R.string.eth_category).toString());
+            netNameList.add(gn.etherName);
         }
        
         if(gn.isSupportWimax){
-
-            netList.add(getText(R.string.wimax_category).toString());
+            netLabelList.add(getText(R.string.wimax_category).toString());
+            netNameList.add(gn.wimaxName);
         }
 
 		
@@ -96,7 +98,7 @@ public class MainActivity extends ListActivity {
         }
 
 
-        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netList);
+        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
 
         setListAdapter(adapter);
 
@@ -118,23 +120,6 @@ public class MainActivity extends ListActivity {
 			finish();
 			startActivity(getIntent());
 		}
-    }
-
-    private LinearLayout setDNSTwopane(EditText e1, EditText e2, String keyprefix){
-        LinearLayout ll = new LinearLayout(this);
-		boolean isPort = false;
-		String e2Suffix = "dns2";
-		if(sp.getString("mode", "0").equals("1")) {
-			isPort = true;
-			e2Suffix = "port";
-		}
-		//e1 = new DNSEditText(this, keyprefix + "dns1", false);
-		//e2 = new DNSEditText(this, keyprefix + e2Suffix, isPort);
-
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        //ll.addView(e1);
-        //ll.addView(e2);
-        return ll;
     }
 
 	@Override
@@ -180,11 +165,15 @@ public class MainActivity extends ListActivity {
 
     private class CustomArrayAdapter extends ArrayAdapter<String>{
         private Context context;
-        private ArrayList<String> values;
-        public CustomArrayAdapter(Context c, ArrayList<String> values){
-            super(c, -1, values);
+        private ArrayList<String> netLabelList;
+        private ArrayList<String> netNameList;
+
+        public CustomArrayAdapter(Context c, ArrayList<String> netLabelList,
+                                  ArrayList<String> netNameList){
+            super(c, -1, netLabelList);
             this.context = c;
-            this.values = values;
+            this.netLabelList = netLabelList;
+            this.netNameList = netNameList;
         }
 
         @Override
@@ -193,8 +182,22 @@ public class MainActivity extends ListActivity {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.net_item, parent, false);
             TextView netText = (TextView) rowView.findViewById(R.id.net_text);
+            CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+            DNSEditText dns1 = (DNSEditText) rowView.findViewById(R.id.dns1);
+            DNSEditText dns2 = (DNSEditText) rowView.findViewById(R.id.dns2);
+            GetNetwork gn = new GetNetwork(context);
+            String dns2Suffix = "dns2";
 
-            netText.setText(values.get(position));
+            netText.setText(netLabelList.get(position));
+            dns1.setKey(netNameList.get(position) + "dns1");
+            dns1.setText(sp.getString(netNameList.get(position) + "dns1", ""));
+
+            if(sp.getString("mode", "0").equals("1")){
+                dns2.setFirewallMode();
+                dns2Suffix = "port";
+            }
+            dns2.setKey(netNameList.get(position) + dns2Suffix);
+            dns2.setText(sp.getString(netNameList.get(position) + dns2Suffix, ""));
 
             return rowView;
         }

@@ -1,6 +1,7 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.content.Context;
 
@@ -13,6 +14,7 @@ public class GetNetwork
     public NetworkInfo bluetoothNetInfo;
     public NetworkInfo etherNetInfo;
     public NetworkInfo wimaxNetInfo;
+    public Network[] networks;
     public String wifiName;
     public String mobileName;
     public String bluetoothName;
@@ -33,11 +35,11 @@ public class GetNetwork
 		etherNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
         wimaxNetInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX);
 
-        isSupportWifi = wifiNetInfo != null ? true : false;
-        isSupportMobile = mobileNetInfo != null ? true : false;
-        isSupportBluetooth = bluetoothNetInfo != null ? true : false;
-        isSupportEthernet = etherNetInfo != null ? true : false;
-        isSupportWimax = wimaxNetInfo != null ? true : false;
+        isSupportWifi = wifiNetInfo != null;
+        isSupportMobile = mobileNetInfo != null;
+        isSupportBluetooth = bluetoothNetInfo != null;
+        isSupportEthernet = etherNetInfo != null;
+        isSupportWimax = wimaxNetInfo != null;
 
 	wifiName = wifiNetInfo != null ? wifiNetInfo.getTypeName() : null;
 	mobileName = mobileNetInfo != null ? mobileNetInfo.getTypeName() : null;

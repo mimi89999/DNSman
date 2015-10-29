@@ -4,7 +4,7 @@ DNS resolver setting tool for Android.
 
 TODO
 ===
-- Find out the method of change DNS without ROOT and VPNService class
+- Find out the method of changing DNS without ROOT and VPNService class
 - Redesign
 
 How to build
@@ -22,8 +22,11 @@ Thanks to
 ===
 
 [libsuperuser](https://github.com/Chainfire/libsuperuser)
+
 [OpenCC](https://github.com/BYVoid/OpenCC)
+
 [GNOME](https://www.gnome.org)
+
 
 License: GNU GPL v3
 
