@@ -17,29 +17,43 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/net_text" />
 
+
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0">
 
-            <io.github.otakuchiyan.dnsman.DNSEditText
-                android:layout_width="wrap_content"
+
+
+        <io.github.otakuchiyan.dnsman.DNSEditText
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:id="@+id/dns1" />
 
             <io.github.otakuchiyan.dnsman.DNSEditText
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:id="@+id/dns2" />
 
         </LinearLayout>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:text="@string/button_apply"
+                android:checked="false"
+                android:layout_gravity="bottom" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

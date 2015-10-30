@@ -182,7 +182,7 @@ public class MainActivity extends ListActivity {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.net_item, parent, false);
             TextView netText = (TextView) rowView.findViewById(R.id.net_text);
-            CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+
             DNSEditText dns1 = (DNSEditText) rowView.findViewById(R.id.dns1);
             DNSEditText dns2 = (DNSEditText) rowView.findViewById(R.id.dns2);
             GetNetwork gn = new GetNetwork(context);
