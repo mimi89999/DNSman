@@ -28,13 +28,29 @@ public class DNSBackgroundService extends IntentService{
         super("DNSBackgroundService");
     }
 
-    public static boolean set(Context c, NetworkInfo info){
-	    sp = PreferenceManager.getDefaultSharedPreferences(
-			    c.getApplicationContext());
+    private static void beforeSet(Context c){
+        sp = PreferenceManager.getDefaultSharedPreferences(
+                c.getApplicationContext());
         context = c;
-	checkProp = sp.getBoolean("checkprop", true);
-	mode = sp.getString("mode", "0");
+        checkProp = sp.getBoolean("checkprop", true);
+        mode = sp.getString("mode", "0");
+    }
 
+    public static boolean setByString(Context c, String dns1, String dns2){
+        beforeSet(c);
+        if(dns1.equals("") || dns2.equals("")){
+            return false;
+        }
+
+        dnsList.add(dns1);
+        dnsList.add(dns2);
+        Intent i = new Intent(c, DNSBackgroundService.class);
+        c.startService(i);
+        return true;
+    }
+
+    public static boolean setByNetworkInfo(Context c, NetworkInfo info){
+        beforeSet(c);
 	getDNSByNetType(info);
 	if(dnsList.isEmpty()){
 		return false;

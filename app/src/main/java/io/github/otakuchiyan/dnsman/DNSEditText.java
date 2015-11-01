@@ -35,11 +35,9 @@ public class DNSEditText extends EditText{
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
     }
 
-    public void setKey(String key){
-        this.key = key;
-    }
 
-    public void setText(){
+    public void setKeyAndText(String key){
+        this.key = key;
         setText(sp.getString(key, ""));
     }
 

@@ -37,6 +37,10 @@ public class MainActivity extends ListActivity {
     
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
+    private LinearLayout currentDNSLayout;
+    private TextView currentDNSText;
+    private TextView currentDNS1;
+    private TextView currentDNS2;
 
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
@@ -52,12 +56,26 @@ public class MainActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayShowHomeEnabled(false);
 
-	sp = PreferenceManager.getDefaultSharedPreferences(this);
-	sped = sp.edit();
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sped = sp.edit();
 
         GetNetwork gn = new GetNetwork(this);
+
+        currentDNSLayout = new LinearLayout(this);
+        currentDNSLayout.setOrientation(LinearLayout.VERTICAL);
+        currentDNSText = new TextView(this);
+        currentDNSText.setText(R.string.cdnstext);
+        currentDNSText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        currentDNS1 = new TextView(this);
+        currentDNS2 = new TextView(this);
+
+        currentDNSLayout.addView(currentDNSText);
+        currentDNSLayout.addView(currentDNS1);
+        currentDNSLayout.addView(currentDNS2);
+
+        ListView mainList = getListView();
+        mainList.addHeaderView(currentDNSLayout);
 
         ArrayList<String> netLabelList = new ArrayList<>();
         ArrayList<String> netNameList = new ArrayList<>();
@@ -158,7 +176,8 @@ public class MainActivity extends ListActivity {
         }
 
         protected void onPostExecute(List<String> dnss){
-            getActionBar().setTitle(dnss.get(0) + " & " + dnss.get(1));
+            currentDNS1.setText(dnss.get(0));
+            currentDNS2.setText(dnss.get(1));
         }
 
     }
@@ -182,22 +201,33 @@ public class MainActivity extends ListActivity {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.net_item, parent, false);
             TextView netText = (TextView) rowView.findViewById(R.id.net_text);
-
+            Button button = (Button) rowView.findViewById(R.id.button);
             DNSEditText dns1 = (DNSEditText) rowView.findViewById(R.id.dns1);
             DNSEditText dns2 = (DNSEditText) rowView.findViewById(R.id.dns2);
             GetNetwork gn = new GetNetwork(context);
+            final String dns1key = netNameList.get(position) + "dns1";
+
             String dns2Suffix = "dns2";
-
-            netText.setText(netLabelList.get(position));
-            dns1.setKey(netNameList.get(position) + "dns1");
-            dns1.setText(sp.getString(netNameList.get(position) + "dns1", ""));
-
-            if(sp.getString("mode", "0").equals("1")){
+            if(sp.getString("mode", "0").equals("1")) {
                 dns2.setFirewallMode();
                 dns2Suffix = "port";
             }
-            dns2.setKey(netNameList.get(position) + dns2Suffix);
-            dns2.setText(sp.getString(netNameList.get(position) + dns2Suffix, ""));
+            final String dns2key = netNameList.get(position) + dns2Suffix;
+
+            netText.setText(netLabelList.get(position));
+            dns1.setKeyAndText(dns1key);
+            dns2.setKeyAndText(dns2key);
+            dns1.setIPChecker();
+            dns2.setIPChecker();
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String dns1str = sp.getString(dns1key, "");
+                    String dns2str = sp.getString(dns2key, "");
+                    DNSBackgroundService.setByString(context, dns1str, dns2str);
+                }
+            });
 
             return rowView;
         }

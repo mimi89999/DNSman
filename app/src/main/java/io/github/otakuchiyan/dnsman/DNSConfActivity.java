@@ -31,8 +31,8 @@ public class DNSConfActivity extends Activity{
     private LinearLayout dnsConfActivity;
     private TextView configPathText;
     private TextView configDNS;
-	private EditText rdns1;
-	private EditText rdns2;
+	private DNSEditText rdns1;
+	private DNSEditText rdns2;
     private String configPath;
 
 	@Override
@@ -61,9 +61,17 @@ public class DNSConfActivity extends Activity{
         configDNS = new TextView(this);
         configPathText.setText(configPath);
 
+        rdns1 = new DNSEditText(this);
+        rdns2 = new DNSEditText(this);
+        rdns1.setKeyAndText("rdns1");
+        rdns2.setKeyAndText("rdns2");
+        rdns1.setIPChecker();
+        rdns2.setIPChecker();
+
         dnsConfActivity.addView(configPathText);
         dnsConfActivity.addView(configDNS);
-        dnsConfActivity.addView(setDNSTwopane());
+        dnsConfActivity.addView(rdns1);
+        dnsConfActivity.addView(rdns2);
 
 		IntentFilter operationFilter = new IntentFilter();
 		operationFilter.addAction(ACTION_CONFOPERATION);
@@ -86,30 +94,18 @@ public class DNSConfActivity extends Activity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-	switch(item.getItemId()){
-        case R.id.write_conf:
-            onClickWriteConfig();
-            break;
+        switch(item.getItemId()){
+            case R.id.write_conf:
+                onClickWriteConfig();
+                break;
         case R.id.default_conf:
             onClickDefaultConfig();
             break;
         case R.id.delete_conf:
             onClickDeleteConfig();
             break;
-	}
-	return super.onOptionsItemSelected(item);
     }
-
-    private LinearLayout setDNSTwopane(){
-        LinearLayout ll = new LinearLayout(this);
-	//rdns1 = new DNSEditText(this, "rdns1", false);
-	//rdns2 = new DNSEditText(this, "rdns2", false);
-
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-//        ll.addView(rdns1);
-  //      ll.addView(rdns2);
-
-        return ll;
+        return super.onOptionsItemSelected(item);
     }
 
     private BroadcastReceiver confOperation = new BroadcastReceiver(){
