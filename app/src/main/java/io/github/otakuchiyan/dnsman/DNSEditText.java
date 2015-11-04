@@ -42,7 +42,7 @@ public class DNSEditText extends EditText{
     }
 
     public void setFirewallMode(){
-        setHint(context.getText(R.string.default_port) + " 53");
+        setHint(context.getText(R.string.default_port));
         isPort = true;
     }
 

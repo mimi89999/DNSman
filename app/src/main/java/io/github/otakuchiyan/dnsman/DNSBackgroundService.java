@@ -23,6 +23,8 @@ public class DNSBackgroundService extends IntentService{
     private static List<String> dnsList = new ArrayList<String>();
     private static boolean checkProp = true;
     private static String mode;
+    private static String lastHijackedDNS;
+    private static String lastHijackedPort;
 
     public DNSBackgroundService(){
         super("DNSBackgroundService");
@@ -34,11 +36,15 @@ public class DNSBackgroundService extends IntentService{
         context = c;
         checkProp = sp.getBoolean("checkprop", true);
         mode = sp.getString("mode", "0");
+        if(mode.equals("1")){
+            lastHijackedDNS = sp.getString("lastHijackedDNS", "");
+            lastHijackedPort = sp.getString("lastHijackedPort", "");
+        }
     }
 
     public static boolean setByString(Context c, String dns1, String dns2){
         beforeSet(c);
-        if(dns1.equals("") || dns2.equals("")){
+        if(dns1.equals("") && dns2.equals("")){
             return false;
         }
 
@@ -51,16 +57,14 @@ public class DNSBackgroundService extends IntentService{
 
     public static boolean setByNetworkInfo(Context c, NetworkInfo info){
         beforeSet(c);
-	getDNSByNetType(info);
-	if(dnsList.isEmpty()){
-		return false;
-	}
-	Log.d("DNSBackgroundService", "dnsList.0 " + dnsList.get(0));
-	Log.d("DNSBackgroundService", "dnsList.1 " + dnsList.get(1));
+        getDNSByNetType(info);
+        if(dnsList.isEmpty()){
+            return false;
+        }
 
-	Intent i = new Intent(c, DNSBackgroundService.class);
-	c.startService(i);
-	return true;
+        Intent i = new Intent(c, DNSBackgroundService.class);
+        c.startService(i);
+        return true;
     }
 
     private static void getDNSByNetType(NetworkInfo info){
@@ -72,7 +76,7 @@ public class DNSBackgroundService extends IntentService{
 	    }
 	    String dns2 = sp.getString(info.getTypeName() + dns2suffix, "");
 	    
-		dnsList.clear();
+//		dnsList.clear();
 	    if(!dns1.equals("") || !dns2.equals("")){
 		    dnsList.add(dns1);
 		    dnsList.add(dns2);
@@ -88,12 +92,26 @@ public class DNSBackgroundService extends IntentService{
     @Override
     protected void onHandleIntent(Intent i){
         boolean result = false;
+        final String dns1 = dnsList.get(0);
+        final String dns2 = dnsList.get(1);
+
         switch(mode){
             case "0":
-                result = DNSManager.setDNSViaSetprop(dnsList.get(0), dnsList.get(1), checkProp);
+                result = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
                 break;
             case "1":
-                result = DNSManager.setDNSViaIPtables(dnsList.get(0), dnsList.get(1));
+                sped = sp.edit();
+
+                if(DNSManager.isRulesAlivable(dns1, dns2)) {
+                    return;
+                }else if (!lastHijackedDNS.equals("") &&
+                        DNSManager.isRulesAlivable(lastHijackedDNS, lastHijackedPort)){
+                    DNSManager.deleteRules(lastHijackedDNS, lastHijackedPort);
+                }
+                sped.putString("lastHijackedDNS", dns1);
+                sped.putString("lastHijackedPort", dns2);
+                sped.apply();
+                result = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
         }
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);

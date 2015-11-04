@@ -72,9 +72,6 @@ public class DNSManager {
     }
 
 	public static boolean setDNSViaIPtables(String dns, String port){
-		if(isRulesAlivable(dns, port)){
-			return true;
-		}
         List<String> cmds = new ArrayList<String>();
         List<String> result;
         String cmd1 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
@@ -103,7 +100,7 @@ public class DNSManager {
 		return !Shell.SU.run(cmd).isEmpty();
 	}
 
-    private static List<String> deleteRules(String dns, String port){
+    public static List<String> deleteRules(String dns, String port){
         List<String> cmds = new ArrayList<String>();
         String cmd1 = SETRULE_COMMAND_PREFIX + "-D OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
         String cmd2 = SETRULE_COMMAND_PREFIX + "-D OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns;

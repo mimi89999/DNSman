@@ -34,13 +34,14 @@ import android.widget.Toolbar.*;
 public class MainActivity extends ListActivity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
 	final private String ACTION_DELETE_RULES = "io.github.otakuchiyan.dnsman.ACTION_DELETE_RULES";
-    
+
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
     private LinearLayout currentDNSLayout;
     private TextView currentDNSText;
     private TextView currentDNS1;
     private TextView currentDNS2;
+    private int clickedButtonPosition;
 
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
 	    @Override
@@ -48,6 +49,7 @@ public class MainActivity extends ListActivity {
 		if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
 		    if(i.getBooleanExtra("result", false)){
                 new getDNSTask().execute();
+
 		    }
 		}
 	    }
@@ -196,23 +198,24 @@ public class MainActivity extends ListActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent){
+        public View getView(final int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.net_item, parent, false);
             TextView netText = (TextView) rowView.findViewById(R.id.net_text);
-            Button button = (Button) rowView.findViewById(R.id.button);
+            final Button button = (Button) rowView.findViewById(R.id.button);
             DNSEditText dns1 = (DNSEditText) rowView.findViewById(R.id.dns1);
             DNSEditText dns2 = (DNSEditText) rowView.findViewById(R.id.dns2);
             GetNetwork gn = new GetNetwork(context);
-            final String dns1key = netNameList.get(position) + "dns1";
+            final String currentNetName = netNameList.get(position);
+            final String dns1key = currentNetName + "dns1";
 
             String dns2Suffix = "dns2";
             if(sp.getString("mode", "0").equals("1")) {
                 dns2.setFirewallMode();
                 dns2Suffix = "port";
             }
-            final String dns2key = netNameList.get(position) + dns2Suffix;
+            final String dns2key = currentNetName + dns2Suffix;
 
             netText.setText(netLabelList.get(position));
             dns1.setKeyAndText(dns1key);
@@ -225,6 +228,13 @@ public class MainActivity extends ListActivity {
                 public void onClick(View v) {
                     String dns1str = sp.getString(dns1key, "");
                     String dns2str = sp.getString(dns2key, "");
+
+                    if (dns1str.equals("") && dns2str.equals("")) {
+                        return;
+                    }
+
+                    clickedButtonPosition = position;
+
                     DNSBackgroundService.setByString(context, dns1str, dns2str);
                 }
             });
