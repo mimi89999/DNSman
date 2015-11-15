@@ -10,6 +10,7 @@
         <activity
             android:name=".MainActivity"
 			android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateVisible"
             android:label="DNS man" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,12 +38,12 @@
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 		
 		<service android:name=".DNSBackgroundService" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 </manifest>

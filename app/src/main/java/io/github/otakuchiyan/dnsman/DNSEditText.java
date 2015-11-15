@@ -27,12 +27,13 @@ public class DNSEditText extends EditText{
 
     public DNSEditText(Context c, AttributeSet attr){
         super(c, attr);
+
         context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(c);
 
         setRawInputType(InputType.TYPE_CLASS_NUMBER);
         setSingleLine(true);
-        setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(39)});
     }
 
 

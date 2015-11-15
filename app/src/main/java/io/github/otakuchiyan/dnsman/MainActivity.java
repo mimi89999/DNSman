@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
@@ -62,6 +63,8 @@ public class MainActivity extends ListActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
 
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
         GetNetwork gn = new GetNetwork(this);
 
         currentDNSLayout = new LinearLayout(this);
@@ -76,8 +79,25 @@ public class MainActivity extends ListActivity {
         currentDNSLayout.addView(currentDNS1);
         currentDNSLayout.addView(currentDNS2);
 
-        ListView mainList = getListView();
+        final ListView mainList = getListView();
         mainList.addHeaderView(currentDNSLayout);
+        mainList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 1){
+                    mainList.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+                    view.requestFocus();
+                }else if(!mainList.isFocused()){
+                    mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+                    mainList.requestFocus();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+            }
+        });
 
         ArrayList<String> netLabelList = new ArrayList<>();
         ArrayList<String> netNameList = new ArrayList<>();
