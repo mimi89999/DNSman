@@ -27,6 +27,7 @@ public class DNSManager {
     final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
 	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
     final static String SETRULE_COMMAND_PREFIX = "iptables -t nat ";
+    // iptables -t nat -A OUTPUT -p tcp --dport 53 -j DNAT --to-destination 127.0.0.5
     final static String SETRULE_COMMAND_SUFFIX = " --dport 53 -j DNAT --to-destination ";
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 

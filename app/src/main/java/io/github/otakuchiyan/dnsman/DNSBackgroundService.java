@@ -115,7 +115,9 @@ public class DNSBackgroundService extends IntentService{
                 break;
         }
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);
-        i.putExtra("result", result);
+        result_intent.putExtra("result", result);
+        result_intent.putExtra("dns1", dns1);
+        result_intent.putExtra("dns2", dns2);
         LocalBroadcastManager.getInstance(context).sendBroadcast(result_intent);
     }
 

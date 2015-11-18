@@ -42,7 +42,12 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 // if(sp.getString("mode", "0").equals("0")) {
                     if (i.getBooleanExtra("result", false)) {
                         if (dnsToast.equals("0")) {
-                            Toast.makeText(c, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+                            final String dns1 = i.getStringExtra("dns1");
+                            final String dns2 = i.getStringExtra("dns2");
+                            String str = c.getText(R.string.set_succeed).toString();
+                            str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                            str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                            Toast.makeText(c, str, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         if (!dnsToast.equals("2")) {
