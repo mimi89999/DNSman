@@ -92,12 +92,13 @@ public class DNSBackgroundService extends IntentService{
     @Override
     protected void onHandleIntent(Intent i){
         boolean result = false;
+        int result_code = 0;
         final String dns1 = dnsList.get(0);
         final String dns2 = dnsList.get(1);
 
         switch(mode){
             case "0":
-                result = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
+                result_code = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
                 break;
             case "1":
                 sped = sp.edit();
@@ -111,11 +112,18 @@ public class DNSBackgroundService extends IntentService{
                 sped.putString("lastHijackedDNS", dns1);
                 sped.putString("lastHijackedPort", dns2);
                 sped.apply();
-                result = DNSManager.setDNSViaIPtables(dns1, dns2);
+                result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
+        }
+
+        if(result_code != 0){
+            result = false;
+        }else{
+            result = true;
         }
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
+        result_intent.putExtra("result_code", result_code);
         result_intent.putExtra("dns1", dns1);
         result_intent.putExtra("dns2", dns2);
         LocalBroadcastManager.getInstance(context).sendBroadcast(result_intent);

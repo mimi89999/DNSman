@@ -31,6 +31,10 @@ public class DNSManager {
     final static String SETRULE_COMMAND_SUFFIX = " --dport 53 -j DNAT --to-destination ";
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
+    //0 is no error
+    final static int ERROR_SETPROP_FAILED = 1;
+    final static int ERROR_UNKNOWN = 9999;
+
 	final static String[] CHECKPROP_COMMANDS = {
         GETPROP_COMMAND_PREFIX + "1",
         GETPROP_COMMAND_PREFIX + "2"
@@ -44,7 +48,7 @@ public class DNSManager {
     private static String port;
     private static boolean checkProp;
 
-	public static boolean setDNSViaSetprop(String dns1, String dns2, boolean checkProp) {
+	public static int setDNSViaSetprop(String dns1, String dns2, boolean checkProp) {
 		String[] setCommands = {
             SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",
             SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + "\""
@@ -65,14 +69,14 @@ public class DNSManager {
             //Check effect
             if(!result.get(0).equals(dns1) ||
                 !result.get(1).equals(dns2)){
-                return false;
+                return ERROR_SETPROP_FAILED;
             }
         }
 		
-        return true;
+        return 0;
     }
 
-	public static boolean setDNSViaIPtables(String dns, String port){
+	public static int setDNSViaIPtables(String dns, String port){
         List<String> cmds = new ArrayList<String>();
         List<String> result;
         String cmd1 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
@@ -88,7 +92,7 @@ public class DNSManager {
         Log.d("DNSManager[CMD]", cmd1);
         Log.d("DNSManager[CMD]", cmd2);
 
-        return Shell.SU.run(cmds).isEmpty();
+        return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
 	public static boolean isRulesAlivable(String dns, String port){
 		String cmd = CHECKRULE_COMMAND_PREFIX + dns;

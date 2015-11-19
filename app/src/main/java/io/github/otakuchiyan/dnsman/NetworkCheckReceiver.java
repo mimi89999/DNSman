@@ -39,6 +39,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
                 sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
                 String dnsToast = sp.getString("toast", "0");
+                int result_code = i.getIntExtra("result_code", 0);
                 // if(sp.getString("mode", "0").equals("0")) {
                     if (i.getBooleanExtra("result", false)) {
                         if (dnsToast.equals("0")) {
@@ -51,7 +52,15 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                         }
                     } else {
                         if (!dnsToast.equals("2")) {
-                            Toast.makeText(c, R.string.set_failed, Toast.LENGTH_SHORT).show();
+                            String error_str = c.getText(R.string.set_failed).toString();
+                            switch(result_code){
+                                case DNSManager.ERROR_SETPROP_FAILED:
+                                    error_str += "\n" + c.getText(R.string.error_setprop_failed).toString();
+                                    break;
+                                default:
+                                    error_str += "\n" + c.getText(R.string.error_unknown).toString();
+                            }
+                            Toast.makeText(c, error_str, Toast.LENGTH_SHORT).show();
                         }
                     }
                 //}
