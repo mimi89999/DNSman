@@ -12,6 +12,7 @@ import android.app.IntentService;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -26,10 +27,17 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
 	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
-    final static String SETRULE_COMMAND_PREFIX = "iptables -t nat ";
-    // iptables -t nat -A OUTPUT -p tcp --dport 53 -j DNAT --to-destination 127.0.0.5
-    final static String SETRULE_COMMAND_SUFFIX = " --dport 53 -j DNAT --to-destination ";
+        final static String SETRULE_COMMAND = "iptables -t nat %s OUTPUT -p %s --dport 53 -j DNAT --to-destination %s\n";
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
+
+    final static String NDC_COMMAND_PREFIX = "ndc resolver";
+    final static String SETIFDNS_COMMAND_BELOW_42 = NDC_COMMAND_PREFIX + " setifdns %s %s %s\n";
+    final static String SETIFDNS_COMMAND = NDC_COMMAND_PREFIX + " setifdns %s '' %s %s\n";
+    final static String SETNETDNS_COMMAND = NDC_COMMAND_PREFIX + " setnetdns %s '' %s %s\n";
+    final static String SETDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " setdefaultif";
+    final static String FLUSHIF_COMMAND = NDC_COMMAND_PREFIX + " flushif %s";
+    final static String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif";
+    final static String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
 
     //0 is no error
     final static int ERROR_SETPROP_FAILED = 1;
@@ -77,10 +85,11 @@ public class DNSManager {
     }
 
 	public static int setDNSViaIPtables(String dns, String port){
-        List<String> cmds = new ArrayList<String>();
+        List<String> cmds = new ArrayList<>();
         List<String> result;
-        String cmd1 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
-        String cmd2 = SETRULE_COMMAND_PREFIX + "-A OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns;
+
+        String cmd1 = String.format(SETRULE_COMMAND, "-A", "udp", dns);
+        String cmd2 = String.format(SETRULE_COMMAND, "-A", "tcp", dns);
         if(!port.equals("")){
             cmd1 += ":" + port;
             cmd2 += ":" + port;
@@ -94,6 +103,39 @@ public class DNSManager {
 
         return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
+
+    public static int setDNSViaNdc(String iface, String dns1, String dns2){
+        List<String> cmds = new ArrayList<>();
+
+        String setdns_cmd;
+        String flushdns_cmd;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>=5.0
+            setdns_cmd = String.format(SETNETDNS_COMMAND, iface, dns1, dns2);
+
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){ //>=4.3
+            setdns_cmd = String.format(SETIFDNS_COMMAND, iface, dns1, dns2);
+        }else{ //<=4.2
+            setdns_cmd = String.format(SETIFDNS_COMMAND_BELOW_42, iface, dns1, dns2);
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            flushdns_cmd = String.format(FLUSHNET_COMMAND, iface);
+        }else{ //<=4.4
+            flushdns_cmd = String.format(FLUSHIF_COMMAND, iface);
+        }
+
+        Log.d("DNSManaget[CMD]", setdns_cmd);
+        Log.d("DNSManaget[CMD]", flushdns_cmd);
+
+        cmds.add(FLUSHDEFAULTIF_COMMAND);
+        cmds.add(flushdns_cmd);
+        cmds.add(setdns_cmd);
+
+        List<String> result = Shell.SU.run(cmds);
+
+        return 0;
+    }
+
 	public static boolean isRulesAlivable(String dns, String port){
 		String cmd = CHECKRULE_COMMAND_PREFIX + dns;
 
@@ -106,9 +148,9 @@ public class DNSManager {
 	}
 
     public static List<String> deleteRules(String dns, String port){
-        List<String> cmds = new ArrayList<String>();
-        String cmd1 = SETRULE_COMMAND_PREFIX + "-D OUTPUT -p udp" + SETRULE_COMMAND_SUFFIX + dns;
-        String cmd2 = SETRULE_COMMAND_PREFIX + "-D OUTPUT -p tcp" + SETRULE_COMMAND_SUFFIX + dns;
+        List<String> cmds = new ArrayList<>();
+        String cmd1 = String.format(SETRULE_COMMAND, "-D", "udp", dns);
+        String cmd2 = String.format(SETRULE_COMMAND, "-D", "tcp", dns);
         if(!port.equals("")){
             cmd1 += ":" + port;
             cmd2 += ":" + port;
@@ -123,7 +165,7 @@ public class DNSManager {
     }
 	
 	public static String writeResolvConfig(String dns1, String dns2, String path){
-        List<String> cmds = new ArrayList<String>();
+        List<String> cmds = new ArrayList<>();
         boolean isSystem = false;
 		
         if(path.substring(0, 7).equals("/system") ||
@@ -153,7 +195,7 @@ public class DNSManager {
 	}
 	
 	public static String removeResolvConfig(String path){
-        List<String> cmds = new ArrayList<String>();
+        List<String> cmds = new ArrayList<>();
         boolean isSystem = false;
 
         if(path.substring(0, 7).equals("/system") ||
