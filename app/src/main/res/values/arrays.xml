@@ -14,9 +14,11 @@
     <string-array name="mode">
         <item>@string/pref_mode_prop</item>
         <item>@string/pref_mode_iptables</item>
+        <item>@string/pref_mode_ndc</item>
     </string-array>
     <string-array name="mode_values">
-        <item>0</item>
-        <item>1</item>
+        <item>PROP</item>
+        <item>IPTABLES</item>
+        <item>NDC</item>
     </string-array>
 </resources>

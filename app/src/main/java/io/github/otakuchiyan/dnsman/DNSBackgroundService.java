@@ -20,7 +20,7 @@ public class DNSBackgroundService extends IntentService{
     private static Context context;
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sped;
-    private static List<String> dnsList = new ArrayList<String>();
+    private static List<String> dnsList = new ArrayList<>();
     private static boolean checkProp = true;
     private static String mode;
     private static String lastHijackedDNS;
@@ -91,16 +91,16 @@ public class DNSBackgroundService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent i){
-        boolean result = false;
+        boolean result;
         int result_code = 0;
         final String dns1 = dnsList.get(0);
         final String dns2 = dnsList.get(1);
 
         switch(mode){
-            case "0":
+            case "PROP":
                 result_code = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
                 break;
-            case "1":
+            case "IPTABLES":
                 sped = sp.edit();
 
                 if(DNSManager.isRulesAlivable(dns1, dns2)) {
@@ -114,13 +114,13 @@ public class DNSBackgroundService extends IntentService{
                 sped.apply();
                 result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
+            case "NDC":
+                String iface = "w";
+                result_code = DNSManager.setDNSViaNdc(iface, dns1, dns2);
+                break;
         }
 
-        if(result_code != 0){
-            result = false;
-        }else{
-            result = true;
-        }
+        result = result_code == 0;
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
         result_intent.putExtra("result_code", result_code);

@@ -31,11 +31,14 @@
 	<string name="pref_mode">Operating mode</string>
 	<string name="pref_mode_prop">System properties</string>
 	<string name="pref_mode_iptables">Firewall rules</string>
+	<string name="pref_mode_ndc">Use ndc command</string>
 
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
+
+    <string name="pref_pop_keyboard">Pop keyboard automatically</string>
 	
     <string name="pref_config">Path of resolv.conf</string>
 
@@ -62,7 +65,6 @@
 	<string name="default_conf_msg">Do you want to use Google public DNS?</string>
 	<string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
 	<string name="developer">Developer</string>
-	<string name="developer_summary">西行寺幽玄(otakuchiyan)</string>
 	<string name="license">License</string>
 	<string name="license_summary">GNU GPLv3</string>
 	<string name="opensource">Source</string>

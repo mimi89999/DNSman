@@ -9,12 +9,15 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.content.Intent;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import static android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
@@ -63,8 +66,6 @@ public class MainActivity extends ListActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
 
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
         GetNetwork gn = new GetNetwork(this);
 
         currentDNSLayout = new LinearLayout(this);
@@ -84,10 +85,10 @@ public class MainActivity extends ListActivity {
         mainList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 1){
+                if (position == 1) {
                     mainList.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
                     view.requestFocus();
-                }else if(!mainList.isFocused()){
+                } else if (!mainList.isFocused()) {
                     mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
                     mainList.requestFocus();
                 }
@@ -98,6 +99,7 @@ public class MainActivity extends ListActivity {
                 mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
             }
         });
+
 
         ArrayList<String> netLabelList = new ArrayList<>();
         ArrayList<String> netNameList = new ArrayList<>();
@@ -137,15 +139,16 @@ public class MainActivity extends ListActivity {
             sped.apply();
         }
 
-
         final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
-
         setListAdapter(adapter);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(ACTION_GETDNS));
 
+        setPopKeyboard();
+
         (new getDNSTask()).execute();
+
 	}
 
 	@Override
@@ -153,13 +156,14 @@ public class MainActivity extends ListActivity {
         super.onResume();
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
-		String current_mode = sp.getString("mode", "0");
-		if(!current_mode.equals(sp.getString("last_mode", "0"))){
+		String current_mode = sp.getString("mode", "PROP");
+		if(!current_mode.equals(sp.getString("last_mode", "PROP"))){
 			sped.putString("last_mode", current_mode);
 			sped.apply();
 			finish();
 			startActivity(getIntent());
 		}
+        setPopKeyboard();
     }
 
 	@Override
@@ -183,6 +187,15 @@ public class MainActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 		
 	}
+
+    private void setPopKeyboard(){
+        if(sp.getBoolean("pop_keyboard", true)){
+            getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                    LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }else{
+            getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        }
+    }
 	
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -231,7 +244,7 @@ public class MainActivity extends ListActivity {
             final String dns1key = currentNetName + "dns1";
 
             String dns2Suffix = "dns2";
-            if(sp.getString("mode", "0").equals("1")) {
+            if(sp.getString("mode", "PROP").equals("IPTABLES")) {
                 dns2.setFirewallMode();
                 dns2Suffix = "port";
             }

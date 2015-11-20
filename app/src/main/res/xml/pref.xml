@@ -4,7 +4,7 @@
         <ListPreference
             android:key="mode"
             android:title="@string/pref_mode"
-            android:defaultValue="0"
+            android:defaultValue="PROP"
             android:entries="@array/mode"
             android:entryValues="@array/mode_values"
             />
@@ -31,10 +31,13 @@
             android:entries="@array/toast"
             android:entryValues="@array/toast_values"
             />
+        <CheckBoxPreference android:key="pop_keyboard"
+            android:title="@string/pref_pop_keyboard"
+            android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_about">
 	    <Preference android:title="@string/developer"
-		    android:summary="@string/developer_summary"/>
+		    android:summary="otakuchiyan"/>
         <Preference android:title="@string/license"
                 android:summary="@string/license_summary">
                 <intent android:action="android.intent.action.VIEW"

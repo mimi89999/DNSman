@@ -82,13 +82,13 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             if(currentNet != null) {
                 if(isFirstConnect) {
                     isFirstConnect = false;
-                        String dnsToast = sp.getString("toast", "0");
-			if(!DNSBackgroundService.setByNetworkInfo(context, currentNet)){
-				if (!dnsToast.equals("2")) {
-					Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
-				}
-			}
-	    }
+                    String dnsToast = sp.getString("toast", "0");
+                    if(!DNSBackgroundService.setByNetworkInfo(context, currentNet)){
+                        if (!dnsToast.equals("2")) {
+                            Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
             }else{
                 isFirstConnect = true;
             }
