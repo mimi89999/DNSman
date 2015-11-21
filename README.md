@@ -27,6 +27,7 @@ Thanks to
 
 [GNOME](https://www.gnome.org)
 
+[Twidere](https://github.com/TwidereProject/Twidere-Android)
 
 License: GNU GPL v3
 

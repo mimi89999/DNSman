@@ -25,9 +25,7 @@ public class SettingsActivity extends PreferenceActivity{
         @Override
         public void onCreate(final Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
-	    addPreferencesFromResource(R.xml.pref);
-	    //	    ListPreference dnsToastPref = getPreference("dns
-	    
+			addPreferencesFromResource(R.xml.pref);
         }
 
     }

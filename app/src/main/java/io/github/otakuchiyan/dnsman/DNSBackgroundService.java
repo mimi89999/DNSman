@@ -68,7 +68,6 @@ public class DNSBackgroundService extends IntentService{
     private static void getDNSByNetType(NetworkInfo info){
 	    String dns1 = sp.getString(info.getTypeName() + "dns1", "");
 	    String dns2suffix = "dns2";
-        current_iface = sp.getString(info.getTypeName() + "iface", "");
         //dns2 was used for port when mode is IPTABLES
         if (mode.equals("IPTABLES")) {
             dns2suffix = "port";
