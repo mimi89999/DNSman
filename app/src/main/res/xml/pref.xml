@@ -14,6 +14,13 @@
             android:defaultValue="/etc/resolv.conf"
             android:title="@string/pref_config"
             />
+
+        <PreferenceScreen android:title="@string/pref_ndc">
+            <io.github.otakuchiyan.dnsman.InterfacePreference
+                android:key="pref_ndc_wlan"
+                android:title="@string/pref_ndc_wlan" />
+        </PreferenceScreen>
+
         <PreferenceScreen android:title="@string/pref_misc">
             <CheckBoxPreference android:key="checkprop"
                 android:defaultValue="true"
@@ -31,13 +38,9 @@
             android:entries="@array/toast"
             android:entryValues="@array/toast_values"
             />
-        <CheckBoxPreference android:key="pop_keyboard"
-            android:title="@string/pref_pop_keyboard"
-            android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_about">
-	    <Preference android:title="@string/developer"
-		    android:summary="otakuchiyan"/>
+        <io.github.otakuchiyan.dnsman.AppVersionPreference />
         <Preference android:title="@string/license"
                 android:summary="@string/license_summary">
                 <intent android:action="android.intent.action.VIEW"

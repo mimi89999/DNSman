@@ -7,17 +7,8 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
-import android.content.Intent;
-import android.app.IntentService;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +18,7 @@ import eu.chainfire.libsuperuser.Shell;
 public class DNSManager {
     final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
 	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
-        final static String SETRULE_COMMAND = "iptables -t nat %s OUTPUT -p %s --dport 53 -j DNAT --to-destination %s\n";
+    final static String SETRULE_COMMAND = "iptables -t nat %s OUTPUT -p %s --dport 53 -j DNAT --to-destination %s\n";
     final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
 
     final static String NDC_COMMAND_PREFIX = "ndc resolver";
@@ -35,7 +26,7 @@ public class DNSManager {
     final static String SETIFDNS_COMMAND = NDC_COMMAND_PREFIX + " setifdns %s '' %s %s\n";
     final static String SETNETDNS_COMMAND = NDC_COMMAND_PREFIX + " setnetdns %s '' %s %s\n";
     final static String SETDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " setdefaultif";
-    final static String FLUSHIF_COMMAND = NDC_COMMAND_PREFIX + " flushif %s";
+    final static String FLUSHIF_COMMAND = NDC_COMMAND_PREFIX + " flushif %s\n";
     final static String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif";
     final static String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
 

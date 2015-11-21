@@ -1,39 +1,31 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
 import android.content.Intent;
-import android.text.InputType;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import static android.view.WindowManager.LayoutParams;
-import android.widget.EditText;
-import android.preference.PreferenceManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.app.*;
-import android.os.AsyncTask;
-import android.content.IntentFilter;
-import android.content.BroadcastReceiver;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.TypedValue;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.widget.*;
-import android.widget.Toolbar.*;
 
 public class MainActivity extends ListActivity {
     final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
@@ -145,8 +137,6 @@ public class MainActivity extends ListActivity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(ACTION_GETDNS));
 
-        setPopKeyboard();
-
         (new getDNSTask()).execute();
 
 	}
@@ -163,7 +153,6 @@ public class MainActivity extends ListActivity {
 			finish();
 			startActivity(getIntent());
 		}
-        setPopKeyboard();
     }
 
 	@Override
@@ -188,15 +177,6 @@ public class MainActivity extends ListActivity {
 		
 	}
 
-    private void setPopKeyboard(){
-        if(sp.getBoolean("pop_keyboard", true)){
-            getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-                    LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }else{
-            getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        }
-    }
-	
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle(R.string.welcome)

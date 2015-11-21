@@ -38,7 +38,11 @@
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
 
-    <string name="pref_pop_keyboard">Pop keyboard automatically</string>
+	<string name="pref_ndc">Network interfaces name</string>
+	<string name="pref_ndc_wlan">Wi-Fi</string>
+	<string name="pref_ndc_rmnet">Mobile network</string>
+	<string name="pref_ndc_bt">Bluetooth</string>
+	<string name="pref_ndc_eth">Ethernet</string>
 	
     <string name="pref_config">Path of resolv.conf</string>
 

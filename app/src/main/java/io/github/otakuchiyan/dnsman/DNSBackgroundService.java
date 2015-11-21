@@ -1,18 +1,15 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
-import android.support.v4.content.LocalBroadcastManager;
-import android.app.IntentService;
 import android.net.NetworkInfo;
-import android.util.Log;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 
-import java.util.List;
 import java.util.ArrayList;
-
-import io.github.otakuchiyan.dnsman.DNSManager;
+import java.util.List;
 
 public class DNSBackgroundService extends IntentService{
     final public static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
@@ -23,6 +20,7 @@ public class DNSBackgroundService extends IntentService{
     private static List<String> dnsList = new ArrayList<>();
     private static boolean checkProp = true;
     private static String mode;
+    private static String current_iface;
     private static String lastHijackedDNS;
     private static String lastHijackedPort;
 
@@ -35,8 +33,8 @@ public class DNSBackgroundService extends IntentService{
                 c.getApplicationContext());
         context = c;
         checkProp = sp.getBoolean("checkprop", true);
-        mode = sp.getString("mode", "0");
-        if(mode.equals("1")){
+        mode = sp.getString("mode", "PROP");
+        if (mode.equals("IPTABLES")) {
             lastHijackedDNS = sp.getString("lastHijackedDNS", "");
             lastHijackedPort = sp.getString("lastHijackedPort", "");
         }
@@ -70,9 +68,10 @@ public class DNSBackgroundService extends IntentService{
     private static void getDNSByNetType(NetworkInfo info){
 	    String dns1 = sp.getString(info.getTypeName() + "dns1", "");
 	    String dns2suffix = "dns2";
-	    //dns2 was used for port when mode is 1
-	    if(mode.equals("1")){
-		    dns2suffix = "port";
+        current_iface = sp.getString(info.getTypeName() + "iface", "");
+        //dns2 was used for port when mode is IPTABLES
+        if (mode.equals("IPTABLES")) {
+            dns2suffix = "port";
 	    }
 	    String dns2 = sp.getString(info.getTypeName() + dns2suffix, "");
 	    
@@ -115,8 +114,7 @@ public class DNSBackgroundService extends IntentService{
                 result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
             case "NDC":
-                String iface = "w";
-                result_code = DNSManager.setDNSViaNdc(iface, dns1, dns2);
+                result_code = DNSManager.setDNSViaNdc(current_iface, dns1, dns2);
                 break;
         }
 
