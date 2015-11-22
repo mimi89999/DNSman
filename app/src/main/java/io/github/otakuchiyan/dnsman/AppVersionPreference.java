@@ -63,7 +63,7 @@ public class AppVersionPreference extends Preference {
     protected void onClick() {
         mHandler.removeCallbacks(mResetCounterRunnable);
         mClickCount++;
-        if (mClickCount >= 20) {
+        if (mClickCount >= 5) {
             final Context context = getContext();
             if (context != null) {
                 mClickCount = 0;

@@ -83,6 +83,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 if(isFirstConnect) {
                     isFirstConnect = false;
                     String dnsToast = sp.getString("toast", "0");
+                    Log.i("NetworkCheckReceiver", "Network was changed");
                     if(!DNSBackgroundService.setByNetworkInfo(context, currentNet)){
                         if (!dnsToast.equals("2")) {
                             Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();

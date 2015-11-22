@@ -73,18 +73,16 @@ public class DNSBackgroundService extends IntentService{
             dns2suffix = "port";
 	    }
 	    String dns2 = sp.getString(info.getTypeName() + dns2suffix, "");
-	    
-//		dnsList.clear();
-	    if(!dns1.equals("") || !dns2.equals("")){
-		    dnsList.add(dns1);
-		    dnsList.add(dns2);
-	    }else{
-			//Fallback to global DNS
+
+        //Fallback to global DNS
+	    if(dns1.equals("") || dns2.equals("")){
 			dns1 = sp.getString("gdns1", "");
 			dns2 = sp.getString("g" + dns2suffix, "");
-			dnsList.add(dns1);
-			dnsList.add(dns2);
 		}
+        if(!dns1.equals("") || !dns2.equals("")) {
+            dnsList.add(dns1);
+            dnsList.add(dns2);
+        }
     }
 
     @Override
