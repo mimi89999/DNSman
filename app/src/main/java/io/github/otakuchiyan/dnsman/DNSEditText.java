@@ -30,10 +30,16 @@ public class DNSEditText extends EditText{
 
         context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(c);
-
-        setRawInputType(InputType.TYPE_CLASS_NUMBER);
         setSingleLine(true);
-        setFilters(new InputFilter[]{new InputFilter.LengthFilter(39)});
+        int input_type = InputType.TYPE_CLASS_NUMBER;
+        int max_length = 15;
+        if(sp.getBoolean("enable_ipv6", false)) {
+            input_type = InputType.TYPE_CLASS_TEXT;
+            max_length = 39;
+        }
+        setRawInputType(input_type);
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(max_length)});
+
     }
 
 

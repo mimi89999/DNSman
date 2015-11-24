@@ -148,11 +148,18 @@ public class MainActivity extends ListActivity {
 		sped = sp.edit();
 		String current_mode = sp.getString("mode", "PROP");
 		if(!current_mode.equals(sp.getString("last_mode", "PROP"))){
-			sped.putString("last_mode", current_mode);
-			sped.apply();
-			finish();
-			startActivity(getIntent());
-		}
+            sped.putString("last_mode", current_mode);
+            sped.apply();
+            finish();
+            startActivity(getIntent());
+        }
+        boolean enable_ipv6 = sp.getBoolean("enable_ipv6", false);
+        if(enable_ipv6 != sp.getBoolean("already_enable_ipv6", false)){
+            sped.putBoolean("already_enable_ipv6", enable_ipv6);
+            sped.apply();
+            finish();
+            startActivity(getIntent());
+        }
     }
 
 	@Override

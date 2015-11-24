@@ -17,10 +17,8 @@ public class IPChecker
 				&& !ip.substring(i, i + 1).equals(".")){
 				dotCount++;
 				if(dotCount == 3){
-					if (i == ip.length()){
-						return false;
-					}
-					return true;
+					//if i is a dot return false
+					return i != ip.length();
 				}
 			}
 		}
@@ -28,19 +26,7 @@ public class IPChecker
 		return false;
 	}
 
-    public static boolean IPSegmentChecker43C(String ip){
-	if(ip.length() == 3 ||
-	   ip.length() == 7 ||
-	   ip.length() == 11){
-
-	        int c = ip.length();
-		if(!ip.substring(c - 1, c).equals(".") &&
-		   !ip.substring(c - 2, c - 1).equals(".") &&
-		   !ip.substring(c - 3, c - 2).equals(".")){
-		    return true;
-		}
-		
-	}
-	return false;
+    public static boolean IPv6Checker(String ip){
+		return false;
     }
 }

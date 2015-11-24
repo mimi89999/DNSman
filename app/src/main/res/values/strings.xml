@@ -28,6 +28,7 @@
     <string name="pref_category_appearance">APPEARANCE</string>
     <string name="pref_category_about">ABOUT</string>
 
+	<string name="pref_enable_ipv6">Enable IPv6</string>
 	<string name="pref_mode">Operating mode</string>
 	<string name="pref_mode_prop">System properties</string>
 	<string name="pref_mode_iptables">Firewall rules</string>
@@ -43,7 +44,7 @@
 	<string name="pref_ndc_rmnet">Mobile network</string>
 	<string name="pref_ndc_bt">Bluetooth</string>
 	<string name="pref_ndc_eth">Ethernet</string>
-	
+
     <string name="pref_config">Path of resolv.conf</string>
 
     <string name="pref_misc">Misc</string>
