@@ -5,7 +5,7 @@ DNS resolver setting tool for Android.
 TODO
 ===
 - Find out the method of changing DNS without ROOT and VPNService class
-- Redesign
+- Implete DNS auto completing
 
 How to build
 ===
