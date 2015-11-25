@@ -1,7 +1,5 @@
 package io.github.otakuchiyan.dnsman;
 
-import android.util.Log;
-
 public class IPChecker
 {
 	public static boolean isIPv4(String ip){
@@ -44,7 +42,7 @@ public class IPChecker
 					colonCount++;
 					if(colonCount >= 2){
 						//if i is a colon return false
-						return i != ip.length();
+						return (i + 1) != ip.length();
 					}
 				}else if(ip.charAt(i) == '.'){
 					return false;

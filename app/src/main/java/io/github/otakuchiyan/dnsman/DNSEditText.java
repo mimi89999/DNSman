@@ -1,6 +1,7 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.util.AttributeSet;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +14,7 @@ import android.text.InputFilter.LengthFilter;
 
 import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 
-public class DNSEditText extends EditText{
+public class DNSEditText extends AutoCompleteTextView{
     private SharedPreferences sp;
 
     private Context context;
