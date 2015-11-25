@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="cdnstext">Current DNS:</string>
-	<string name="global_category">Global</string>
+    <string name="cdnstext">Current DNS:</string>
+    <string name="global_category">Global</string>
     <string name="individual_category">Individual</string>
 
-	<string name="wifi_category">Wi-Fi</string>
-	<string name="mobile_category">Mobile network</string>
+    <string name="wifi_category">Wi-Fi</string>
+    <string name="mobile_category">Mobile network</string>
     <string name="bt_category">Bluetooth</string>
     <string name="eth_category">Ethernet</string>
-	<string name="wimax_category">WiMax</string>
+    <string name="wimax_category">WiMax</string>
 
-	<string name="default_port">Port</string>
-	
-	<string name="set_succeed">Setting DNS succeed</string>
+    <string name="default_port">Port</string>
+
+    <string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed</string>
-	<string name="error_setprop_failed">setprop was no affected, may need root permission.</string>
-	<string name="error_unknown">Unknown error occured, may be a bug.</string>
-	<string name="operation_succeed">The operation was completed successfully</string>
-	
-	<string name="action_edit_resolv">DNS config file</string>
-	<string name="action_settings">Settings</string>
+    <string name="error_setprop_failed">setprop was no affected, may need root permission.</string>
+    <string name="error_unknown">Unknown error occured, may be a bug.</string>
+    <string name="operation_succeed">The operation was completed successfully</string>
 
-	<string name="button_apply">Apply</string>
-	<string name="button_unapply">Unapply</string>
+    <string name="action_edit_resolv">DNS config file</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="button_apply">Apply</string>
+    <string name="button_unapply">Unapply</string>
 
     <string name="pref_category_function">FUNCTION</string>
     <string name="pref_category_appearance">APPEARANCE</string>
     <string name="pref_category_about">ABOUT</string>
 
-	<string name="pref_enable_ipv6">Enable IPv6</string>
-	<string name="pref_mode">Operating mode</string>
-	<string name="pref_mode_prop">System properties</string>
-	<string name="pref_mode_iptables">Firewall rules</string>
-	<string name="pref_mode_ndc">Use ndc command</string>
+    <string name="pref_enable_ipv6">Enable IPv6</string>
+    <string name="pref_mode">Operating mode</string>
+    <string name="pref_mode_prop">System properties</string>
+    <string name="pref_mode_iptables">Firewall rules</string>
+    <string name="pref_mode_ndc">Use ndc command</string>
 
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
 
-	<string name="pref_ndc">Network interfaces name</string>
-	<string name="pref_ndc_wlan">Wi-Fi</string>
-	<string name="pref_ndc_rmnet">Mobile network</string>
-	<string name="pref_ndc_bt">Bluetooth</string>
-	<string name="pref_ndc_eth">Ethernet</string>
+    <string name="pref_ndc">Network interfaces name</string>
+    <string name="pref_ndc_wlan">Wi-Fi</string>
+    <string name="pref_ndc_rmnet">Mobile network</string>
+    <string name="pref_ndc_bt">Bluetooth</string>
+    <string name="pref_ndc_eth">Ethernet</string>
+
+    <string name="pref_dns_list">DNS completing list</string>
 
     <string name="pref_config">Path of resolv.conf</string>
 
@@ -52,26 +56,26 @@
     <string name="pref_misc_checkprop_summary">To detecting properties whether had setted, closed it can improve little performance</string>
 
     <string name="invalid_dns">Invalid DNS</string>
-	
-	
-	<string name="welcome">Welcome</string>
-	<string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
+
+
+    <string name="welcome">Welcome</string>
+    <string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
 
     <string name="nodns_noti_text">Click to set DNS</string>
-	<string name="nodns_noti">No alivable DNS</string>
+    <string name="nodns_noti">No alivable DNS</string>
 
     <string name="no_conf">resolv.conf was not found</string>
-	
-	<string name="write_conf">Write DNS resolver</string>
-	<string name="default_conf">Use Google public DNS</string>
+
+    <string name="write_conf">Write DNS resolver</string>
+    <string name="default_conf">Use Google public DNS</string>
     <string name="delete_conf">Delete /etc/resolv.conf</string>
-    
-	<string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf?</string>
-	<string name="default_conf_msg">Do you want to use Google public DNS?</string>
-	<string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
-	<string name="developer">Developer</string>
-	<string name="license">License</string>
-	<string name="license_summary">GNU GPLv3</string>
-	<string name="opensource">Source</string>
+
+    <string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf?</string>
+    <string name="default_conf_msg">Do you want to use Google public DNS?</string>
+    <string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
+    <string name="developer">Developer</string>
+    <string name="license">License</string>
+    <string name="license_summary">GNU GPLv3</string>
+    <string name="opensource">Source</string>
     <string name="opensource_summary">View source code on GitHub</string>
 </resources>

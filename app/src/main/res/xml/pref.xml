@@ -11,13 +11,11 @@
             android:entries="@array/mode"
             android:entryValues="@array/mode_values"
             />
-        
         <EditTextPreference
             android:key="config_path"
             android:defaultValue="/etc/resolv.conf"
             android:title="@string/pref_config"
             />
-
         <PreferenceScreen android:title="@string/pref_ndc">
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_wlan"
@@ -32,7 +30,9 @@
                 android:key="pref_ndc_eth"
                 android:title="@string/pref_ndc_eth" />
         </PreferenceScreen>
-
+        <Preference android:title="@string/pref_dns_list">
+            <intent android:action="io.github.otakuchiyan.dnsman.DNSListActivity"/>
+        </Preference>
         <PreferenceScreen android:title="@string/pref_misc">
             <CheckBoxPreference android:key="checkprop"
                 android:defaultValue="true"

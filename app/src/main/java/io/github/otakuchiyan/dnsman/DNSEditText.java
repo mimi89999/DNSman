@@ -1,6 +1,7 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.content.Context;
@@ -40,6 +41,12 @@ public class DNSEditText extends AutoCompleteTextView{
         }
         setRawInputType(input_type);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(max_length)});
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDropDown();
+            }
+        });
 
     }
 
@@ -56,5 +63,10 @@ public class DNSEditText extends AutoCompleteTextView{
 
     public void setIPChecker() {
         addTextChangedListener(new IPCheckerComponent(context, this, key, isPort));
+    }
+
+    @Override
+    public boolean enoughToFilter(){
+        return true;
     }
 }

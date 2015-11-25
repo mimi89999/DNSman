@@ -88,8 +88,8 @@ public class DNSConfActivity extends Activity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-	getMenuInflater().inflate(R.menu.dnsconf, menu);
-	return true;
+        getMenuInflater().inflate(R.menu.dnsconf, menu);
+        return true;
     }
 
     @Override
