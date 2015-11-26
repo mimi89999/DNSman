@@ -19,7 +19,7 @@ public class DNSEditText extends AutoCompleteTextView{
     private SharedPreferences sp;
 
     private Context context;
-    private String key;
+    private String key = "";
     private boolean isPort = false;
 
 

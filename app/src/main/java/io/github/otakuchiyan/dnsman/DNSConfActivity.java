@@ -98,13 +98,13 @@ public class DNSConfActivity extends Activity{
             case R.id.write_conf:
                 onClickWriteConfig();
                 break;
-        case R.id.default_conf:
-            onClickDefaultConfig();
-            break;
-        case R.id.delete_conf:
-            onClickDeleteConfig();
-            break;
-    }
+            case R.id.default_conf:
+                onClickDefaultConfig();
+                break;
+            case R.id.delete_conf:
+                onClickDeleteConfig();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

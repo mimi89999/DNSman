@@ -48,6 +48,9 @@
 
         <activity android:name=".DNSListActivity"
             android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity" />
             <intent-filter>
                 <action android:name="io.github.otakuchiyan.dnsman.DNSListActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>
