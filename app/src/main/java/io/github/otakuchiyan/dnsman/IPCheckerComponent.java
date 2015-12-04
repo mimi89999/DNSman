@@ -38,20 +38,22 @@ public class IPCheckerComponent implements TextWatcher
 		if(s.equals("")){
 			sped.putString(this.key, s);
 			sped.apply();
-		}else if(!this.isPort && !s.equals("")){
-			if(IPChecker.isIPv4(s) && IPChecker.IPv4Checker(s)){
+		}else if(!s.equals("")){
+			if(!this.isPort) {
+				if (IPChecker.isIPv4(s) && IPChecker.IPv4Checker(s)) {
+					sped.putString(this.key, s);
+					sped.apply();
+				} else if (IPChecker.IPv6Checker(s)) {
+					Log.d("", "Invoked");
+					sped.putString(this.key, s);
+					sped.apply();
+				} else {
+					this.e.setError(c.getText(R.string.invalid_dns));
+				}
+			}else {
 				sped.putString(this.key, s);
 				sped.apply();
-			}else if(IPChecker.IPv6Checker(s)){
-				Log.d("", "Invoked");
-				sped.putString(this.key, s);
-				sped.apply();
-			}else{
-				this.e.setError(c.getText(R.string.invalid_dns));
 			}
-		}else if(this.isPort && !s.equals("")) {
-			sped.putString(this.key, s);
-			sped.apply();
 		}else{
 			this.e.setError(c.getText(R.string.invalid_dns));
 		}

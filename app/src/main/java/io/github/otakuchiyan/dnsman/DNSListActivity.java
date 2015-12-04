@@ -4,23 +4,32 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.ArraySet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DNSListActivity extends ListActivity {
-    ArrayList<String> dnsList = new ArrayList<>();
-    ArrayAdapter<String> adapter;
+    private SharedPreferences sp;
+    private SharedPreferences.Editor sped;
+    private ArrayList<String> dnsList;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.pref_dns_list);
+        dnsList = new ArrayList<>(sp.getStringSet("dnslist", new HashSet<String>()));
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
         setListAdapter(adapter);
     }
@@ -40,6 +49,15 @@ public class DNSListActivity extends ListActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Set<String> toSavedDNS = new HashSet<>(dnsList);
+        sped.putStringSet("dnslist", toSavedDNS);
+        sped.apply();
+    }*/
 
     private void addItem(){
         AlertDialog.Builder dnsDialog = new AlertDialog.Builder(this);
