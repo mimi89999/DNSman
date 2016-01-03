@@ -7,10 +7,10 @@ android {
     defaultConfig {
         applicationId "io.github.otakuchiyan.dnsman"
         minSdkVersion 15
-        maxSdkVersion 22
+        maxSdkVersion 23
         targetSdkVersion 23
-        versionCode 100
-        versionName "1.0"
+        versionCode 80
+        versionName "0.8"
     }
     buildTypes {
         release {

@@ -9,7 +9,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DNSBackgroundService extends IntentService{
     final public static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
@@ -58,6 +60,15 @@ public class DNSBackgroundService extends IntentService{
         getDNSByNetType(info);
         if(dnsList.isEmpty()){
             return false;
+        }
+        if(mode.equals("NDC")){
+            GetNetwork i = new GetNetwork(c);
+            Map<String, String> name2pref_map = new HashMap<>();
+            name2pref_map.put(i.wifiName, "pref_ndc_wlan");
+            name2pref_map.put(i.mobileName, "pref_ndc_rmnet");
+            name2pref_map.put(i.bluetoothName, "pref_ndc_bt");
+            name2pref_map.put(i.etherName, "pref_ndc_eth");
+            current_iface = sp.getString(name2pref_map.get(info.getTypeName()), "");
         }
 
         Intent i = new Intent(c, DNSBackgroundService.class);
