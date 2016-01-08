@@ -22,7 +22,7 @@ public class DNSBackgroundService extends IntentService{
     private static List<String> dnsList = new ArrayList<>();
     private static boolean checkProp = true;
     private static String mode;
-    private static String current_iface;
+    private static String current_netObj;
     private static String lastHijackedDNS;
     private static String lastHijackedPort;
 
@@ -48,27 +48,35 @@ public class DNSBackgroundService extends IntentService{
             return false;
         }
 
+        GetNetwork g = new GetNetwork(c);
+
         dnsList.add(dns1);
         dnsList.add(dns2);
+
+        current_netObj = g.getNetId();
         Intent i = new Intent(c, DNSBackgroundService.class);
         c.startService(i);
         return true;
     }
 
-    public static boolean setByNetworkInfo(Context c, NetworkInfo info){
+    public static boolean setByNetworkInfo(Context c, NetworkInfo info, String netId){
         beforeSet(c);
         getDNSByNetType(info);
         if(dnsList.isEmpty()){
             return false;
         }
         if(mode.equals("NDC")){
-            GetNetwork i = new GetNetwork(c);
-            Map<String, String> name2pref_map = new HashMap<>();
-            name2pref_map.put(i.wifiName, "pref_ndc_wlan");
-            name2pref_map.put(i.mobileName, "pref_ndc_rmnet");
-            name2pref_map.put(i.bluetoothName, "pref_ndc_bt");
-            name2pref_map.put(i.etherName, "pref_ndc_eth");
-            current_iface = sp.getString(name2pref_map.get(info.getTypeName()), "");
+            if(netId.equals("")) {
+                GetNetwork i = new GetNetwork(c);
+                Map<String, String> name2pref_map = new HashMap<>();
+                name2pref_map.put(i.wifiName, "pref_ndc_wlan");
+                name2pref_map.put(i.mobileName, "pref_ndc_rmnet");
+                name2pref_map.put(i.bluetoothName, "pref_ndc_bt");
+                name2pref_map.put(i.etherName, "pref_ndc_eth");
+                current_netObj = sp.getString(name2pref_map.get(info.getTypeName()), "");
+            }else {
+                current_netObj = netId;
+            }
         }
 
         Intent i = new Intent(c, DNSBackgroundService.class);
@@ -122,9 +130,11 @@ public class DNSBackgroundService extends IntentService{
                 result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
             case "NDC":
-                result_code = DNSManager.setDNSViaNdc(current_iface, dns1, dns2);
+                result_code = DNSManager.setDNSViaNdc(current_netObj, dns1, dns2);
                 break;
         }
+
+        AirplaneModeUtils.toggle(context, current_netObj);
 
         result = result_code == 0;
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);

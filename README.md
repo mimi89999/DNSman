@@ -29,6 +29,10 @@ Thanks to
 
 [Twidere](https://github.com/TwidereProject/Twidere-Android)
 
+[shadowsocks-android](https://github.com/shadowsocks/shadowsocks-android)
+
+[fqrouter](https://github.com/fqrouter/fqrouter)
+
 License: GNU GPL v3
 
 Copyright (c) 2015 otakuchiyan <codeotakuchiyan[at]gmail.com>

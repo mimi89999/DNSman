@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -81,10 +83,11 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
             currentNet = cm.getActiveNetworkInfo();
             if(currentNet != null) {
                 if(isFirstConnect) {
+                    Log.i("NetworkCheckReceiver", "Network was changed");
                     isFirstConnect = false;
                     String dnsToast = sp.getString("toast", "0");
-                    Log.i("NetworkCheckReceiver", "Network was changed");
-                    if(!DNSBackgroundService.setByNetworkInfo(context, currentNet)){
+                    GetNetwork gn = new GetNetwork(context);
+                    if(!DNSBackgroundService.setByNetworkInfo(context, currentNet, gn.getNetId())){
                         if (!dnsToast.equals("2")) {
                             Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
                         }

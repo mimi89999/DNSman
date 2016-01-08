@@ -7,6 +7,8 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Build;
 import android.util.Log;
 
@@ -26,9 +28,7 @@ public class DNSManager {
     final static String SETIFDNS_COMMAND = NDC_COMMAND_PREFIX + " setifdns %s '' %s %s\n";
     final static String SETNETDNS_COMMAND = NDC_COMMAND_PREFIX + " setnetdns %s '' %s %s\n";
     final static String SETDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " setdefaultif";
-    final static String FLUSHIF_COMMAND = NDC_COMMAND_PREFIX + " flushif %s\n";
-    final static String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif";
-    final static String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
+
 
     //0 is no error
     final static int ERROR_SETPROP_FAILED = 1;
@@ -95,36 +95,25 @@ public class DNSManager {
         return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
 
-    public static int setDNSViaNdc(String iface, String dns1, String dns2){
+    public static int setDNSViaNdc(String netObject, String dns1, String dns2){
+        // netObject contained netId and interface name
         List<String> cmds = new ArrayList<>();
 
         String setdns_cmd;
-        String flushdns_cmd;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>=5.0
-            setdns_cmd = String.format(SETNETDNS_COMMAND, iface, dns1, dns2);
-
+            setdns_cmd = String.format(SETNETDNS_COMMAND, netObject, dns1, dns2);
         }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){ //>=4.3
-            setdns_cmd = String.format(SETIFDNS_COMMAND, iface, dns1, dns2);
+            setdns_cmd = String.format(SETIFDNS_COMMAND, netObject, dns1, dns2);
         }else{ //<=4.2
-            setdns_cmd = String.format(SETIFDNS_COMMAND_BELOW_42, iface, dns1, dns2);
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            flushdns_cmd = String.format(FLUSHNET_COMMAND, iface);
-        }else{ //<=4.4
-            flushdns_cmd = String.format(FLUSHIF_COMMAND, iface);
+            setdns_cmd = String.format(SETIFDNS_COMMAND_BELOW_42, netObject, dns1, dns2);
         }
 
         Log.d("DNSManaget[CMD]", setdns_cmd);
-        Log.d("DNSManaget[CMD]", flushdns_cmd);
-
-        cmds.add(FLUSHDEFAULTIF_COMMAND);
-        cmds.add(flushdns_cmd);
         cmds.add(setdns_cmd);
 
         List<String> result = Shell.SU.run(cmds);
 
-        return 0;
+        return result.get(0).equals("") ? 0 : ERROR_UNKNOWN;
     }
 
 	public static boolean isRulesAlivable(String dns, String port){

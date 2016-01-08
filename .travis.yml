@@ -12,5 +12,8 @@ jdk:
 
 before_script:
     - ./depending_repos.sh
+    - pip install -r ./travis/requirements.txt --user
 
 script: ./gradlew build -s
+
+after_success: ./travis/travis_upload_release_to_github.py

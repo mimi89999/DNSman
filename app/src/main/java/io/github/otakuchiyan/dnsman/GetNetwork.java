@@ -4,6 +4,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.content.Context;
+import android.os.Build;
 
 public class GetNetwork
 {
@@ -46,5 +47,21 @@ public class GetNetwork
 	bluetoothName = bluetoothNetInfo != null ? bluetoothNetInfo.getTypeName() : null;
 	etherName = etherNetInfo != null ? etherNetInfo.getTypeName() : null;
 	wimaxName = wimaxNetInfo != null ? wimaxNetInfo.getTypeName() : null;
+    }
+
+    public String getNetId(){
+        String netId = "";
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>=5.0
+            try {
+                Network[] ns = cm.getAllNetworks();
+                for (Network i : ns) {
+                    netId = i.getClass().getDeclaredField("netId").get(i).toString();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return netId;
     }
 }
