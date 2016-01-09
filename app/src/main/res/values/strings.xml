@@ -53,7 +53,9 @@
 
     <string name="pref_misc">Misc</string>
     <string name="pref_misc_checkprop">Check system properities</string>
-    <string name="pref_misc_checkprop_summary">To detecting properties whether had setted, closed it can improve little performance</string>
+    <string name="pref_misc_checkprop_summary">To detecting properties whether had set, closed it can improve little performance</string>
+    <string name="pref_misc_autoflush">Flush DNS cache</string>
+    <string name="pref_misc_autoflush_summary">Flush it when had set DNS</string>
 
     <string name="invalid_dns">Invalid DNS</string>
 

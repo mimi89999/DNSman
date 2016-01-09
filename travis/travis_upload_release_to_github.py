@@ -118,7 +118,7 @@ if not response:
 response_values = json.loads(response.read())
 
 for root, dirnames, filenames in os.walk(os.getcwd()):
-    for filename in fnmatch.filter(filenames, '*.apk'):
+    for filename in fnmatch.filter(filenames, '*-debug.apk'):
         file_path = os.path.join(root, filename)
         request = urllib2.Request(
             uritemplate.expand(response_values['upload_url'], {'name': filename}),

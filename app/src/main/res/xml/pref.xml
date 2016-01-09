@@ -39,6 +39,11 @@
                 android:title="@string/pref_misc_checkprop"
                 android:summary="@string/pref_misc_checkprop_summary"
                 />
+            <CheckBoxPreference android:key="autoflush"
+                android:defaultValue="true"
+                android:title="@string/pref_misc_autoflush"
+                android:summary="@string/pref_misc_autoflush_summary"
+                />
         </PreferenceScreen>
     </PreferenceCategory>
 

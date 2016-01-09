@@ -20,7 +20,6 @@ public class DNSBackgroundService extends IntentService{
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sped;
     private static List<String> dnsList = new ArrayList<>();
-    private static boolean checkProp = true;
     private static String mode;
     private static String current_netObj;
     private static String lastHijackedDNS;
@@ -34,8 +33,9 @@ public class DNSBackgroundService extends IntentService{
         sp = PreferenceManager.getDefaultSharedPreferences(
                 c.getApplicationContext());
         context = c;
-        checkProp = sp.getBoolean("checkprop", true);
+
         mode = sp.getString("mode", "PROP");
+
         if (mode.equals("IPTABLES")) {
             lastHijackedDNS = sp.getString("lastHijackedDNS", "");
             lastHijackedPort = sp.getString("lastHijackedPort", "");
@@ -113,6 +113,7 @@ public class DNSBackgroundService extends IntentService{
 
         switch(mode){
             case "PROP":
+                boolean checkProp = sp.getBoolean("checkprop", true);
                 result_code = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
                 break;
             case "IPTABLES":
@@ -134,9 +135,11 @@ public class DNSBackgroundService extends IntentService{
                 break;
         }
 
-        AirplaneModeUtils.toggle(context, current_netObj);
-
         result = result_code == 0;
+        if(result && sp.getBoolean("autoflush", true)) {
+            AirplaneModeUtils.toggle(context, current_netObj);
+        }
+
         Intent result_intent = new Intent(ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
         result_intent.putExtra("result_code", result_code);
