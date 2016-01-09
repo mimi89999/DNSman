@@ -16,4 +16,4 @@ before_script:
 
 script: ./gradlew build -s
 
-after_success: ./travis/travis_upload_release_to_github.py
+after_success: python2 ./travis/travis_upload_release_to_github.py

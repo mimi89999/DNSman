@@ -39,14 +39,6 @@ public class DNSManager {
         GETPROP_COMMAND_PREFIX + "2"
     };
 
-	private static Context context;
-
-    private static String mode;
-    private static String dns1;
-    private static String dns2;
-    private static String port;
-    private static boolean checkProp;
-
 	public static int setDNSViaSetprop(String dns1, String dns2, boolean checkProp) {
 		String[] setCommands = {
             SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",

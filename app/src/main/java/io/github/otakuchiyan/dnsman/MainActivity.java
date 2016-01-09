@@ -37,6 +37,7 @@ public class MainActivity extends ListActivity {
     private TextView currentDNSText;
     private TextView currentDNS1;
     private TextView currentDNS2;
+    private String current_mode;
     private int clickedButtonPosition;
 
     private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
@@ -57,6 +58,7 @@ public class MainActivity extends ListActivity {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
+        current_mode = sp.getString("mode", "PROP");
 
         GetNetwork gn = new GetNetwork(this);
 
@@ -146,7 +148,7 @@ public class MainActivity extends ListActivity {
         super.onResume();
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
-		String current_mode = sp.getString("mode", "PROP");
+
 		if(!current_mode.equals(sp.getString("last_mode", "PROP"))){
             sped.putString("last_mode", current_mode);
             sped.apply();
@@ -194,6 +196,20 @@ public class MainActivity extends ListActivity {
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
         protected List<String> doInBackground(Void[] p1){
+            if(current_mode.equals("IPTABLES")){
+                List<String> dnss = new ArrayList<>();
+                String entry;
+                String ip = sp.getString("lastHijackedDNS", "");
+                String port = sp.getString("lastHijackedPort", "");
+                if(!port.equals("")){
+                    entry = ip + ":" + port;
+                }else{
+                    entry = ip;
+                }
+                dnss.add(entry);
+                dnss.add("");
+                return dnss;
+            }
             return DNSManager.getCurrentDNS();
         }
 
@@ -231,7 +247,7 @@ public class MainActivity extends ListActivity {
             final String dns1key = currentNetName + "dns1";
 
             String dns2Suffix = "dns2";
-            if(sp.getString("mode", "PROP").equals("IPTABLES")) {
+            if(current_mode.equals("IPTABLES")) {
                 dns2.setFirewallMode();
                 dns2Suffix = "port";
             }

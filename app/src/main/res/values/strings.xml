@@ -15,7 +15,7 @@
     <string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed</string>
     <string name="error_setprop_failed">setprop was no affected, may need root permission.</string>
-    <string name="error_unknown">Unknown error occured, may be a bug.</string>
+    <string name="error_unknown">Unknown error occurred, may be a bug.</string>
     <string name="operation_succeed">The operation was completed successfully</string>
 
     <string name="action_edit_resolv">DNS config file</string>
