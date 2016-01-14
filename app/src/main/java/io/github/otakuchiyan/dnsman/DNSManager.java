@@ -45,8 +45,8 @@ public class DNSManager {
             SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + "\""
         };
 
-        Log.d("DNSManager[CMD]", setCommands[0]);
-        Log.d("DNSManager[CMD]", setCommands[1]);
+        Log.d("DNSManager.prop", setCommands[0]);
+        Log.d("DNSManager.prop", setCommands[1]);
 
         if(Shell.SU.available()){
             Shell.SU.run(setCommands);
@@ -81,8 +81,8 @@ public class DNSManager {
         cmds.add(cmd1);
         cmds.add(cmd2);
 
-        Log.d("DNSManager[CMD]", cmd1);
-        Log.d("DNSManager[CMD]", cmd2);
+        Log.d("DNSManager.rules", cmd1);
+        Log.d("DNSManager.rules", cmd2);
 
         return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
@@ -100,7 +100,7 @@ public class DNSManager {
             setdns_cmd = String.format(SETIFDNS_COMMAND_BELOW_42, netObject, dns1, dns2);
         }
 
-        Log.d("DNSManaget[CMD]", setdns_cmd);
+        Log.d("DNSManaget.ndc", setdns_cmd);
         cmds.add(setdns_cmd);
 
         List<String> result = Shell.SU.run(cmds);
@@ -131,8 +131,8 @@ public class DNSManager {
         cmds.add(cmd1);
         cmds.add(cmd2);
 
-        Log.d("DNSManager[CMD]", cmd1);
-        Log.d("DNSManager[CMD]", cmd2);
+        Log.d("DNSManager.deleteRules", cmd1);
+        Log.d("DNSManager.deleteRules", cmd2);
         return Shell.SU.run(cmds);
     }
 	

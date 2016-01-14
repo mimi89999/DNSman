@@ -59,6 +59,13 @@ public class DNSBackgroundService extends IntentService{
         return true;
     }
 
+    public static void deleteLastRules(Context c){
+        beforeSet(c);
+        mode = "DELETE_RULES";
+        Intent i = new Intent(c, DNSBackgroundService.class);
+        c.startService(i);
+    }
+
     public static boolean setByNetworkInfo(Context c, NetworkInfo info, String netId){
         beforeSet(c);
         getDNSByNetType(info);
@@ -110,6 +117,7 @@ public class DNSBackgroundService extends IntentService{
         int result_code = 0;
         final String dns1 = dnsList.get(0);
         final String dns2 = dnsList.get(1);
+        sped = sp.edit();
 
         switch(mode){
             case "PROP":
@@ -117,8 +125,6 @@ public class DNSBackgroundService extends IntentService{
                 result_code = DNSManager.setDNSViaSetprop(dns1, dns2, checkProp);
                 break;
             case "IPTABLES":
-                sped = sp.edit();
-
                 if(DNSManager.isRulesAlivable(dns1, dns2)) {
                     return;
                 }else if (!lastHijackedDNS.equals("") &&
@@ -129,6 +135,12 @@ public class DNSBackgroundService extends IntentService{
                 sped.putString("lastHijackedPort", dns2);
                 sped.apply();
                 result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
+                break;
+            case "DELETE_RULES":
+                DNSManager.deleteRules(lastHijackedDNS, lastHijackedPort);
+                sped.putString("lastHijackedDNS", "");
+                sped.putString("lastHijackedPort", "");
+                sped.apply();
                 break;
             case "NDC":
                 result_code = DNSManager.setDNSViaNdc(current_netObj, dns1, dns2);

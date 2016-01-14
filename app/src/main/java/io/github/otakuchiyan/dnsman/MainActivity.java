@@ -28,9 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
-    final private String ACTION_GETDNS = "io.github.otakuchiyan.dnsman.ACTION_GETDNS";
-	final private String ACTION_DELETE_RULES = "io.github.otakuchiyan.dnsman.ACTION_DELETE_RULES";
-
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
     private LinearLayout currentDNSLayout;
@@ -39,18 +36,8 @@ public class MainActivity extends ListActivity {
     private TextView currentDNS2;
     private String current_mode;
     private int clickedButtonPosition;
+    private Menu menu;
 
-    private BroadcastReceiver dnsSetted = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-		if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
-		    if(i.getBooleanExtra("result", false)){
-                new getDNSTask().execute();
-
-		    }
-		}
-	    }
-	};
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,8 +123,20 @@ public class MainActivity extends ListActivity {
         final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
         setListAdapter(adapter);
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
-                new IntentFilter(ACTION_GETDNS));
+        BroadcastReceiver dnsSetted = new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context c, Intent i){
+                if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
+                    if(i.getBooleanExtra("result", false)){
+                        new getDNSTask().execute();
+
+                    }
+                }
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
+                new IntentFilter(DNSBackgroundService.ACTION_SETDNS_DONE));
 
         (new getDNSTask()).execute();
 
@@ -168,6 +167,7 @@ public class MainActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
 		return true;
 	}
 
@@ -178,6 +178,9 @@ public class MainActivity extends ListActivity {
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
 				break;
+            case R.id.delete_rule:
+                DNSBackgroundService.deleteLastRules(this);
+                break;
 			case R.id.settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
@@ -195,18 +198,26 @@ public class MainActivity extends ListActivity {
 	}
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
+        boolean haveRules = false;
         protected List<String> doInBackground(Void[] p1){
             if(current_mode.equals("IPTABLES")){
                 List<String> dnss = new ArrayList<>();
                 String entry;
                 String ip = sp.getString("lastHijackedDNS", "");
                 String port = sp.getString("lastHijackedPort", "");
-                if(!port.equals("")){
-                    entry = ip + ":" + port;
-                }else{
-                    entry = ip;
+                if(DNSManager.isRulesAlivable(ip, port)){
+                    haveRules = true;
+
+                    if(!port.equals("")){
+                        entry = ip + ":" + port;
+                    }else{
+                        entry = ip;
+                    }
+
+                    dnss.add(entry);
+                } else{ //Fill the list
+                    dnss.add("");
                 }
-                dnss.add(entry);
                 dnss.add("");
                 return dnss;
             }
@@ -216,6 +227,10 @@ public class MainActivity extends ListActivity {
         protected void onPostExecute(List<String> dnss){
             currentDNS1.setText(dnss.get(0));
             currentDNS2.setText(dnss.get(1));
+            if(haveRules){
+                MenuItem itemDelete = menu.findItem(R.id.delete_rule);
+                itemDelete.setEnabled(true);
+            }
         }
 
     }
