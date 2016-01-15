@@ -2,6 +2,7 @@ package io.github.otakuchiyan.dnsman;
 
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.content.Context;
@@ -12,6 +13,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.text.InputType;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 
@@ -47,7 +51,11 @@ public class DNSEditText extends AutoCompleteTextView{
                 showDropDown();
             }
         });
-
+        Set<String> dnslist = sp.getStringSet("dnslist", new HashSet<String>());
+        ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(c,
+                android.R.layout.simple_dropdown_item_1line,
+                dnslist.toArray(new String[dnslist.size()]));
+        setAdapter(dnsListAdapter);
     }
 
 
