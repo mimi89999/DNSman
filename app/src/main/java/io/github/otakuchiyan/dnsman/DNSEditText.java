@@ -24,8 +24,7 @@ public class DNSEditText extends AutoCompleteTextView{
 
     private Context context;
     private String key = "";
-    private boolean isPort = false;
-
+    private boolean isPort;
 
     public DNSEditText(Context c){
         this(c, null);
@@ -58,23 +57,27 @@ public class DNSEditText extends AutoCompleteTextView{
         setAdapter(dnsListAdapter);
     }
 
-
     public void setKeyAndText(String key){
         this.key = key;
         setText(sp.getString(key, ""));
     }
 
-    public void setFirewallMode(){
-        setHint(context.getText(R.string.default_port));
+    public void setFirewallMode() {
+        setHint(context.getText(R.string.port));
         isPort = true;
+        setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
+        //Escape completing
+        setThreshold(7);
+        setOnClickListener(null);
     }
-
     public void setIPChecker() {
         addTextChangedListener(new IPCheckerComponent(context, this, key, isPort));
     }
-
+/*
     @Override
     public boolean enoughToFilter(){
         return true;
     }
+    */
 }

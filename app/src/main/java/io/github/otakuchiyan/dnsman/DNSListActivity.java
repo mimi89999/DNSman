@@ -8,9 +8,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +24,11 @@ public class DNSListActivity extends ListActivity {
     private SharedPreferences.Editor sped;
     private ArrayList<String> dnsList;
     private ArrayAdapter<String> adapter;
+
+    private String[] default_list = {
+            "8.8.8.8",
+            "8.8.4.4"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +39,17 @@ public class DNSListActivity extends ListActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.pref_dns_list);
         dnsList = new ArrayList<>(sp.getStringSet("dnslist", new HashSet<String>()));
+        if(dnsList.size() == 0){
+            dnsList.addAll(Arrays.asList(default_list));
+        }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
         setListAdapter(adapter);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3){
+                return true;
+            }
+        });
     }
 
     @Override
@@ -79,4 +98,9 @@ public class DNSListActivity extends ListActivity {
         dnsDialog.show();
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+    }
 }

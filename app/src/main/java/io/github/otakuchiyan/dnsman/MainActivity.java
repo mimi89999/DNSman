@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +36,6 @@ public class MainActivity extends ListActivity {
     private TextView currentDNS1;
     private TextView currentDNS2;
     private String current_mode;
-    private int clickedButtonPosition;
     private Menu menu;
 
 
@@ -45,7 +45,7 @@ public class MainActivity extends ListActivity {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
-        current_mode = sp.getString("mode", "PROP");
+
 
         GetNetwork gn = new GetNetwork(this);
 
@@ -148,7 +148,9 @@ public class MainActivity extends ListActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
 
-		if(!current_mode.equals(sp.getString("last_mode", "PROP"))){
+        String last_mode = sp.getString("last_mode", "PROP");
+        current_mode = sp.getString("mode", "PROP");
+		if(!current_mode.equals(last_mode)){
             sped.putString("last_mode", current_mode);
             sped.apply();
             finish();
@@ -200,6 +202,7 @@ public class MainActivity extends ListActivity {
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
         boolean haveRules = false;
         protected List<String> doInBackground(Void[] p1){
+            current_mode = sp.getString("mode", "PROP");
             if(current_mode.equals("IPTABLES")){
                 List<String> dnss = new ArrayList<>();
                 String entry;
@@ -284,15 +287,13 @@ public class MainActivity extends ListActivity {
                         return;
                     }
 
-                    clickedButtonPosition = position;
-
                     DNSBackgroundService.setByString(context, dns1str, dns2str);
                 }
             });
 
             return rowView;
-        }
 
+        }
 
     }
 	

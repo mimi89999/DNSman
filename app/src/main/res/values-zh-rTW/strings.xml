@@ -8,7 +8,7 @@
     <string name="mobile_category">行動網路</string>
     <string name="bt_category">藍芽</string>
     <string name="eth_category">有線</string>
-	<string name="default_port">埠</string>
+	<string name="port">埠</string>
 
     <string name="set_succeed">設定 DNS 成功</string>
     <string name="set_failed">設定 DNS 失敗</string>

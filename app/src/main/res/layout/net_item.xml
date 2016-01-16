@@ -24,24 +24,22 @@
             android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/dns_entry"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0">
 
-
-
-        <io.github.otakuchiyan.dnsman.DNSEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:id="@+id/dns1" />
-
             <io.github.otakuchiyan.dnsman.DNSEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:id="@+id/dns2" />
+                android:id="@+id/dns1" />
+            <io.github.otakuchiyan.dnsman.DNSEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:id="@+id/dns2"/>
 
         </LinearLayout>
 

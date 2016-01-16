@@ -22,7 +22,6 @@ public class IPCheckerComponent implements TextWatcher
 	private Context c;
 	private boolean isPort;
 
-		
 	public IPCheckerComponent(Context c, EditText e, String key, boolean isPort){
 		this.c = c;
 		this.e = e;
@@ -39,21 +38,19 @@ public class IPCheckerComponent implements TextWatcher
 			sped.putString(this.key, s);
 			sped.apply();
 		}else if(!s.equals("")){
-			if(!this.isPort) {
+			if(!isPort) {
 				if (IPChecker.isIPv4(s) && IPChecker.IPv4Checker(s)) {
 					sped.putString(this.key, s);
 					sped.apply();
 				} else if (IPChecker.IPv6Checker(s)) {
-					Log.d("", "Invoked");
 					sped.putString(this.key, s);
 					sped.apply();
 				} else {
 					this.e.setError(c.getText(R.string.invalid_dns));
 				}
-			}else {
-				sped.putString(this.key, s);
-				sped.apply();
 			}
+			sped.putString(this.key, s);
+			sped.apply();
 		}else{
 			this.e.setError(c.getText(R.string.invalid_dns));
 		}

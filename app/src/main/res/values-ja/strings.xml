@@ -5,7 +5,7 @@
     <string name="mobile_category">モバイルネットワーク</string>
     <string name="eth_category">イーサネット</string>
 
-    <string name="default_port">ポート</string>
+    <string name="port">ポート</string>
 
     <string name="set_succeed">DNS 設定は成功しました</string>
     <string name="set_failed">DNS 設定は失敗しました</string>
