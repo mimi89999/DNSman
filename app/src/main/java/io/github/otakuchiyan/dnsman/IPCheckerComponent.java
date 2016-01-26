@@ -30,27 +30,29 @@ public class IPCheckerComponent implements TextWatcher
 		sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
 		sped = sp.edit();
 	}
+
+	private void putStringWithoutBlank(String rawString){
+		String s = rawString.replace(" ", "");
+		sped.putString(this.key, s);
+		sped.apply();
+	}
 	
 	@Override
 	public void afterTextChanged(Editable eable){
 		String s = this.e.getText().toString();
 		if(s.equals("")){
-			sped.putString(this.key, s);
-			sped.apply();
+			putStringWithoutBlank(s);
 		}else if(!s.equals("")){
 			if(!isPort) {
 				if (IPChecker.isIPv4(s) && IPChecker.IPv4Checker(s)) {
-					sped.putString(this.key, s);
-					sped.apply();
+					putStringWithoutBlank(s);
 				} else if (IPChecker.IPv6Checker(s)) {
-					sped.putString(this.key, s);
-					sped.apply();
+					putStringWithoutBlank(s);
 				} else {
 					this.e.setError(c.getText(R.string.invalid_dns));
 				}
 			}
-			sped.putString(this.key, s);
-			sped.apply();
+			putStringWithoutBlank(s);
 		}else{
 			this.e.setError(c.getText(R.string.invalid_dns));
 		}

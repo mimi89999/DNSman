@@ -115,8 +115,12 @@ public class DNSBackgroundService extends IntentService{
     protected void onHandleIntent(Intent i){
         boolean result;
         int result_code = 0;
-        final String dns1 = dnsList.get(0);
-        final String dns2 = dnsList.get(1);
+        String dns1 = "";
+        String dns2 = "";
+        if(!mode.equals("DELETE_RULES")){
+            dns1 = dnsList.get(0);
+            dns2 = dnsList.get(1);
+        }
         sped = sp.edit();
 
         switch(mode){
