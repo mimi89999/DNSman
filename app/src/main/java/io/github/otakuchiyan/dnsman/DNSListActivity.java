@@ -6,9 +6,13 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -26,6 +30,9 @@ public class DNSListActivity extends ListActivity {
     private ArrayAdapter<String> adapter;
 
     private String[] default_list = {
+            "127.0.0.1",
+            "192.168.0.1",
+            "192.168.100.1",
             "8.8.8.8",
             "8.8.4.4"
     };
@@ -44,12 +51,52 @@ public class DNSListActivity extends ListActivity {
         }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
         setListAdapter(adapter);
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+
+        final ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
-        public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3){
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.item_longclick, menu);
                 return true;
             }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.delete:
+                        SparseBooleanArray selectedItems = listView.getCheckedItemPositions();
+                        for(int i = 0; i < selectedItems.size(); i++){
+                            if(selectedItems.valueAt(i)){
+                                String s = (String) adapter.getItem(selectedItems.keyAt(i));
+                                adapter.remove(s);
+                            }
+                        }
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
         });
+
     }
 
     @Override

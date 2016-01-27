@@ -11,12 +11,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,9 +50,45 @@ public class MainActivity extends ListActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
 
+        final ListView mainList = getListView();
+        ArrayList<String> netLabelList = new ArrayList<>();
+        ArrayList<String> netNameList = new ArrayList<>();
 
+        //Constructing list
+        netLabelList.add(getText(R.string.global_category).toString());
+        netNameList.add("g");
         GetNetwork gn = new GetNetwork(this);
+        if(gn.isSupportWifi){
+            netLabelList.add(getText(R.string.wifi_category).toString());
+            netNameList.add(gn.wifiName);
+        }
+        if(gn.isSupportMobile){
+            netLabelList.add(getText(R.string.mobile_category).toString());
+            netNameList.add(gn.mobileName);
+        }
+        if(gn.isSupportBluetooth){
+            netLabelList.add(getText(R.string.bt_category).toString());
+            netNameList.add(gn.bluetoothName);
+        }
+        if(gn.isSupportEthernet){
+            netLabelList.add(getText(R.string.eth_category).toString());
+            netNameList.add(gn.etherName);
+        }
+        if(gn.isSupportWimax){
+            netLabelList.add(getText(R.string.wimax_category).toString());
+            netNameList.add(gn.wimaxName);
+        }
 
+		if(!sp.getBoolean("firstbooted", false)) {
+            showWelcomeDialog();
+            sped.putBoolean("firstbooted", true);
+            sped.apply();
+        }
+
+        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
+        setListAdapter(adapter);
+
+        //construecting header
         currentDNSLayout = new LinearLayout(this);
         currentDNSLayout.setOrientation(LinearLayout.VERTICAL);
         currentDNSText = new TextView(this);
@@ -56,13 +96,12 @@ public class MainActivity extends ListActivity {
         currentDNSText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         currentDNS1 = new TextView(this);
         currentDNS2 = new TextView(this);
-
         currentDNSLayout.addView(currentDNSText);
         currentDNSLayout.addView(currentDNS1);
         currentDNSLayout.addView(currentDNS2);
-
-        final ListView mainList = getListView();
         mainList.addHeaderView(currentDNSLayout);
+
+        //listener
         mainList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -80,49 +119,50 @@ public class MainActivity extends ListActivity {
                 mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
             }
         });
+        mainList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mainList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
+            }
 
-        ArrayList<String> netLabelList = new ArrayList<>();
-        ArrayList<String> netNameList = new ArrayList<>();
-        netLabelList.add(getText(R.string.global_category).toString());
-        netNameList.add("g");
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.item_longclick, menu);
+                return true;
+            }
 
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
 
-        if(gn.isSupportWifi){
-            netLabelList.add(getText(R.string.wifi_category).toString());
-            netNameList.add(gn.wifiName);
-        }
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        SparseBooleanArray selectedItems = mainList.getCheckedItemPositions();
+                        for (int i = 0; i < selectedItems.size(); i++) {
+                            if (selectedItems.valueAt(i)) {
+                                //TODO: clean all input
+                            }
+                        }
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
 
-        if(gn.isSupportMobile){
-            netLabelList.add(getText(R.string.mobile_category).toString());
-            netNameList.add(gn.mobileName);
-        }
+            }
 
-        if(gn.isSupportBluetooth){
-            netLabelList.add(getText(R.string.bt_category).toString());
-            netNameList.add(gn.bluetoothName);
-        }
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
 
-        if(gn.isSupportEthernet){
-            netLabelList.add(getText(R.string.eth_category).toString());
-            netNameList.add(gn.etherName);
-        }
-       
-        if(gn.isSupportWimax){
-            netLabelList.add(getText(R.string.wimax_category).toString());
-            netNameList.add(gn.wimaxName);
-        }
+            }
+        });
 
-		
-		if(!sp.getBoolean("firstbooted", false)) {
-            showWelcomeDialog();
-            sped.putBoolean("firstbooted", true);
-            sped.apply();
-        }
-
-        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
-        setListAdapter(adapter);
-
+        //broadcast
         BroadcastReceiver dnsSetted = new BroadcastReceiver(){
             @Override
             public void onReceive(Context c, Intent i){
