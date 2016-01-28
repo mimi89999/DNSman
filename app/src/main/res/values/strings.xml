@@ -61,7 +61,7 @@
 
 
     <string name="welcome">Welcome</string>
-    <string name="welcome_msg">Welcome to use DNS man!\nWhen toggle the network, DNS man will change DNS automatically.</string>
+    <string name="welcome_msg">Welcome to use DNS man!\nWhen connected network, DNS man will change DNS automatically.\nDo you want to read usage?</string>
 
     <string name="nodns_noti_text">Click to set DNS</string>
     <string name="nodns_noti">No alivable DNS</string>

@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,7 +198,14 @@ public class MainActivity extends ListActivity {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle(R.string.welcome)
 			.setMessage(R.string.welcome_msg)
-			.setPositiveButton(android.R.string.ok, null);
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/otakuchiyan/DNSman/wiki/"));
+                    startActivity(i);
+                }
+            })
+                .setNegativeButton(android.R.string.cancel, null);
 		adb.create().show();
 	}
 
