@@ -95,7 +95,7 @@ except HTTPError, err:
                 'tag_name': current_tag,
                 'name': "Version %s" % current_tag,
                 'body': current_tag_body,
-		'prerelease': true
+		'prerelease': True
             }),
             headers={
                 'Accept': github_header_accept,
