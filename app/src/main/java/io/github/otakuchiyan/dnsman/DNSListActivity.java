@@ -79,7 +79,7 @@ public class DNSListActivity extends ListActivity {
                         SparseBooleanArray selectedItems = listView.getCheckedItemPositions();
                         for(int i = 0; i < selectedItems.size(); i++){
                             if(selectedItems.valueAt(i)){
-                                String s = (String) adapter.getItem(selectedItems.keyAt(i));
+                                String s = adapter.getItem(selectedItems.keyAt(i));
                                 adapter.remove(s);
                             }
                         }
@@ -149,5 +149,31 @@ public class DNSListActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        final String focusedString = adapter.getItem(position);
+
+        AlertDialog.Builder dnsDialog = new AlertDialog.Builder(this);
+        final DNSEditText dnsEditText = new DNSEditText(this);
+        dnsEditText.setText(focusedString);
+
+        dnsEditText.setIPChecker();
+        dnsDialog.setView(dnsEditText);
+        dnsDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String dns = dnsEditText.getText().toString();
+                if (!dns.equals("") &&
+                        (IPChecker.IPv4Checker(dns)
+                                || IPChecker.IPv6Checker(dns))) {
+                    adapter.add(dns);
+                    adapter.remove(focusedString);
+                }
+            }
+        });
+        dnsDialog.setNegativeButton(android.R.string.cancel, null);
+        dnsDialog.show();
+
     }
+
+
+
 }

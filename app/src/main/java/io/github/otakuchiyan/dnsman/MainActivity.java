@@ -85,9 +85,6 @@ public class MainActivity extends ListActivity {
             sped.apply();
         }
 
-        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
-        setListAdapter(adapter);
-
         //construecting header
         currentDNSLayout = new LinearLayout(this);
         currentDNSLayout.setOrientation(LinearLayout.VERTICAL);
@@ -120,47 +117,6 @@ public class MainActivity extends ListActivity {
             }
         });
         mainList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mainList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.item_longclick, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        SparseBooleanArray selectedItems = mainList.getCheckedItemPositions();
-                        for (int i = 0; i < selectedItems.size(); i++) {
-                            if (selectedItems.valueAt(i)) {
-                                //TODO: clean all input
-                            }
-                        }
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
 
         //broadcast
         BroadcastReceiver dnsSetted = new BroadcastReceiver(){
@@ -174,6 +130,10 @@ public class MainActivity extends ListActivity {
                 }
             }
         };
+
+        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
+        setListAdapter(adapter);
+
 
         LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(DNSBackgroundService.ACTION_SETDNS_DONE));
