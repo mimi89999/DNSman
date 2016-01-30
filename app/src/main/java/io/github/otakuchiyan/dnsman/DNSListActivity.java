@@ -13,13 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,13 +75,21 @@ public class DNSListActivity extends ListActivity {
                 switch (item.getItemId()){
                     case R.id.delete:
                         SparseBooleanArray selectedItems = listView.getCheckedItemPositions();
-                        for(int i = 0; i < selectedItems.size(); i++){
+                        ArrayList<String> deletingString = new ArrayList<>();
+                        //Get will be deleted entry
+                        for(int i = 0; i != selectedItems.size(); i++){
                             if(selectedItems.valueAt(i)){
-                                String s = adapter.getItem(selectedItems.keyAt(i));
-                                adapter.remove(s);
+                                int j = selectedItems.keyAt(i);
+                                String s = adapter.getItem(j);
+                                deletingString.add(s);
                             }
                         }
+                        //Delete phase
+                        for(String s: deletingString) {
+                            adapter.remove(s);
+                        }
                         mode.finish();
+
                         return true;
                     default:
                         return false;

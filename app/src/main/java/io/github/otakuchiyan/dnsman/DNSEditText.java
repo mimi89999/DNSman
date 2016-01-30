@@ -1,23 +1,17 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.text.InputType;
-import android.text.InputFilter;
-import android.text.InputFilter.LengthFilter;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import io.github.otakuchiyan.dnsman.IPCheckerComponent;
 
 public class DNSEditText extends AutoCompleteTextView{
     private SharedPreferences sp;
@@ -74,10 +68,5 @@ public class DNSEditText extends AutoCompleteTextView{
     public void setIPChecker() {
         addTextChangedListener(new IPCheckerComponent(context, this, key, isPort));
     }
-/*
-    @Override
-    public boolean enoughToFilter(){
-        return true;
-    }
-    */
+
 }

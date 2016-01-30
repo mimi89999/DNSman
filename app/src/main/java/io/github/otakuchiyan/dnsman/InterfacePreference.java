@@ -1,7 +1,6 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,14 +8,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -32,13 +27,10 @@ public class InterfacePreference extends EditTextPreference {
         public AutoCompleteEditText(Context c, AttributeSet attrs, int defStyle){
             super(c, attrs, defStyle);
         }
-
-        @Override
-        public boolean enoughToFilter(){
-            return true;
-        }
     }
     private static AutoCompleteEditText mEditText = null;
+    private Context context;
+
     final static String[] interface_list = {
             "wlan0",
             "rmnet0",
@@ -63,8 +55,9 @@ public class InterfacePreference extends EditTextPreference {
     }
 
     private void init(Context c, AttributeSet attrs, int defStyle) {
+        context = c;
         mEditText = new AutoCompleteEditText(c, attrs);
-        mEditText.setThreshold(0);
+        mEditText.setSingleLine();
         List<String> all_interface = getAlivableInterfaces();
 
         ArrayAdapter<String> interfaces = new ArrayAdapter<>(c,
@@ -83,14 +76,13 @@ public class InterfacePreference extends EditTextPreference {
                 if(Arrays.asList(interface_list).contains(interface_name)){
                     system_interfaces.remove(interface_name);
                     system_interfaces.add(0, interface_name);
-               }
+                }
                 system_interfaces.add(interface_name);
             }
+            system_interfaces.remove("lo");
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        system_interfaces.remove("lo");
 
         return system_interfaces;
     }
