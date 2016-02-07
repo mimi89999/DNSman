@@ -82,9 +82,9 @@ public class MainActivity extends ListActivity {
             netNameList.add(gn.wimaxName);
         }
 
-		if(!sp.getBoolean("firstbooted", false)) {
+		if(sp.getBoolean("firstbooted", true)) {
             showWelcomeDialog();
-            sped.putBoolean("firstbooted", true);
+            sped.putBoolean("firstbooted", false);
             sped.apply();
         }
 

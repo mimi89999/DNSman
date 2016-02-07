@@ -47,9 +47,9 @@ public class DNSListActivity extends ListActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.pref_dns_list);
         dnsList = new ArrayList<>(sp.getStringSet("dnslist", new HashSet<String>()));
-        if(sp.getBoolean("dnslist_firstenter", false)){
+        if(sp.getBoolean("dnslist_firstenter", true)){
             dnsList.addAll(Arrays.asList(default_list));
-            sped.putBoolean("dnslist_firstenter", true);
+            sped.putBoolean("dnslist_firstenter", false);
             sped.apply();
         }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
