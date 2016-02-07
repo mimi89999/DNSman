@@ -228,7 +228,7 @@ public class MainActivity extends ListActivity {
                 //ALERT USER
                 if(haveRules && !current_mode.equals("IPTABLES")){
                     currentDNSData.add(getText(R.string.firewall_rules_available).toString());
-                } else {
+                } else if(!haveRules) {
                     currentDNSData.addAll(prop_dns);
                 }
             }

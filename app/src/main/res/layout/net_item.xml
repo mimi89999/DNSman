@@ -11,12 +11,30 @@
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/net_text" />
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/net_text"
+                android:textSize="23sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:text="@string/button_apply"
+                android:checked="false"
+                android:layout_alignParentRight="true"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -26,30 +44,20 @@
         <LinearLayout
             android:id="@+id/dns_entry"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <io.github.otakuchiyan.dnsman.DNSEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
+                android:layout_weight="1"
                 android:id="@+id/dns1" />
             <io.github.otakuchiyan.dnsman.DNSEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
                 android:id="@+id/dns2"/>
 
         </LinearLayout>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button"
-                android:text="@string/button_apply"
-                android:checked="false"
-                android:layout_gravity="bottom" />
 
         </LinearLayout>
     </LinearLayout>

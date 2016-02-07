@@ -67,7 +67,7 @@ public class DNSEditText extends AutoCompleteTextView{
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
         //Escape completing
         setThreshold(7);
-        setOnClickListener(null);
+        setOnFocusChangeListener(null);
     }
     public void setIPChecker() {
         addTextChangedListener(new IPCheckerComponent(context, this, key, isPort));
