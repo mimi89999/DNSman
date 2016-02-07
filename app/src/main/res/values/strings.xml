@@ -10,7 +10,7 @@
     <string name="eth_category">Ethernet</string>
     <string name="wimax_category">WiMax</string>
 
-    <string name="port">Port</string>
+    <string name="port">Port(optional)</string>
 
     <string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed</string>
@@ -34,7 +34,7 @@
     <string name="pref_mode">Operating mode</string>
     <string name="pref_mode_prop">System properties</string>
     <string name="pref_mode_iptables">Firewall rules</string>
-    <string name="pref_mode_ndc">Command "ndc"</string>
+    <string name="pref_mode_ndc">ndc</string>
 
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
@@ -55,10 +55,9 @@
     <string name="pref_misc_checkprop">Check system properities</string>
     <string name="pref_misc_checkprop_summary">To detecting properties whether had set, closed it can improve little performance</string>
     <string name="pref_misc_autoflush">Flush DNS cache</string>
-    <string name="pref_misc_autoflush_summary">Flush it when had set DNS</string>
+    <string name="pref_misc_autoflush_summary">Flush cache when had set DNS</string>
 
     <string name="invalid_dns">Invalid DNS</string>
-
 
     <string name="welcome">Welcome</string>
     <string name="welcome_msg">Welcome to use DNS man!\nWhen connected network, DNS man will change DNS automatically.\nDo you want to read usage?</string>
