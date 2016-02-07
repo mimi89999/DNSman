@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cdnstext">Current DNS:</string>
-    <string name="global_category">Global</string>
-    <string name="individual_category">Individual</string>
+    <string name="firewall_rules_available">FIREWALL RULES AVAILABLE, CURRENT SETTINGS WILL BE IGNORED</string>
 
+    <string name="global_category">Global</string>
     <string name="wifi_category">Wi-Fi</string>
     <string name="mobile_category">Mobile network</string>
     <string name="bt_category">Bluetooth</string>
@@ -14,8 +14,8 @@
 
     <string name="set_succeed">Setting DNS succeed</string>
     <string name="set_failed">Setting DNS failed</string>
-    <string name="error_setprop_failed">setprop was no affected, may need root permission.</string>
-    <string name="error_unknown">Unknown error occurred, may be a bug.</string>
+    <string name="error_setprop_failed">setprop was no affected, may need root permission</string>
+    <string name="error_unknown">Unknown error occurred, may be a bug</string>
     <string name="operation_succeed">The operation was completed successfully</string>
 
     <string name="action_edit_resolv">DNS config file</string>

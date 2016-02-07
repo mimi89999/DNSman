@@ -12,10 +12,12 @@ How to build
     $ ./depending_repos.sh
     $ ./gradlew build
 
-Donation
+Help my work
 ===
 
 Alipay: otakuchiyan
+
+[Translate](https://crowdin.com/project/dnsman)
 
 Thanks to
 ===
@@ -34,4 +36,4 @@ Thanks to
 
 License: GNU GPL v3
 
-Copyright (c) 2015 otakuchiyan <codeotakuchiyan[at]gmail.com>
+Copyright (c) 2015-2016 otakuchiyan <codeotakuchiyan[at]gmail.com>

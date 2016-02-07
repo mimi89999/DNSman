@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
 import android.view.ActionMode;
@@ -39,11 +40,9 @@ public class MainActivity extends ListActivity {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
     private LinearLayout currentDNSLayout;
-    private TextView currentDNSText;
-    private TextView currentDNS1;
-    private TextView currentDNS2;
     private String current_mode;
     private Menu menu;
+    private Context context;
 
 
 	@Override
@@ -52,6 +51,7 @@ public class MainActivity extends ListActivity {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
+        context = this;
 
         final ListView mainList = getListView();
         ArrayList<String> netLabelList = new ArrayList<>();
@@ -91,14 +91,6 @@ public class MainActivity extends ListActivity {
         //construecting header
         currentDNSLayout = new LinearLayout(this);
         currentDNSLayout.setOrientation(LinearLayout.VERTICAL);
-        currentDNSText = new TextView(this);
-        currentDNSText.setText(R.string.cdnstext);
-        currentDNSText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        currentDNS1 = new TextView(this);
-        currentDNS2 = new TextView(this);
-        currentDNSLayout.addView(currentDNSText);
-        currentDNSLayout.addView(currentDNS1);
-        currentDNSLayout.addView(currentDNS2);
         mainList.addHeaderView(currentDNSLayout);
 
         //listener
@@ -211,35 +203,52 @@ public class MainActivity extends ListActivity {
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
         boolean haveRules = false;
-        protected List<String> doInBackground(Void[] p1){
-            current_mode = sp.getString("mode", "PROP");
-            if(current_mode.equals("IPTABLES")){
-                List<String> dnss = new ArrayList<>();
-                String entry;
-                String ip = sp.getString("lastHijackedDNS", "");
-                String port = sp.getString("lastHijackedPort", "");
-                if(DNSManager.isRulesAlivable(ip, port)){
-                    haveRules = true;
+        protected List<String> doInBackground(Void[] p1) {
+            List<String> currentDNSData = new ArrayList<>();
 
-                    if(!port.equals("")){
-                        entry = ip + ":" + port;
-                    }else{
-                        entry = ip;
-                    }
+            //Check firewall rules
+            String entry;
+            String ip = sp.getString("lastHijackedDNS", "");
+            String port = sp.getString("lastHijackedPort", "");
+            if (DNSManager.isRulesAlivable(ip, port)) {
+                haveRules = true;
 
-                    dnss.add(entry);
-                } else{ //Fill the list
-                    dnss.add("");
+                if (!port.equals("")) {
+                    entry = ip + ":" + port;
+                } else {
+                    entry = ip;
                 }
-                dnss.add("");
-                return dnss;
+
+                currentDNSData.add(entry);
             }
-            return DNSManager.getCurrentDNS();
+
+            //Check system properties
+            List<String> prop_dns = DNSManager.getCurrentPropDNS();
+            if(!prop_dns.isEmpty()){
+                //ALERT USER
+                if(haveRules && current_mode.equals("IPTABLES")){
+                    currentDNSData.add(getText(R.string.firewall_rules_available).toString());
+                } else {
+                    currentDNSData.addAll(prop_dns);
+                }
+            }
+            for(int i = 0; i != currentDNSData.size(); i++){
+                Log.d("MainActivity", "data = " + currentDNSData.get(0));
+            }
+            return currentDNSData;
         }
 
-        protected void onPostExecute(List<String> dnss){
-            currentDNS1.setText(dnss.get(0));
-            currentDNS2.setText(dnss.get(1));
+        protected void onPostExecute(List<String> data){
+            currentDNSLayout.removeAllViews();
+            TextView currentDNSText = new TextView(context);
+            currentDNSText.setText(R.string.cdnstext);
+            currentDNSText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            currentDNSLayout.addView(currentDNSText);
+            for(int i = 0; i != data.size(); i++){
+                TextView t = new TextView(context);
+                t.setText(data.get(i));
+                currentDNSLayout.addView(t);
+            }
             if(haveRules){
                 MenuItem itemDelete = menu.findItem(R.id.delete_rule);
                 itemDelete.setEnabled(true);

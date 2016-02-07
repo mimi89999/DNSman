@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -38,12 +39,15 @@ public class DNSEditText extends AutoCompleteTextView{
         }
         setRawInputType(input_type);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(max_length)});
-        setOnClickListener(new OnClickListener() {
+        setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                showDropDown();
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    showDropDown();
+                }
             }
         });
+
         Set<String> dnslist = sp.getStringSet("dnslist", new HashSet<String>());
         ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(c,
                 android.R.layout.simple_dropdown_item_1line,

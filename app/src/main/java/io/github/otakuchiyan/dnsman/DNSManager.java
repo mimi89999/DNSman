@@ -193,7 +193,7 @@ public class DNSManager {
         return sb.toString();
 	}
 	
-	public static List<String> getCurrentDNS(){
+	public static List<String> getCurrentPropDNS(){
 		return Shell.SH.run(CHECKPROP_COMMANDS);
 	}
 

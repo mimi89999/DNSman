@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,6 +121,8 @@ public class DNSBackgroundService extends IntentService{
         if(!mode.equals("DELETE_RULES")){
             dns1 = dnsList.get(0);
             dns2 = dnsList.get(1);
+            Log.d("DNSBackgroundService", "onHandleIntent.dns1 = " + dns1);
+            Log.d("DNSBackgroundService", "onHandleIntent.dns2 = " + dns2);
         }
         sped = sp.edit();
 

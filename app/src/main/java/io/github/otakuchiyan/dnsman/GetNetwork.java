@@ -15,7 +15,6 @@ public class GetNetwork
     public NetworkInfo bluetoothNetInfo;
     public NetworkInfo etherNetInfo;
     public NetworkInfo wimaxNetInfo;
-    public Network[] networks;
     public String wifiName;
     public String mobileName;
     public String bluetoothName;
@@ -42,11 +41,11 @@ public class GetNetwork
         isSupportEthernet = etherNetInfo != null;
         isSupportWimax = wimaxNetInfo != null;
 
-	wifiName = wifiNetInfo != null ? wifiNetInfo.getTypeName() : null;
-	mobileName = mobileNetInfo != null ? mobileNetInfo.getTypeName() : null;
-	bluetoothName = bluetoothNetInfo != null ? bluetoothNetInfo.getTypeName() : null;
-	etherName = etherNetInfo != null ? etherNetInfo.getTypeName() : null;
-	wimaxName = wimaxNetInfo != null ? wimaxNetInfo.getTypeName() : null;
+        wifiName = wifiNetInfo != null ? wifiNetInfo.getTypeName() : null;
+        mobileName = mobileNetInfo != null ? mobileNetInfo.getTypeName() : null;
+        bluetoothName = bluetoothNetInfo != null ? bluetoothNetInfo.getTypeName() : null;
+        etherName = etherNetInfo != null ? etherNetInfo.getTypeName() : null;
+        wimaxName = wimaxNetInfo != null ? wimaxNetInfo.getTypeName() : null;
     }
 
     public String getNetId(){
