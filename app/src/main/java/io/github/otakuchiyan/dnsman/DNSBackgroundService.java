@@ -51,6 +51,7 @@ public class DNSBackgroundService extends IntentService{
 
         GetNetwork g = new GetNetwork(c);
 
+        dnsList.clear();
         dnsList.add(dns1);
         dnsList.add(dns2);
 
@@ -134,7 +135,8 @@ public class DNSBackgroundService extends IntentService{
             case "IPTABLES":
                 if(DNSManager.isRulesAlivable(dns1, dns2)) {
                     return;
-                }else if (!lastHijackedDNS.equals("") &&
+                    //IP was changed
+                }else if (!dns1.equals(lastHijackedDNS) &&
                         DNSManager.isRulesAlivable(lastHijackedDNS, lastHijackedPort)){
                     DNSManager.deleteRules(lastHijackedDNS, lastHijackedPort);
                 }

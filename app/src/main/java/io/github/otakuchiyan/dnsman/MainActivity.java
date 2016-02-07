@@ -226,7 +226,7 @@ public class MainActivity extends ListActivity {
             List<String> prop_dns = DNSManager.getCurrentPropDNS();
             if(!prop_dns.isEmpty()){
                 //ALERT USER
-                if(haveRules && current_mode.equals("IPTABLES")){
+                if(haveRules && !current_mode.equals("IPTABLES")){
                     currentDNSData.add(getText(R.string.firewall_rules_available).toString());
                 } else {
                     currentDNSData.addAll(prop_dns);
