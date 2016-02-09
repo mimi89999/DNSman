@@ -28,16 +28,6 @@ public class DNSListActivity extends ListActivity {
     private ListView mListView;
     private ArrayAdapter<String> adapter;
 
-    private String[] default_list = {
-            "127.0.0.1",
-            "192.168.0.1",
-            "192.168.100.1",
-            "8.8.8.8",
-            "8.8.4.4",
-            "208.67.222.222",
-            "208.67.220.220"
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +39,6 @@ public class DNSListActivity extends ListActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.pref_dns_list);
         dnsList = new ArrayList<>(sp.getStringSet("dnslist", new HashSet<String>()));
-        if(sp.getBoolean("dnslist_firstenter", true)){
-            dnsList.addAll(Arrays.asList(default_list));
-            sped.putBoolean("dnslist_firstenter", false);
-            sped.apply();
-        }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
         setListAdapter(adapter);
 

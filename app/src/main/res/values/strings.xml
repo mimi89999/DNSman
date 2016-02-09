@@ -60,10 +60,10 @@
     <string name="invalid_dns">Invalid DNS</string>
 
     <string name="welcome">Welcome</string>
-    <string name="welcome_msg">Welcome to use DNS man!\nWhen connected network, DNS man will change DNS automatically.\nDo you want to read usage?</string>
+    <string name="welcome_msg">Welcome to use DNS man!\nDo you want to read usage?</string>
 
     <string name="nodns_noti_text">Click to set DNS</string>
-    <string name="nodns_noti">No alivable DNS</string>
+    <string name="nodns_noti">No avaliable DNS</string>
 
     <string name="no_conf">resolv.conf was not found</string>
 
@@ -79,4 +79,6 @@
     <string name="license_summary">GNU GPLv3</string>
     <string name="opensource">Source</string>
     <string name="opensource_summary">View source code on GitHub</string>
+    <string name="pref_usage">Usage</string>
+    <string name="pref_usage_summary">View usage on wiki</string>
 </resources>

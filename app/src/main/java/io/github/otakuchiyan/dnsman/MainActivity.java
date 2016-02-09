@@ -34,7 +34,10 @@ import android.widget.TextView;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends ListActivity {
 	private SharedPreferences sp;
@@ -44,6 +47,15 @@ public class MainActivity extends ListActivity {
     private Menu menu;
     private Context context;
 
+    private String[] default_list = {
+            "127.0.0.1",
+            "192.168.0.1",
+            "192.168.100.1",
+            "8.8.8.8",
+            "8.8.4.4",
+            "208.67.222.222",
+            "208.67.220.220"
+    };
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +96,7 @@ public class MainActivity extends ListActivity {
 
 		if(sp.getBoolean("firstbooted", true)) {
             showWelcomeDialog();
+            setDNSCompletingList();
             sped.putBoolean("firstbooted", false);
             sped.apply();
         }
@@ -200,6 +213,12 @@ public class MainActivity extends ListActivity {
                 .setNegativeButton(android.R.string.cancel, null);
 		adb.create().show();
 	}
+
+    private void setDNSCompletingList(){
+        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(default_list));
+        sped.putStringSet("dnslist", toSavedDNS);
+        sped.apply();
+    }
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
         boolean haveRules = false;

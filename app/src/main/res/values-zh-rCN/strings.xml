@@ -47,7 +47,7 @@
   <string name="pref_misc_autoflush_summary">设置 DNS 后刷新缓存</string>
   <string name="invalid_dns">无效的 DNS</string>
   <string name="welcome">欢迎</string>
-  <string name="welcome_msg">欢迎使用 DNS man！当开关网络的时候，它就会自动更改 DNS.</string>
+  <string name="welcome_msg">欢迎您使用 DNS man！\n您想要阅读使用方法吗？</string>
   <string name="nodns_noti_text">点击以进行设置</string>
   <string name="nodns_noti">没有可用 DNS</string>
   <string name="no_conf">resolv.conf 未找到</string>
@@ -62,4 +62,6 @@
   <string name="license_summary">GNU GPLv3</string>
   <string name="opensource">源代码</string>
   <string name="opensource_summary">到 GitHub 查看源代码</string>
+  <string name="pref_usage">使用方法</string>
+  <string name="pref_usage_summary">在 wiki 上查看使用方法</string>
 </resources>
