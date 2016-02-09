@@ -210,7 +210,7 @@ public class MainActivity extends ListActivity {
             String entry;
             String ip = sp.getString("lastHijackedDNS", "");
             String port = sp.getString("lastHijackedPort", "");
-            if (DNSManager.isRulesAlivable(ip, port)) {
+            if (!ip.equals("") && DNSManager.isRulesAlivable(ip, port)) {
                 haveRules = true;
 
                 if (!port.equals("")) {
@@ -250,8 +250,11 @@ public class MainActivity extends ListActivity {
                 currentDNSLayout.addView(t);
             }
             if(haveRules){
-                MenuItem itemDelete = menu.findItem(R.id.delete_rule);
-                itemDelete.setEnabled(true);
+                //Escaping crash when it faster than menu creates
+                if(menu != null) {
+                    MenuItem itemDelete = menu.findItem(R.id.delete_rule);
+                    itemDelete.setEnabled(true);
+                }
             }
         }
 

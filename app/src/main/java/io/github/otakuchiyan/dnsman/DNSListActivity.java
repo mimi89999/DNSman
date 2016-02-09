@@ -33,7 +33,9 @@ public class DNSListActivity extends ListActivity {
             "192.168.0.1",
             "192.168.100.1",
             "8.8.8.8",
-            "8.8.4.4"
+            "8.8.4.4",
+            "208.67.222.222",
+            "208.67.220.220"
     };
 
     @Override
@@ -62,6 +64,12 @@ public class DNSListActivity extends ListActivity {
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 int count = mListView.getCheckedItemCount();
                 mode.setTitle(String.format("%d", count));
+                View entry = mListView.getChildAt(position);
+                if(checked) {
+                    entry.setBackgroundResource(android.R.color.holo_blue_dark);
+                }else{
+                    entry.setBackgroundResource(android.R.color.transparent);
+                }
             }
 
             @Override
@@ -105,7 +113,13 @@ public class DNSListActivity extends ListActivity {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
+                SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
+                for(int i = 0; i != selectedItems.size(); i++){
+                    if(selectedItems.valueAt(i)){
+                        int j = selectedItems.keyAt(i);
+                        mListView.getChildAt(j).setBackgroundResource(android.R.color.transparent);
+                    }
+                }
             }
         });
 
