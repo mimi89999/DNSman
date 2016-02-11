@@ -3,36 +3,33 @@ package io.github.otakuchiyan.dnsman;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,12 +54,28 @@ public class MainActivity extends ListActivity {
             "208.67.220.220"
     };
 
+    private DNSMonitorService dnsMonitorService;
+    private boolean dnsMonitorServiceIsBound;
+    private ServiceConnection dnsMonitorConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            dnsMonitorService = ((DNSMonitorService.DNSWatchingBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            dnsMonitorService = null;
+        }
+    };
+    private Intent dnsWatchingServiceIntent;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
+        dnsWatchingServiceIntent = new Intent(this, DNSMonitorService.class);
         context = this;
 
         final ListView mainList = getListView();
@@ -145,9 +158,9 @@ public class MainActivity extends ListActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
                 new IntentFilter(DNSBackgroundService.ACTION_SETDNS_DONE));
+        setDNSWatchingService();
 
         (new getDNSTask()).execute();
-
 	}
 
 	@Override
@@ -170,6 +183,12 @@ public class MainActivity extends ListActivity {
             sped.apply();
             finish();
             startActivity(getIntent());
+        }
+        if(!sp.getBoolean("pref_dnswatching", true)){
+            if(dnsMonitorServiceIsBound) {
+                stopService(dnsWatchingServiceIntent);
+                //unbindService(dnsWatchingConnection);
+            }
         }
     }
 
@@ -218,6 +237,15 @@ public class MainActivity extends ListActivity {
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(default_list));
         sped.putStringSet("dnslist", toSavedDNS);
         sped.apply();
+    }
+
+    private void setDNSWatchingService(){
+        if(sp.getBoolean("pref_dnswatching", true)) {
+            /*bindService(new Intent(context, DNSMonitorService.class),
+                    dnsWatchingConnection, Context.BIND_AUTO_CREATE);
+            dnsWatchingServiceIsBound = true;*/
+            startService(dnsWatchingServiceIntent);
+        }
     }
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{

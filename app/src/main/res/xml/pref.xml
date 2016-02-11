@@ -4,6 +4,9 @@
         <SwitchPreference android:key="enable_ipv6"
             android:title="@string/pref_enable_ipv6"
             android:defaultValue="false"/>
+        <SwitchPreference android:key="pref_dnswatching"
+            android:title="@string/pref_dnsmonitor"
+            android:defaultValue="true"/>
         <ListPreference
             android:key="mode"
             android:title="@string/pref_mode"

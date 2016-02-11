@@ -46,16 +46,24 @@
 
         <service android:name=".DNSBackgroundService" />
 
-        <activity android:name=".DNSListActivity"
+        <activity
+            android:name=".DNSListActivity"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SettingsActivity" />
+
             <intent-filter>
-                <action android:name="io.github.otakuchiyan.dnsman.DNSListActivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="io.github.otakuchiyan.dnsman.DNSListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".DNSMonitorService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
