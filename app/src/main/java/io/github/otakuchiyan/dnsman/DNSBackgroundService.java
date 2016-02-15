@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DNSBackgroundService extends IntentService{
-    final public static String ACTION_SETDNS_DONE = "io.github.otakuchiyan.dnsman.SETDNS_DONE";
-
     private static Context context;
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sped;
@@ -161,7 +159,7 @@ public class DNSBackgroundService extends IntentService{
             AirplaneModeUtils.toggle(context, current_netObj);
         }
 
-        Intent result_intent = new Intent(ACTION_SETDNS_DONE);
+        Intent result_intent = new Intent(DNSmanConstants.ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
         result_intent.putExtra("result_code", result_code);
         result_intent.putExtra("dns1", dns1);

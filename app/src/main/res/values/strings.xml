@@ -35,7 +35,7 @@
     <string name="pref_mode">Operating mode</string>
     <string name="pref_mode_prop">System properties</string>
     <string name="pref_mode_iptables">Firewall rules</string>
-    <string name="pref_mode_ndc">ndc</string>
+    <string name="pref_mode_ndc">Daemon connector</string>
 
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
@@ -74,7 +74,7 @@
 
     <string name="write_conf_msg">Do you really want to write DNS resolver to /etc/resolv.conf?</string>
     <string name="default_conf_msg">Do you want to use Google public DNS?</string>
-    <string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!!</string>
+    <string name="delete_conf_msg">Do you want to delete /etc/resolv.conf? May cause the network problem!</string>
     <string name="developer">Developer</string>
     <string name="license">License</string>
     <string name="license_summary">GNU GPLv3</string>

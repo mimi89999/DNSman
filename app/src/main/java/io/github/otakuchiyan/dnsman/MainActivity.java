@@ -44,16 +44,6 @@ public class MainActivity extends ListActivity {
     private Menu menu;
     private Context context;
 
-    private String[] default_list = {
-            "127.0.0.1",
-            "192.168.0.1",
-            "192.168.100.1",
-            "8.8.8.8",
-            "8.8.4.4",
-            "208.67.222.222",
-            "208.67.220.220"
-    };
-
     private DNSMonitorService dnsMonitorService;
     private boolean dnsMonitorServiceIsBound;
     private ServiceConnection dnsMonitorConnection = new ServiceConnection() {
@@ -143,7 +133,7 @@ public class MainActivity extends ListActivity {
         BroadcastReceiver dnsSetted = new BroadcastReceiver(){
             @Override
             public void onReceive(Context c, Intent i){
-                if(i.getAction().equals(DNSBackgroundService.ACTION_SETDNS_DONE)){
+                if(i.getAction().equals(DNSmanConstants.ACTION_SETDNS_DONE)){
                     if(i.getBooleanExtra("result", false)){
                         new getDNSTask().execute();
 
@@ -157,7 +147,7 @@ public class MainActivity extends ListActivity {
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
-                new IntentFilter(DNSBackgroundService.ACTION_SETDNS_DONE));
+                new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
         setDNSWatchingService();
 
         (new getDNSTask()).execute();
@@ -234,7 +224,7 @@ public class MainActivity extends ListActivity {
 	}
 
     private void setDNSCompletingList(){
-        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(default_list));
+        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DNSmanConstants.DEFAULT_LIST));
         sped.putStringSet("dnslist", toSavedDNS);
         sped.apply();
     }
