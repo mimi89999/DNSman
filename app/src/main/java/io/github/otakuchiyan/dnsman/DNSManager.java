@@ -7,8 +7,10 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
+import android.net.VpnService;
 import android.os.Build;
 import android.util.Log;
 
@@ -17,28 +19,7 @@ import java.util.List;
 
 import eu.chainfire.libsuperuser.Shell;
 
-public class DNSManager {
-    final static String SETPROP_COMMAND_PREFIX = "setprop net.dns";
-	final static String GETPROP_COMMAND_PREFIX = "getprop net.dns";
-    final static String SETRULE_COMMAND = "iptables -t nat %s OUTPUT -p %s --dport 53 -j DNAT --to-destination %s\n";
-    final static String CHECKRULE_COMMAND_PREFIX = "iptables -t nat -L OUTPUT | grep ";
-
-    final static String NDC_COMMAND_PREFIX = "ndc resolver";
-    final static String SETIFDNS_COMMAND_BELOW_42 = NDC_COMMAND_PREFIX + " setifdns %s %s %s\n";
-    final static String SETIFDNS_COMMAND = NDC_COMMAND_PREFIX + " setifdns %s '' %s %s\n";
-    final static String SETNETDNS_COMMAND = NDC_COMMAND_PREFIX + " setnetdns %s '' %s %s\n";
-    final static String SETDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " setdefaultif";
-
-
-    //0 is no error
-    final static int ERROR_SETPROP_FAILED = 1;
-    final static int ERROR_UNKNOWN = 9999;
-
-	final static String[] CHECKPROP_COMMANDS = {
-        GETPROP_COMMAND_PREFIX + "1",
-        GETPROP_COMMAND_PREFIX + "2"
-    };
-
+public class DNSManager implements DNSmanConstants{
 	public static int setDNSViaSetprop(String dns1, String dns2, boolean checkProp) {
 		String[] setCommands = {
             SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + "\"",
@@ -106,6 +87,16 @@ public class DNSManager {
         List<String> result = Shell.SU.run(cmds);
 
         return result.get(0).equals("") ? 0 : ERROR_UNKNOWN;
+    }
+
+    public static int setDNSViaVpn(Context c, String dns1, String dns2){
+        Intent i = VpnService.prepare(c);
+        if(i != null) {
+            c.startActivity(i);
+        }
+
+        //DNSVpnService.perform(c, dns1, dns2);
+        return 0;
     }
 
 	public static boolean isRulesAlivable(String dns, String port){

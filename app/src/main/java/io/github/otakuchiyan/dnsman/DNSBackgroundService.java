@@ -152,6 +152,9 @@ public class DNSBackgroundService extends IntentService{
             case "NDC":
                 result_code = DNSManager.setDNSViaNdc(current_netObj, dns1, dns2);
                 break;
+            case "VPN":
+                DNSManager.setDNSViaVpn(context, dns1, dns2);
+                break;
         }
 
         result = result_code == 0;

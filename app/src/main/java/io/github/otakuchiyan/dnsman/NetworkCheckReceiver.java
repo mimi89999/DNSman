@@ -30,7 +30,6 @@ import java.lang.Integer;
 
 public class NetworkCheckReceiver extends BroadcastReceiver {
     private SharedPreferences sp;
-
     private ConnectivityManager cm;
     private NetworkInfo currentNet;
     private boolean isFirstConnect = true;
@@ -42,30 +41,28 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 sp = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext());
                 String dnsToast = sp.getString("toast", "0");
                 int result_code = i.getIntExtra("result_code", 0);
-                // if(sp.getString("mode", "0").equals("0")) {
-                    if (i.getBooleanExtra("result", false)) {
-                        if (dnsToast.equals("0")) {
-                            final String dns1 = i.getStringExtra("dns1");
-                            final String dns2 = i.getStringExtra("dns2");
-                            String str = c.getText(R.string.set_succeed).toString();
-                            str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
-                            str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
-                            Toast.makeText(c, str, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        if (!dnsToast.equals("2")) {
-                            String error_str = c.getText(R.string.set_failed).toString();
-                            switch(result_code){
-                                case DNSManager.ERROR_SETPROP_FAILED:
-                                    error_str += "\n" + c.getText(R.string.error_setprop_failed).toString();
-                                    break;
-                                default:
-                                    error_str += "\n" + c.getText(R.string.error_unknown).toString();
-                            }
-                            Toast.makeText(c, error_str, Toast.LENGTH_SHORT).show();
-                        }
+                if (i.getBooleanExtra("result", false)) {
+                    if (dnsToast.equals("0")) {
+                        final String dns1 = i.getStringExtra("dns1");
+                        final String dns2 = i.getStringExtra("dns2");
+                        String str = c.getText(R.string.set_succeed).toString();
+                        str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                        str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                        Toast.makeText(c, str, Toast.LENGTH_SHORT).show();
                     }
-                //}
+                } else {
+                    if (!dnsToast.equals("2")) {
+                        String error_str = c.getText(R.string.set_failed).toString();
+                        switch(result_code){
+                            case DNSManager.ERROR_SETPROP_FAILED:
+                                error_str += "\n" + c.getText(R.string.error_setprop_failed).toString();
+                                break;
+                            default:
+                                error_str += "\n" + c.getText(R.string.error_unknown).toString();
+                        }
+                        Toast.makeText(c, error_str, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 	    }
 	};

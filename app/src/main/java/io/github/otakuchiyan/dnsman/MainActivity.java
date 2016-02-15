@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.VpnService;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -208,6 +209,14 @@ public class MainActivity extends ListActivity {
 		
 	}
 
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, Intent data){
+        if(reqCode == DNSmanConstants.VPN_REQUEST || resCode == RESULT_OK){
+            Intent s = new Intent(this, DNSVpnService.class);
+            startService(s);
+        }
+    }
+
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		adb.setTitle(R.string.welcome)
@@ -270,7 +279,7 @@ public class MainActivity extends ListActivity {
                 }
             }
             for(int i = 0; i != currentDNSData.size(); i++){
-                Log.d("MainActivity", "data = " + currentDNSData.get(0));
+                Log.d("MainActivity", "data = " + currentDNSData.get(i));
             }
             return currentDNSData;
         }
@@ -346,7 +355,15 @@ public class MainActivity extends ListActivity {
                         return;
                     }
 
-                    DNSBackgroundService.setByString(context, dns1str, dns2str);
+                    Intent i = VpnService.prepare(context);
+                    if (i != null) {
+                        startActivityForResult(i, DNSmanConstants.VPN_REQUEST);
+                    } else {
+                        Intent s = new Intent(context, DNSVpnService.class);
+                        startService(s);
+                    }
+
+                    //DNSBackgroundService.setByString(context, dns1str, dns2str);
                 }
             });
 
