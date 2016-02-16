@@ -4,7 +4,8 @@ DNS resolver setting tool for Android.
 
 TODO
 ===
-- Find out the method of changing DNS without ROOT and VPNService class
+- Implement DNSMoniterService
+- Improve UX
 
 How to build
 ===
@@ -15,7 +16,7 @@ How to build
 Help my work
 ===
 
-Alipay: otakuchiyan
+Alipay: yugen.dev#gmail.com (# replace to @)
 
 [Translate](https://crowdin.com/project/dnsman)
 
