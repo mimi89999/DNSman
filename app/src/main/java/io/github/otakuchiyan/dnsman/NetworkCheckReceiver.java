@@ -71,7 +71,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
 			context.getApplicationContext());
 		
-		if(sp.getBoolean("firstbooted", false)){
+		if(!sp.getBoolean("firstboot", false)){
             LocalBroadcastManager.getInstance(context).registerReceiver(dnsSetted,
                     new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 

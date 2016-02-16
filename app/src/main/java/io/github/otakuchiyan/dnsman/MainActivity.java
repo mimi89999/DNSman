@@ -98,10 +98,10 @@ public class MainActivity extends ListActivity {
             netNameList.add(gn.wimaxName);
         }
 
-		if(sp.getBoolean("firstbooted", true)) {
+		if(sp.getBoolean("firstboot", true)) {
             showWelcomeDialog();
             setDNSCompletingList();
-            sped.putBoolean("firstbooted", false);
+            sped.putBoolean("firstboot", false);
             sped.apply();
         }
 
@@ -208,14 +208,6 @@ public class MainActivity extends ListActivity {
 		return super.onOptionsItemSelected(item);
 		
 	}
-
-    @Override
-    protected void onActivityResult(int reqCode, int resCode, Intent data){
-        if(reqCode == DNSmanConstants.VPN_REQUEST || resCode == RESULT_OK){
-            Intent s = new Intent(this, DNSVpnService.class);
-            startService(s);
-        }
-    }
 
 	private void showWelcomeDialog(){
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -355,15 +347,7 @@ public class MainActivity extends ListActivity {
                         return;
                     }
 
-                    Intent i = VpnService.prepare(context);
-                    if (i != null) {
-                        startActivityForResult(i, DNSmanConstants.VPN_REQUEST);
-                    } else {
-                        Intent s = new Intent(context, DNSVpnService.class);
-                        startService(s);
-                    }
-
-                    //DNSBackgroundService.setByString(context, dns1str, dns2str);
+                    DNSBackgroundService.setByString(context, dns1str, dns2str);
                 }
             });
 

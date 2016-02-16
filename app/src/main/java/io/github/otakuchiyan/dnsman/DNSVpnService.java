@@ -77,6 +77,8 @@ public class DNSVpnService extends VpnService {
                         fd = vpn.setSession("DNSVpnService")
                                 .addAddress(addr, 24)
                                 .addDnsServer("8.8.8.8")
+                                        .addDnsServer("8.8.4.4")
+                                        //.addDnsServer("4.4.4.4")
                                // .addRoute("0.0.0.0", 0)
                                 .establish();
 

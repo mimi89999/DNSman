@@ -71,6 +71,8 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
+
+        <activity android:name=".VpnWrapperActivity"></activity>
     </application>
 
 </manifest>
