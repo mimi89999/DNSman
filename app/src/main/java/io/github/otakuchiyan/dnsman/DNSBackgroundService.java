@@ -3,16 +3,19 @@ package io.github.otakuchiyan.dnsman;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class DNSBackgroundService extends IntentService{
     private static Context context;
@@ -162,12 +165,13 @@ public class DNSBackgroundService extends IntentService{
             AirplaneModeUtils.toggle(context, current_netObj);
         }
 
+        //Send to MainActivity
         Intent result_intent = new Intent(DNSmanConstants.ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
         result_intent.putExtra("result_code", result_code);
         result_intent.putExtra("dns1", dns1);
         result_intent.putExtra("dns2", dns2);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(result_intent);
+        sendBroadcast(result_intent);
     }
-
 }
+

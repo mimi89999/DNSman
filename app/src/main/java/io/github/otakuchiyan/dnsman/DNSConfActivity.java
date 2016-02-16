@@ -1,33 +1,26 @@
 package io.github.otakuchiyan.dnsman;
+
 import android.app.*;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.AsyncTask;
-import android.widget.EditText;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.content.Context;
 
 import java.lang.Void;
 
-import io.github.otakuchiyan.dnsman.DNSManager;
-import io.github.otakuchiyan.dnsman.IPCheckerComponent;
-import io.github.otakuchiyan.dnsman.DNSEditText;
-import android.view.View.*;
-import android.content.*;
-import android.view.*;
-import android.util.Log;
+
 
 public class DNSConfActivity extends Activity{
-    final static String ACTION_CONFOPERATION = "io.github.otakuchiyan.dnsman.ACTION_CONFOPERATION";
-    final static String ACTION_CONF_GETTED = "io.github.otakuchiyan.dnsman.ACTION_CONF_GETTED";
-    
 	private SharedPreferences sp;
+    private Context context;
+
     private LinearLayout dnsConfActivity;
     private TextView configPathText;
     private TextView configDNS;
@@ -41,6 +34,7 @@ public class DNSConfActivity extends Activity{
 		getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.action_edit_resolv);
 		sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        context = this;
 
         configPath = sp.getString("config_path", "/etc/resolv.conf");
         if(configPath.equals("")){
@@ -73,14 +67,6 @@ public class DNSConfActivity extends Activity{
         dnsConfActivity.addView(rdns1);
         dnsConfActivity.addView(rdns2);
 
-		IntentFilter operationFilter = new IntentFilter();
-		operationFilter.addAction(ACTION_CONFOPERATION);
-		LocalBroadcastManager.getInstance(this).registerReceiver(confOperation, operationFilter);
-
-        IntentFilter confFilter = new IntentFilter();
-        confFilter.addAction(ACTION_CONF_GETTED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(gettedConf, confFilter);
-
         (new getConfigTask()).execute();
 		
         setContentView(dnsConfActivity);
@@ -108,29 +94,6 @@ public class DNSConfActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver confOperation = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-		String err = i.getStringExtra("err");
-		if(i.getAction().equals(ACTION_CONFOPERATION)){
-		    if(err != null){
-				Toast.makeText(c, err, Toast.LENGTH_LONG).show();
-		    }else{
-	    Toast.makeText(c, R.string.operation_succeed, Toast.LENGTH_SHORT).show();
-		    }
-		}
-	    }
-	};
-
-    private BroadcastReceiver gettedConf = new BroadcastReceiver(){
-	    @Override
-	    public void onReceive(Context c, Intent i){
-            if(i.getAction().equals(ACTION_CONF_GETTED)){
-                (new getConfigTask()).execute();
-            }
-	    }
-	};
-
     private class getConfigTask extends AsyncTask<Void, Void, String>{
         protected String doInBackground(Void... p1){
             sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -149,13 +112,14 @@ public class DNSConfActivity extends Activity{
         protected String doInBackground(String... dnss){
             return DNSManager.writeResolvConfig(dnss[0], dnss[1], configPath);
         }
-        protected void onPostExecuted(String error){
+        protected void onPostExecute(String error){
             if(!error.equals("")){
                 AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
                 adb.setMessage(error)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
             }else{
+                Toast.makeText(context, R.string.set_succeed, Toast.LENGTH_SHORT).show();
                 new getConfigTask().execute();
             }
         }
@@ -165,12 +129,15 @@ public class DNSConfActivity extends Activity{
         protected String doInBackground(Void... p1){
             return DNSManager.removeResolvConfig(configPath);
         }
-        protected void onPostExecuted(String error){
+        protected void onPostExecute(String error){
             if(!error.equals("")){
                 AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
                 adb.setMessage(error)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
+            }else{
+                Toast.makeText(context, R.string.set_succeed, Toast.LENGTH_SHORT).show();
+                new getConfigTask().execute();
             }
         }
     }

@@ -31,11 +31,14 @@ public class DNSEditText extends AutoCompleteTextView{
         context = c;
         sp = PreferenceManager.getDefaultSharedPreferences(c);
         setSingleLine(true);
-        int input_type = InputType.TYPE_CLASS_NUMBER;
-        int max_length = 15;
-        if(sp.getBoolean("enable_ipv6", false)) {
+        int input_type;
+        int max_length;
+        if(sp.getBoolean("enable_full_keyboard", false)) {
             input_type = InputType.TYPE_CLASS_TEXT;
             max_length = 39;
+        }else{
+            input_type = InputType.TYPE_CLASS_NUMBER;
+            max_length = 15;
         }
         setRawInputType(input_type);
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(max_length)});

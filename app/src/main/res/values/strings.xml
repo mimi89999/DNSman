@@ -30,7 +30,7 @@
     <string name="pref_category_appearance">APPEARANCE</string>
     <string name="pref_category_about">ABOUT</string>
 
-    <string name="pref_enable_ipv6">Enable IPv6</string>
+    <string name="pref_enable_full_keyboard">Enable full keyboard</string>
     <string name="pref_dnsmonitor">DNS monitor</string>
     <string name="pref_mode">Operating mode</string>
     <string name="pref_mode_prop">System properties</string>

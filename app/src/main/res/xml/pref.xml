@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/pref_category_function">
-        <SwitchPreference android:key="enable_ipv6"
+        <SwitchPreference android:key="enable_full_keyboard"
             android:title="@string/pref_enable_ipv6"
             android:defaultValue="false"/>
         <SwitchPreference android:key="pref_dnswatching"

@@ -91,7 +91,7 @@ public class DNSManager implements DNSmanConstants{
 
     public static int setDNSViaVpn(Context c, String dns1, String dns2){
         Intent i = new Intent(c, VpnWrapperActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("dns1", dns1);
         i.putExtra("dns2", dns2);
         c.startActivity(i);

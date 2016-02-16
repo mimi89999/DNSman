@@ -16,7 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
+//import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,8 @@ public class MainActivity extends ListActivity {
     private String current_mode;
     private Menu menu;
     private Context context;
+
+    private boolean isRegistered = false;
 
     private DNSMonitorService dnsMonitorService;
     private boolean dnsMonitorServiceIsBound;
@@ -60,7 +63,7 @@ public class MainActivity extends ListActivity {
     };
     private Intent dnsWatchingServiceIntent;
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -135,20 +138,51 @@ public class MainActivity extends ListActivity {
             @Override
             public void onReceive(Context c, Intent i){
                 if(i.getAction().equals(DNSmanConstants.ACTION_SETDNS_DONE)){
-                    if(i.getBooleanExtra("result", false)){
+                    boolean result = i.getBooleanExtra("result", false);
+                    int result_code = i.getIntExtra("result_code", 0);
+                    String dns1 = i.getStringExtra("dns1");
+                    String dns2 = i.getStringExtra("dns2");
+                    if(result){
+                        //For MainActivity
                         new getDNSTask().execute();
 
+                        //Toast
+                        String dnsToast = sp.getString("toast", "0");
+                        if (result) {
+                            if (dnsToast.equals("0")) {
+                                String str = context.getText(R.string.set_succeed).toString();
+                                str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                                str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                                Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (!dnsToast.equals("2")) {
+                                String error_str = context.getText(R.string.set_failed).toString();
+                                switch(result_code){
+                                    case DNSManager.ERROR_SETPROP_FAILED:
+                                        error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
+                                        break;
+                                    default:
+                                        error_str += "\n" + context.getText(R.string.error_unknown).toString();
+                                }
+                                Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
             }
         };
 
+
+
         final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
         setListAdapter(adapter);
 
+        if(!isRegistered) {
+            registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
+            isRegistered = true;
+        }
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(dnsSetted,
-                new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
         setDNSWatchingService();
 
         (new getDNSTask()).execute();
