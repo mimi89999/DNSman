@@ -2,8 +2,7 @@
     <item
         android:id="@+id/resolv_edit"
         android:title="@string/action_edit_resolv"
-        android:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_edit"/>
+        android:showAsAction="never"/>
 
     <item
         android:id="@+id/delete_rule"
@@ -14,6 +13,5 @@
 	<item
 		android:id="@+id/settings"
 		android:title="@string/action_settings"
-        android:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_preferences"/>
+        android:showAsAction="never"/>
 </menu>
