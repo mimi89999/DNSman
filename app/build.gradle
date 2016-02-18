@@ -12,9 +12,6 @@ android {
         versionName "0.9"
     }
     buildTypes {
-        debug {
-            minifyEnabled true
-        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

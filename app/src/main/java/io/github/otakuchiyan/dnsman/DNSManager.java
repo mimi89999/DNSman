@@ -8,9 +8,6 @@ package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.VpnService;
 import android.os.Build;
 import android.util.Log;
 
@@ -29,12 +26,8 @@ public class DNSManager implements DNSmanConstants{
         Log.d("DNSManager.prop", setCommands[0]);
         Log.d("DNSManager.prop", setCommands[1]);
 
-        if(Shell.SU.available()){
-            Shell.SU.run(setCommands);
-        }else{
-            Shell.SH.run(setCommands);
-        }
-    
+        Shell.SU.run(setCommands);
+
         if(checkProp){
             List<String> result = Shell.SH.run(CHECKPROP_COMMANDS);
 
@@ -50,7 +43,6 @@ public class DNSManager implements DNSmanConstants{
 
 	public static int setDNSViaIPtables(String dns, String port){
         List<String> cmds = new ArrayList<>();
-        List<String> result;
 
         String cmd1 = String.format(SETRULE_COMMAND, "-A", "udp", dns);
         String cmd2 = String.format(SETRULE_COMMAND, "-A", "tcp", dns);
@@ -103,9 +95,9 @@ public class DNSManager implements DNSmanConstants{
 
 		if(!port.equals("")){
 			cmd += ":" + port;
-		}
+        }
 
-		Log.d("DNSManager[CMD]", cmd);
+        Log.d("DNSManager[CMD]", cmd);
 		return !Shell.SU.run(cmd).isEmpty();
 	}
 

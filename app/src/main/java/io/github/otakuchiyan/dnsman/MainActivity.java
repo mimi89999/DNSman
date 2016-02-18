@@ -3,23 +3,15 @@ package io.github.otakuchiyan.dnsman;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.net.VpnService;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
-//import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,25 +21,71 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import eu.chainfire.libsuperuser.Shell;
 
 public class MainActivity extends ListActivity {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
-    private LinearLayout currentDNSLayout;
     private String current_mode;
-    private Menu menu;
-    private Context context;
     private Intent dnsWatchingServiceIntent;
 
+    private Menu menu;
+    private Context context;
+    private TextView currentDns;
+
     private boolean isRegistered = false;
+    BroadcastReceiver dnsSetted = new BroadcastReceiver(){
+        @Override
+        public void onReceive(Context c, Intent i){
+            if(i.getAction().equals(DNSmanConstants.ACTION_SETDNS_DONE)){
+                boolean result = i.getBooleanExtra("result", false);
+                int result_code = i.getIntExtra("result_code", 0);
+                String dns1 = i.getStringExtra("dns1");
+                String dns2 = i.getStringExtra("dns2");
+                if(result){
+                    //For MainActivity
+                    new getDNSTask().execute();
+
+                    //Toast
+                    String dnsToast = sp.getString("toast", "0");
+                    if (result) {
+                        if (dnsToast.equals("0")) {
+                            String str = context.getText(R.string.set_succeed).toString();
+                            str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                            str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (!dnsToast.equals("2")) {
+                            String error_str = context.getText(R.string.set_failed).toString();
+                            switch(result_code){
+                                case DNSManager.ERROR_SETPROP_FAILED:
+                                    error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
+                                    break;
+                                default:
+                                    error_str += "\n" + context.getText(R.string.error_unknown).toString();
+                            }
+                            Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,118 +97,90 @@ public class MainActivity extends ListActivity {
         context = this;
 
         final ListView mainList = getListView();
-        ArrayList<String> netLabelList = new ArrayList<>();
-        ArrayList<String> netNameList = new ArrayList<>();
+
+        List<Map<String, String>> dnsList = new ArrayList<>();
+        Map<String, String> dnsEntryData = new HashMap<>();
+
+        current_mode = sp.getString("mode", "PROP");
+
+        String dns1key = "dns1";
+        String dns2Suffix = "dns2";
+        if(current_mode.equals("IPTABLES")) {
+            dns2Suffix = "port";
+        }
 
         //Constructing list
-        netLabelList.add(getText(R.string.global_category).toString());
-        netNameList.add("g");
+        dnsEntryData.put("label", getText(R.string.global_category).toString());
+        String global_dns_data = sp.getString("g" + dns1key, "") + "\t" + sp.getString("g" + dns2Suffix, "");
+        dnsEntryData.put("dns_data", global_dns_data);
+        dnsList.add(dnsEntryData);
         GetNetwork gn = new GetNetwork(this);
-        if(gn.isSupportWifi){
-            netLabelList.add(getText(R.string.wifi_category).toString());
-            netNameList.add(gn.wifiName);
-        }
-        if(gn.isSupportMobile){
-            netLabelList.add(getText(R.string.mobile_category).toString());
-            netNameList.add(gn.mobileName);
-        }
-        if(gn.isSupportBluetooth){
-            netLabelList.add(getText(R.string.bt_category).toString());
-            netNameList.add(gn.bluetoothName);
-        }
-        if(gn.isSupportEthernet){
-            netLabelList.add(getText(R.string.eth_category).toString());
-            netNameList.add(gn.etherName);
-        }
-        if(gn.isSupportWimax){
-            netLabelList.add(getText(R.string.wimax_category).toString());
-            netNameList.add(gn.wimaxName);
+
+        ArrayList<Boolean> netSupportingList = new ArrayList<>();
+        ArrayList<Integer> netLabelList = new ArrayList<>();
+        ArrayList<String> netNameList = new ArrayList<>();
+        netSupportingList.add(gn.isSupportWifi);
+        netSupportingList.add(gn.isSupportMobile);
+        netSupportingList.add(gn.isSupportBluetooth);
+        netSupportingList.add(gn.isSupportEthernet);
+        netSupportingList.add(gn.isSupportWimax);
+        netLabelList.add(R.string.wifi_category);
+        netLabelList.add(R.string.mobile_category);
+        netLabelList.add(R.string.bt_category);
+        netLabelList.add(R.string.eth_category);
+        netLabelList.add(R.string.wimax_category);
+        netNameList.add(gn.wifiName);
+        netNameList.add(gn.mobileName);
+        netNameList.add(gn.bluetoothName);
+        netNameList.add(gn.etherName);
+        netNameList.add(gn.wimaxName);
+
+        for(int i = 0; i != netSupportingList.size(); i++){
+            if(netSupportingList.get(i)){
+                Map<String, String> netEntryData = new HashMap<>();
+                netEntryData.put("label", getText(netLabelList.get(i)).toString());
+                String dns_data = sp.getString(netNameList.get(i) + dns1key, "") + "\t"
+                        + sp.getString(netNameList + dns2Suffix, "");
+                netEntryData.put("dns_data", dns_data);
+                dnsList.add(netEntryData);
+            }
         }
 
 		if(sp.getBoolean("firstboot", true)) {
-            showWelcomeDialog();
             setDNSCompletingList();
             sped.putBoolean("firstboot", false);
             sped.apply();
         }
 
         //construecting header
-        currentDNSLayout = new LinearLayout(this);
-        currentDNSLayout.setOrientation(LinearLayout.VERTICAL);
-        mainList.addHeaderView(currentDNSLayout);
+        LinearLayout headerLayout = new LinearLayout(this);
+        headerLayout.setOrientation(LinearLayout.VERTICAL);
+        TextView currentDNSText = new TextView(this);
+        currentDNSText.setText(R.string.cdnstext);
+        currentDns = new TextView(this);
+        headerLayout.addView(currentDNSText);
+        headerLayout.addView(currentDns);
+        if(sp.getBoolean("auto_setting", true)) {
+            TextView priorityText = new TextView(this);
+            priorityText.setText(R.string.priority_text);
+            headerLayout.addView(priorityText);
+        }
+        mainList.addHeaderView(headerLayout);
 
         //listener
-        mainList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1) {
-                    mainList.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-                    view.requestFocus();
-                } else if (!mainList.isFocused()) {
-                    mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-                    mainList.requestFocus();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mainList.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-            }
-        });
         mainList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-        //broadcast
-        BroadcastReceiver dnsSetted = new BroadcastReceiver(){
-            @Override
-            public void onReceive(Context c, Intent i){
-                if(i.getAction().equals(DNSmanConstants.ACTION_SETDNS_DONE)){
-                    boolean result = i.getBooleanExtra("result", false);
-                    int result_code = i.getIntExtra("result_code", 0);
-                    String dns1 = i.getStringExtra("dns1");
-                    String dns2 = i.getStringExtra("dns2");
-                    if(result){
-                        //For MainActivity
-                        new getDNSTask().execute();
-
-                        //Toast
-                        String dnsToast = sp.getString("toast", "0");
-                        if (result) {
-                            if (dnsToast.equals("0")) {
-                                String str = context.getText(R.string.set_succeed).toString();
-                                str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
-                                str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
-                                Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            if (!dnsToast.equals("2")) {
-                                String error_str = context.getText(R.string.set_failed).toString();
-                                switch(result_code){
-                                    case DNSManager.ERROR_SETPROP_FAILED:
-                                        error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
-                                        break;
-                                    default:
-                                        error_str += "\n" + context.getText(R.string.error_unknown).toString();
-                                }
-                                Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-
-
-        final ArrayAdapter<String> adapter = new CustomArrayAdapter(this, netLabelList, netNameList);
+        final SimpleAdapter adapter = new SimpleAdapter(this, dnsList,
+                android.R.layout.simple_list_item_2,
+                new String[] {"label", "dns_data"},
+                new int[]{ android.R.id.text1, android.R.id.text2 });
         setListAdapter(adapter);
 
-        if(!isRegistered) {
-            registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
-            isRegistered = true;
-        }
+        registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 
         setDNSWatchingService();
 
+        checkRoot();
         (new getDNSTask()).execute();
 	}
 
@@ -201,16 +211,14 @@ public class MainActivity extends ListActivity {
     }
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
         this.menu = menu;
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
@@ -226,20 +234,11 @@ public class MainActivity extends ListActivity {
 		
 	}
 
-	private void showWelcomeDialog(){
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		adb.setTitle(R.string.welcome)
-			.setMessage(R.string.welcome_msg)
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/otakuchiyan/DNSman/wiki/"));
-                    startActivity(i);
-                }
-            })
-                .setNegativeButton(android.R.string.cancel, null);
-		adb.create().show();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(dnsSetted);
+    }
 
     private void setDNSCompletingList(){
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DNSmanConstants.DEFAULT_LIST));
@@ -249,11 +248,20 @@ public class MainActivity extends ListActivity {
 
     private void setDNSWatchingService(){
         if(sp.getBoolean("pref_dnswatching", true)) {
-            /*bindService(new Intent(context, DNSMonitorService.class),
-                    dnsWatchingConnection, Context.BIND_AUTO_CREATE);
-            dnsWatchingServiceIsBound = true;*/
             startService(dnsWatchingServiceIntent);
         }
+    }
+
+    private class checkRootTask extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void[] p1) {
+            sped.putBoolean("rooted",Shell.SU.available());
+            sped.apply();
+            return null;
+        }
+    }
+
+    private void checkRoot(){
+        new checkRootTask().execute();
     }
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
@@ -294,16 +302,11 @@ public class MainActivity extends ListActivity {
         }
 
         protected void onPostExecute(List<String> data){
-            currentDNSLayout.removeAllViews();
-            TextView currentDNSText = new TextView(context);
-            currentDNSText.setText(R.string.cdnstext);
-            currentDNSText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-            currentDNSLayout.addView(currentDNSText);
+            String dnsString = "";
             for(int i = 0; i != data.size(); i++){
-                TextView t = new TextView(context);
-                t.setText(data.get(i));
-                currentDNSLayout.addView(t);
+                dnsString += data.get(i) + "\n";
             }
+            currentDns.setText(dnsString);
             if(haveRules){
                 //Escaping crash when it faster than menu creates
                 if(menu != null) {
@@ -314,64 +317,4 @@ public class MainActivity extends ListActivity {
         }
 
     }
-
-    private class CustomArrayAdapter extends ArrayAdapter<String>{
-        private Context context;
-        private ArrayList<String> netLabelList;
-        private ArrayList<String> netNameList;
-
-        public CustomArrayAdapter(Context c, ArrayList<String> netLabelList,
-                                  ArrayList<String> netNameList){
-            super(c, -1, netLabelList);
-            this.context = c;
-            this.netLabelList = netLabelList;
-            this.netNameList = netNameList;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent){
-            LayoutInflater inflater = (LayoutInflater) context.
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.net_item, parent, false);
-            TextView netText = (TextView) rowView.findViewById(R.id.net_text);
-            final Button button = (Button) rowView.findViewById(R.id.button);
-            DNSEditText dns1 = (DNSEditText) rowView.findViewById(R.id.dns1);
-            DNSEditText dns2 = (DNSEditText) rowView.findViewById(R.id.dns2);
-            GetNetwork gn = new GetNetwork(context);
-            final String currentNetName = netNameList.get(position);
-            final String dns1key = currentNetName + "dns1";
-
-            String dns2Suffix = "dns2";
-            if(current_mode.equals("IPTABLES")) {
-                dns2.setFirewallMode();
-                dns2Suffix = "port";
-            }
-            final String dns2key = currentNetName + dns2Suffix;
-
-            netText.setText(netLabelList.get(position));
-            dns1.setKeyAndText(dns1key);
-            dns2.setKeyAndText(dns2key);
-            dns1.setIPChecker();
-            dns2.setIPChecker();
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String dns1str = sp.getString(dns1key, "");
-                    String dns2str = sp.getString(dns2key, "");
-
-                    if (dns1str.equals("") && dns2str.equals("")) {
-                        return;
-                    }
-
-                    DNSBackgroundService.setByString(context, dns1str, dns2str);
-                }
-            });
-
-            return rowView;
-
-        }
-
-    }
-	
 }
