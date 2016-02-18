@@ -21,15 +21,13 @@ public class DNSConfActivity extends Activity{
 	private SharedPreferences sp;
     private Context context;
 
-    private LinearLayout dnsConfActivity;
-    private TextView configPathText;
     private TextView configDNS;
 	private DNSEditText rdns1;
 	private DNSEditText rdns2;
     private String configPath;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState){
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.action_edit_resolv);
@@ -49,11 +47,16 @@ public class DNSConfActivity extends Activity{
 			adb.show();
             return;
         }
-        dnsConfActivity = new LinearLayout(this);
+
+        LinearLayout dnsConfActivity = new LinearLayout(this);
         dnsConfActivity.setOrientation(LinearLayout.VERTICAL);
-        configPathText = new TextView(this);
+
+        TextView configPathText = new TextView(this);
         configDNS = new TextView(this);
         configPathText.setText(configPath);
+        TextView hint = new TextView(this);
+        hint.setText(getText(R.string.hint_conf));
+
 
         rdns1 = new DNSEditText(this);
         rdns2 = new DNSEditText(this);
@@ -66,6 +69,7 @@ public class DNSConfActivity extends Activity{
         dnsConfActivity.addView(configDNS);
         dnsConfActivity.addView(rdns1);
         dnsConfActivity.addView(rdns2);
+        dnsConfActivity.addView(hint);
 
         (new getConfigTask()).execute();
 		

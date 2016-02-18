@@ -45,23 +45,9 @@ public class MainActivity extends ListActivity {
     private String current_mode;
     private Menu menu;
     private Context context;
+    private Intent dnsWatchingServiceIntent;
 
     private boolean isRegistered = false;
-
-    private DNSMonitorService dnsMonitorService;
-    private boolean dnsMonitorServiceIsBound;
-    private ServiceConnection dnsMonitorConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            dnsMonitorService = ((DNSMonitorService.DNSWatchingBinder)service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            dnsMonitorService = null;
-        }
-    };
-    private Intent dnsWatchingServiceIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,10 +196,7 @@ public class MainActivity extends ListActivity {
             startActivity(getIntent());
         }
         if(!sp.getBoolean("pref_dnswatching", true)){
-            if(dnsMonitorServiceIsBound) {
-                stopService(dnsWatchingServiceIntent);
-                //unbindService(dnsWatchingConnection);
-            }
+            stopService(dnsWatchingServiceIntent);
         }
     }
 

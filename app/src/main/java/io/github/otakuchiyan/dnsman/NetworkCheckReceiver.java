@@ -19,7 +19,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
                 context.getApplicationContext());
-        if (isFirstConnect) {
+        if (isFirstConnect && sp.getBoolean("pref_auto_setting", true)) {
             if (!sp.getBoolean("firstboot", false)) {
 
                 //Workaround to deal with multiple broadcast

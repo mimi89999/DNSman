@@ -30,13 +30,23 @@
     <string name="pref_category_appearance">APPEARANCE</string>
     <string name="pref_category_about">ABOUT</string>
 
+    <string name="help">Help</string>
+
+    <string name="pref_auto_setting">Auto setting</string>
+    <string name="pref_auto_setting_summary">Set DNS when connected network</string>
     <string name="pref_enable_full_keyboard">Enable full keyboard</string>
     <string name="pref_dnsmonitor">DNS monitor</string>
+
     <string name="pref_mode">Operating mode</string>
     <string name="pref_mode_prop">System properties</string>
     <string name="pref_mode_iptables">Firewall rules</string>
     <string name="pref_mode_ndc">Daemon connector</string>
     <string name="pref_mode_vpn">VPN</string>
+
+    <string name="pref_mode_prop_summary">System seems ignored these properties above Android 4.3</string>
+    <string name="pref_mode_iptables_summary">It may led device can not send any DNS requests when using mobile network\nUninstall app will not delete already applied firewall rules, need delete it in app manually</string>
+    <string name="pref_mode_ndc_summary">Need to specify network interface below Android 5.0</string>
+    <string name="pref_mode_vpn_summary">Need to detect another VPN</string>
 
     <string name="pref_toast">Toast</string>
     <string name="pref_toast_show">Show</string>
@@ -68,7 +78,7 @@
     <string name="nodns_noti">No avaliable DNS</string>
 
     <string name="no_conf">resolv.conf was not found</string>
-
+    <string name="hint_conf">System seems ignored this file above Android 4.3.\nThis function is provided to some binary and Linux chroot.</string>
     <string name="write_conf">Write DNS resolver</string>
     <string name="default_conf">Use Google public DNS</string>
     <string name="delete_conf">Delete /etc/resolv.conf</string>
