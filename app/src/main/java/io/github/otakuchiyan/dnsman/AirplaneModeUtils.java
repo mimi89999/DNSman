@@ -2,42 +2,45 @@ package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
 
 import eu.chainfire.libsuperuser.Shell;
 
 public class AirplaneModeUtils {
-    final static String NDC_COMMAND_PREFIX = "ndc resolver";
-    final static String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
-    final static String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif\n";
 
     public static void toggle(Context context, String netId){
-        try {
-            String flushdns_cmd;
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                flushdns_cmd = String.format(FLUSHNET_COMMAND, netId);
-            }else{ //<=4.4, netId will be ignored
-                flushdns_cmd = FLUSHDEFAULTIF_COMMAND;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        if(sp.getBoolean("rooted", true)) {
+            try {
+                String flushdns_cmd;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    flushdns_cmd = String.format(DNSmanConstants.FLUSHNET_COMMAND, netId);
+                } else { //<=4.4, netId will be ignored
+                    flushdns_cmd = DNSmanConstants.FLUSHDEFAULTIF_COMMAND;
+                }
+
+                Log.d("AirplaneModeUtils", "cmd = " + flushdns_cmd);
+                Shell.SU.run(flushdns_cmd);
+            } catch (Exception e) {
+                toggleViaCommand();
             }
-
-            Log.d("AirplaneModeUtils", "cmd = " + flushdns_cmd);
-            Shell.SU.run(flushdns_cmd);
-        } catch (Exception e) {
-
+        } else {
             if (Build.VERSION.SDK_INT >= 17) {
-                toggleAboveApiLevel17();
-            } else {
+            }else{
                 toggleBelowApiLevel17(context);
             }
         }
     }
 
-    private static void toggleAboveApiLevel17() {
+    private static void toggleViaCommand() {
         List<String> cmds = new ArrayList<>();
         Log.e("AirplaneModeUtils", "failed to flush dns cache via ndc");
         cmds.add("settings put global airplane_mode_on 1");

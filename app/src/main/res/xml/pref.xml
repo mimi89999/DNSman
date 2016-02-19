@@ -17,21 +17,30 @@
                 android:defaultValue="PROP"
                 android:entries="@array/mode"
                 android:entryValues="@array/mode_values" />
-            <PreferenceScreen android:title="@string/pref_ndc">
-                <io.github.otakuchiyan.dnsman.InterfacePreference
-                    android:key="pref_ndc_wlan"
-                    android:title="@string/pref_ndc_wlan" />
-                <io.github.otakuchiyan.dnsman.InterfacePreference
-                    android:key="pref_ndc_rmnet"
-                    android:title="@string/pref_ndc_rmnet" />
-                <io.github.otakuchiyan.dnsman.InterfacePreference
-                    android:key="pref_ndc_bt"
-                    android:title="@string/pref_ndc_bt" />
-                <io.github.otakuchiyan.dnsman.InterfacePreference
-                    android:key="pref_ndc_eth"
-                    android:title="@string/pref_ndc_eth" />
-            </PreferenceScreen>
-            <PreferenceCategory android:title="@string/help">
+            <PreferenceCategory android:title="@string/category_prop_setting">
+                <CheckBoxPreference android:key="checkprop"
+                    android:defaultValue="true"
+                    android:title="@string/pref_misc_checkprop"
+                    android:summary="@string/pref_misc_checkprop_summary"
+                    />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/category_ndc_setting">
+                <PreferenceScreen android:title="@string/pref_ndc">
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_wlan"
+                        android:title="@string/pref_ndc_wlan" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_rmnet"
+                        android:title="@string/pref_ndc_rmnet" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_bt"
+                        android:title="@string/pref_ndc_bt" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_eth"
+                        android:title="@string/pref_ndc_eth" />
+                </PreferenceScreen>
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/category_about_mode">
                 <Preference android:title="@string/pref_mode_prop"
                     android:summary="@string/pref_mode_prop_summary"/>
                 <Preference android:title="@string/pref_mode_iptables"
@@ -51,11 +60,6 @@
             <intent android:action="io.github.otakuchiyan.dnsman.DNSListActivity"/>
         </Preference>
         <PreferenceScreen android:title="@string/pref_misc">
-            <CheckBoxPreference android:key="checkprop"
-                android:defaultValue="true"
-                android:title="@string/pref_misc_checkprop"
-                android:summary="@string/pref_misc_checkprop_summary"
-                />
             <CheckBoxPreference android:key="autoflush"
                 android:defaultValue="true"
                 android:title="@string/pref_misc_autoflush"
