@@ -72,7 +72,13 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".VpnWrapperActivity"></activity>
+        <activity android:name=".VpnWrapperActivity" />
+        <activity
+            android:name=".DNSEntryActivity"
+            android:label="@string/title_activity_dnsentry"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
     </application>
 
 </manifest>

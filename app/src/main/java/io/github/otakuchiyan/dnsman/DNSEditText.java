@@ -50,6 +50,12 @@ public class DNSEditText extends AutoCompleteTextView{
                 }
             }
         });
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDropDown();
+            }
+        });
 
         Set<String> dnslist = sp.getStringSet("dnslist", new HashSet<String>());
         ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(c,

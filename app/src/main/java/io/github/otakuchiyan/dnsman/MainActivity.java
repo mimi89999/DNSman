@@ -44,6 +44,7 @@ public class MainActivity extends ListActivity {
     private Menu menu;
     private Context context;
     private TextView currentDns;
+    private SimpleAdapter adapter;
 
     private boolean isRegistered = false;
     BroadcastReceiver dnsSetted = new BroadcastReceiver(){
@@ -111,7 +112,11 @@ public class MainActivity extends ListActivity {
 
         //Constructing list
         dnsEntryData.put("label", getText(R.string.global_category).toString());
-        String global_dns_data = sp.getString("g" + dns1key, "") + "\t" + sp.getString("g" + dns2Suffix, "");
+        String globalDns1Key = "g" + dns1key;
+        String globalDns2Key = "g" + dns2Suffix;
+        String global_dns_data = sp.getString(globalDns1Key, "") + "\t" + sp.getString(globalDns2Key, "");
+        dnsEntryData.put("dns1key", globalDns1Key);
+        dnsEntryData.put("dns2key", globalDns2Key);        
         dnsEntryData.put("dns_data", global_dns_data);
         dnsList.add(dnsEntryData);
         GetNetwork gn = new GetNetwork(this);
@@ -139,8 +144,12 @@ public class MainActivity extends ListActivity {
             if(netSupportingList.get(i)){
                 Map<String, String> netEntryData = new HashMap<>();
                 netEntryData.put("label", getText(netLabelList.get(i)).toString());
-                String dns_data = sp.getString(netNameList.get(i) + dns1key, "") + "\t"
-                        + sp.getString(netNameList + dns2Suffix, "");
+                        String dns1Key = netNameList.get(i) + dns1key;
+                String dns2Key = netNameList + dns2Suffix;
+                netEntryData.put("dns1key", dns1Key);
+                netEntryData.put("dns2key", dns2Key);
+                String dns_data = sp.getString(dns1Key, "") + "\t"
+                        + sp.getString(dns2Key, "");
                 netEntryData.put("dns_data", dns_data);
                 dnsList.add(netEntryData);
             }
@@ -155,6 +164,7 @@ public class MainActivity extends ListActivity {
         //construecting header
         LinearLayout headerLayout = new LinearLayout(this);
         headerLayout.setOrientation(LinearLayout.VERTICAL);
+        headerLayout.setOnClickListener(null);
         TextView currentDNSText = new TextView(this);
         currentDNSText.setText(R.string.cdnstext);
         currentDns = new TextView(this);
@@ -167,14 +177,27 @@ public class MainActivity extends ListActivity {
         }
         mainList.addHeaderView(headerLayout);
 
-        //listener
-        mainList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
-        final SimpleAdapter adapter = new SimpleAdapter(this, dnsList,
+        adapter = new SimpleAdapter(this, dnsList,
                 android.R.layout.simple_list_item_2,
                 new String[] {"label", "dns_data"},
                 new int[]{ android.R.id.text1, android.R.id.text2 });
         setListAdapter(adapter);
+
+        //listener
+        mainList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Map<String, String> data = (Map<String, String>) parent.getItemAtPosition(position);
+                Intent i = new Intent(context, DNSEntryActivity.class);
+                i.putExtra("label", data.get("label"));
+                i.putExtra("dns1key", data.get("dns1key"));
+                i.putExtra("dns2key", data.get("dns2key"));
+                startActivity(i);
+            }
+        });
+
+
 
         registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 
@@ -195,15 +218,7 @@ public class MainActivity extends ListActivity {
 		if(!current_mode.equals(last_mode)){
             sped.putString("last_mode", current_mode);
             sped.apply();
-            finish();
-            startActivity(getIntent());
-        }
-        boolean enable_ipv6 = sp.getBoolean("enable_ipv6", false);
-        if(enable_ipv6 != sp.getBoolean("already_enable_ipv6", false)){
-            sped.putBoolean("already_enable_ipv6", enable_ipv6);
-            sped.apply();
-            finish();
-            startActivity(getIntent());
+            adapter.notifyDataSetChanged();
         }
         if(!sp.getBoolean("pref_dnswatching", true)){
             stopService(dnsWatchingServiceIntent);
