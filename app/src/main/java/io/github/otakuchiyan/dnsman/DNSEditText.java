@@ -57,8 +57,12 @@ public class DNSEditText extends AutoCompleteTextView{
             }
         });
 
+        setCompletingList();
+    }
+
+    private void setCompletingList(){
         Set<String> dnslist = sp.getStringSet("dnslist", new HashSet<String>());
-        ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(c,
+        ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_dropdown_item_1line,
                 dnslist.toArray(new String[dnslist.size()]));
         setAdapter(dnsListAdapter);
@@ -69,6 +73,8 @@ public class DNSEditText extends AutoCompleteTextView{
         setText(sp.getString(key, ""));
     }
 
+
+    //If the EditText is used to input port, must invoke before setIPChecker
     public void setFirewallMode() {
         setHint(context.getText(R.string.port));
         isPort = true;

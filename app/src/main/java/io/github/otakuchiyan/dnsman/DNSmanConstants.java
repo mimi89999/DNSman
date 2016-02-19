@@ -34,9 +34,14 @@ public interface DNSmanConstants{
     String SETNETDNS_COMMAND = NDC_COMMAND_PREFIX + " setnetdns %s '' %s %s\n";
     String SETDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " setdefaultif";
 
+    String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
+    String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif\n";
+
+
     //0 is no error
     int ERROR_SETPROP_FAILED = 1;
     int ERROR_UNKNOWN = 9999;
 
     int VPN_REQUEST = 0x01;
+    int REFRESH_CURRENT_DNS_REQUEST = 0x02;
 }

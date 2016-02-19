@@ -1,10 +1,8 @@
 package io.github.otakuchiyan.dnsman;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -15,10 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -41,11 +36,15 @@ public class MainActivity extends ListActivity {
     private String current_mode;
     private Intent dnsWatchingServiceIntent;
 
+    private ArrayList<Boolean> netSupportingList = new ArrayList<>();
+    private ArrayList<Integer> netLabelList = new ArrayList<>();
+    private ArrayList<String> netNameList = new ArrayList<>();
+
     private Menu menu;
     private Context context;
     private TextView currentDns;
     private SimpleAdapter adapter;
-    private ListView mainList;
+    private List<Map<String, String>> dnsEntryList;
 
     private boolean isRegistered = false;
     BroadcastReceiver dnsSetted = new BroadcastReceiver(){
@@ -98,33 +97,13 @@ public class MainActivity extends ListActivity {
         dnsWatchingServiceIntent = new Intent(this, DNSMonitorService.class);
         context = this;
 
-        mainList = getListView();
-
-        List<Map<String, String>> dnsList = new ArrayList<>();
-        Map<String, String> dnsEntryData = new HashMap<>();
+        ListView mainList = getListView();
 
         current_mode = sp.getString("mode", "PROP");
 
-        String dns1key = "dns1";
-        String dns2Suffix = "dns2";
-        if(current_mode.equals("IPTABLES")) {
-            dns2Suffix = "port";
-        }
-
-        //Constructing list
-        dnsEntryData.put("label", getText(R.string.global_category).toString());
-        String globalDns1Key = "g" + dns1key;
-        String globalDns2Key = "g" + dns2Suffix;
-        String global_dns_data = sp.getString(globalDns1Key, "") + "\t" + sp.getString(globalDns2Key, "");
-        dnsEntryData.put("dns1key", globalDns1Key);
-        dnsEntryData.put("dns2key", globalDns2Key);        
-        dnsEntryData.put("dns_data", global_dns_data);
-        dnsList.add(dnsEntryData);
         GetNetwork gn = new GetNetwork(this);
 
-        ArrayList<Boolean> netSupportingList = new ArrayList<>();
-        ArrayList<Integer> netLabelList = new ArrayList<>();
-        ArrayList<String> netNameList = new ArrayList<>();
+        //init
         netSupportingList.add(gn.isSupportWifi);
         netSupportingList.add(gn.isSupportMobile);
         netSupportingList.add(gn.isSupportBluetooth);
@@ -140,21 +119,6 @@ public class MainActivity extends ListActivity {
         netNameList.add(gn.bluetoothName);
         netNameList.add(gn.etherName);
         netNameList.add(gn.wimaxName);
-
-        for(int i = 0; i != netSupportingList.size(); i++){
-            if(netSupportingList.get(i)){
-                Map<String, String> netEntryData = new HashMap<>();
-                netEntryData.put("label", getText(netLabelList.get(i)).toString());
-                        String dns1Key = netNameList.get(i) + dns1key;
-                String dns2Key = netNameList + dns2Suffix;
-                netEntryData.put("dns1key", dns1Key);
-                netEntryData.put("dns2key", dns2Key);
-                String dns_data = sp.getString(dns1Key, "") + "\t"
-                        + sp.getString(dns2Key, "");
-                netEntryData.put("dns_data", dns_data);
-                dnsList.add(netEntryData);
-            }
-        }
 
 		if(sp.getBoolean("firstboot", true)) {
             setDNSCompletingList();
@@ -179,7 +143,9 @@ public class MainActivity extends ListActivity {
         }
         mainList.addHeaderView(headerLayout);
 
-        adapter = new SimpleAdapter(this, dnsList,
+        dnsEntryList = buildList();
+
+        adapter = new SimpleAdapter(this, dnsEntryList,
                 android.R.layout.simple_list_item_2,
                 new String[] {"label", "dns_data"},
                 new int[]{ android.R.id.text1, android.R.id.text2 });
@@ -200,7 +166,6 @@ public class MainActivity extends ListActivity {
         });
 
 
-
         registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 
         setDNSWatchingService();
@@ -215,12 +180,17 @@ public class MainActivity extends ListActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		sped = sp.edit();
 
+        dnsEntryList.clear();
+        dnsEntryList.addAll(buildList());
+        adapter.notifyDataSetChanged();
+
         String last_mode = sp.getString("last_mode", "PROP");
         current_mode = sp.getString("mode", "PROP");
 		if(!current_mode.equals(last_mode)){
             sped.putString("last_mode", current_mode);
             sped.apply();
-            adapter.notifyDataSetChanged();
+            finish();
+            startActivity(getIntent());
         }
         if(!sp.getBoolean("pref_dns_monitor", true)){
             stopService(dnsWatchingServiceIntent);
@@ -234,6 +204,43 @@ public class MainActivity extends ListActivity {
                 sped.apply();
             }
         }
+    }
+
+    private List<Map<String, String>> buildList(){
+        String dns1key = "dns1";
+        String dns2Suffix = "dns2";
+        if(current_mode.equals("IPTABLES")) {
+            dns2Suffix = "port";
+        }
+
+        Map<String, String> dnsEntryData = new HashMap<>();
+        List<Map<String, String>> dnsEntryList = new ArrayList<>();
+
+        //Constructing list
+        dnsEntryData.put("label", getText(R.string.global_category).toString());
+        String globalDns1Key = "g" + dns1key;
+        String globalDns2Key = "g" + dns2Suffix;
+        String global_dns_data = sp.getString(globalDns1Key, "") + "\t" + sp.getString(globalDns2Key, "");
+        dnsEntryData.put("dns1key", globalDns1Key);
+        dnsEntryData.put("dns2key", globalDns2Key);
+        dnsEntryData.put("dns_data", global_dns_data);
+        dnsEntryList.add(dnsEntryData);
+
+        for(int i = 0; i != netSupportingList.size(); i++){
+            if(netSupportingList.get(i)){
+                Map<String, String> netEntryData = new HashMap<>();
+                netEntryData.put("label", getText(netLabelList.get(i)).toString());
+                String dns1Key = netNameList.get(i) + dns1key;
+                String dns2Key = netNameList.get(i) + dns2Suffix;
+                netEntryData.put("dns1key", dns1Key);
+                netEntryData.put("dns2key", dns2Key);
+                String dns_data = sp.getString(dns1Key, "") + "\t"
+                        + sp.getString(dns2Key, "");
+                netEntryData.put("dns_data", dns_data);
+                dnsEntryList.add(netEntryData);
+            }
+        }
+        return dnsEntryList;
     }
 
 	@Override
@@ -264,6 +271,14 @@ public class MainActivity extends ListActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(dnsSetted);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == DNSmanConstants.REFRESH_CURRENT_DNS_REQUEST){
+            new getDNSTask().execute();
+        }
     }
 
     private void setDNSCompletingList(){

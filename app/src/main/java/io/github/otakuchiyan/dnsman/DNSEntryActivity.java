@@ -39,12 +39,13 @@ public class DNSEntryActivity extends Activity {
 
         dns1.setKeyAndText(dns1Key);
         dns2.setKeyAndText(dns2Key);
-        dns1.setIPChecker();
-        dns2.setIPChecker();
 
         if(current_mode.equals("IPTABLES")){
             dns2.setFirewallMode();
         }
+
+        dns1.setIPChecker();
+        dns2.setIPChecker();
     }
 
     public void onClickApplyButton(View v){
