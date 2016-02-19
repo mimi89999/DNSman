@@ -45,6 +45,7 @@ public class MainActivity extends ListActivity {
     private Context context;
     private TextView currentDns;
     private SimpleAdapter adapter;
+    private ListView mainList;
 
     private boolean isRegistered = false;
     BroadcastReceiver dnsSetted = new BroadcastReceiver(){
@@ -97,7 +98,7 @@ public class MainActivity extends ListActivity {
         dnsWatchingServiceIntent = new Intent(this, DNSMonitorService.class);
         context = this;
 
-        final ListView mainList = getListView();
+        mainList = getListView();
 
         List<Map<String, String>> dnsList = new ArrayList<>();
         Map<String, String> dnsEntryData = new HashMap<>();
@@ -164,6 +165,7 @@ public class MainActivity extends ListActivity {
         //construecting header
         LinearLayout headerLayout = new LinearLayout(this);
         headerLayout.setOrientation(LinearLayout.VERTICAL);
+        headerLayout.setPadding(10, 10, 10, 10);
         headerLayout.setOnClickListener(null);
         TextView currentDNSText = new TextView(this);
         currentDNSText.setText(R.string.cdnstext);
@@ -220,8 +222,17 @@ public class MainActivity extends ListActivity {
             sped.apply();
             adapter.notifyDataSetChanged();
         }
-        if(!sp.getBoolean("pref_dnswatching", true)){
+        if(!sp.getBoolean("pref_dns_monitor", true)){
             stopService(dnsWatchingServiceIntent);
+        }
+
+        //no root
+        if(!sp.getBoolean("rooted", true)) {
+            if (!current_mode.equals("VPN")) {
+                Toast.makeText(this, R.string.toast_noroot, Toast.LENGTH_LONG).show();
+                sped.putString("mode", "VPN");
+                sped.apply();
+            }
         }
     }
 
@@ -262,7 +273,7 @@ public class MainActivity extends ListActivity {
     }
 
     private void setDNSWatchingService(){
-        if(sp.getBoolean("pref_dnswatching", true)) {
+        if(sp.getBoolean("pref_dns_moniter", true)) {
             startService(dnsWatchingServiceIntent);
         }
     }

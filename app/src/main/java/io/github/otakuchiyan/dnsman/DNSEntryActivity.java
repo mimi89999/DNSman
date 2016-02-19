@@ -59,5 +59,4 @@ public class DNSEntryActivity extends Activity {
         sped.apply();
         Toast.makeText(this, R.string.toast_clear, Toast.LENGTH_SHORT).show();
     }
-
 }

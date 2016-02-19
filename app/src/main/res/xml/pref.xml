@@ -7,7 +7,7 @@
         <SwitchPreference android:key="enable_full_keyboard"
             android:title="@string/pref_enable_ipv6"
             android:defaultValue="false"/>
-        <SwitchPreference android:key="pref_dnswatching"
+        <SwitchPreference android:key="pref_dns_monitor"
             android:title="@string/pref_dnsmonitor"
             android:defaultValue="true"/>
         <PreferenceScreen android:title="@string/pref_mode">

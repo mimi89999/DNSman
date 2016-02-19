@@ -80,6 +80,7 @@
     <string name="nodns_noti">No available DNS</string>
 
     <string name="toast_clear">Current entry data was cleared</string>
+    <string name="toast_noroot">Device was not rooted, only VPN mode available</string>
 
     <string name="no_conf">resolv.conf was not found</string>
     <string name="hint_conf">System seems ignored this file above Android 4.3.\nThis function is provided to some binary and Linux chroot.</string>
