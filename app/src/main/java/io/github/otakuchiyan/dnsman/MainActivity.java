@@ -234,8 +234,13 @@ public class MainActivity extends ListActivity {
                 String dns2Key = netNameList.get(i) + dns2Suffix;
                 netEntryData.put("dns1key", dns1Key);
                 netEntryData.put("dns2key", dns2Key);
-                String dns_data = sp.getString(dns1Key, "") + "\t"
-                        + sp.getString(dns2Key, "");
+                String dns1 = sp.getString(dns1Key, "");
+                String dns2 = sp.getString(dns2Key, "");
+                String dns_data = "";
+                if(!dns1.equals("")){
+                    dns_data = dns1 + "\t";
+                }
+                dns_data += dns2;
                 netEntryData.put("dns_data", dns_data);
                 dnsEntryList.add(netEntryData);
             }
