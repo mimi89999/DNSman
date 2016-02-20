@@ -46,7 +46,6 @@ public class MainActivity extends ListActivity {
     private SimpleAdapter adapter;
     private List<Map<String, String>> dnsEntryList;
 
-    private boolean isRegistered = false;
     BroadcastReceiver dnsSetted = new BroadcastReceiver(){
         @Override
         public void onReceive(Context c, Intent i){
@@ -186,12 +185,21 @@ public class MainActivity extends ListActivity {
 
         String last_mode = sp.getString("last_mode", "PROP");
         current_mode = sp.getString("mode", "PROP");
+
+        //Mode was changed
 		if(!current_mode.equals(last_mode)){
             sped.putString("last_mode", current_mode);
             sped.apply();
             finish();
             startActivity(getIntent());
         }
+
+        //If IPTABLES mode first enabled
+        if(current_mode.equals("IPTABLES") && !sp.getBoolean("iptables_first_enabled", false)) {
+            sped.putBoolean("iptables_first_enabled", true);
+            sped.apply();
+        }
+
         if(!sp.getBoolean("pref_dns_monitor", true)){
             stopService(dnsWatchingServiceIntent);
         }
@@ -202,6 +210,10 @@ public class MainActivity extends ListActivity {
                 Toast.makeText(this, R.string.toast_noroot, Toast.LENGTH_LONG).show();
                 sped.putString("mode", "VPN");
                 sped.apply();
+            }
+            if(menu != null){
+                MenuItem item = menu.findItem(R.id.resolv_edit);
+                item.setEnabled(false);
             }
         }
     }
@@ -293,14 +305,14 @@ public class MainActivity extends ListActivity {
     }
 
     private void setDNSWatchingService(){
-        if(sp.getBoolean("pref_dns_moniter", true)) {
+        if(sp.getBoolean("pref_dns_monitor", true)) {
             startService(dnsWatchingServiceIntent);
         }
     }
 
     private class checkRootTask extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void[] p1) {
-            sped.putBoolean("rooted",Shell.SU.available());
+            sped.putBoolean("rooted", Shell.SU.available());
             sped.apply();
             return null;
         }
@@ -316,19 +328,22 @@ public class MainActivity extends ListActivity {
             List<String> currentDNSData = new ArrayList<>();
 
             //Check firewall rules
-            String entry;
-            String ip = sp.getString("lastHijackedDNS", "");
-            String port = sp.getString("lastHijackedPort", "");
-            if (!ip.equals("") && DNSManager.isRulesAlivable(ip, port)) {
-                haveRules = true;
+            sp = PreferenceManager.getDefaultSharedPreferences(context);
+            if(sp.getBoolean("iptables_first_enabled", false)) {
+                String entry;
+                String ip = sp.getString("lastHijackedDNS", "");
+                String port = sp.getString("lastHijackedPort", "");
+                if (!ip.equals("") && DNSManager.isRulesAlivable(ip, port)) {
+                    haveRules = true;
 
-                if (!port.equals("")) {
-                    entry = ip + ":" + port;
-                } else {
-                    entry = ip;
+                    if (!port.equals("")) {
+                        entry = ip + ":" + port;
+                    } else {
+                        entry = ip;
+                    }
+
+                    currentDNSData.add(entry);
                 }
-
-                currentDNSData.add(entry);
             }
 
             //Check system properties
