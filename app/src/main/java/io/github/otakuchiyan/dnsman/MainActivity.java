@@ -207,7 +207,7 @@ public class MainActivity extends ListActivity {
         //no root
         if(!sp.getBoolean("rooted", true)) {
             if (!current_mode.equals("VPN")) {
-                Toast.makeText(this, R.string.toast_noroot, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.toast_no_root, Toast.LENGTH_LONG).show();
                 sped.putString("mode", "VPN");
                 sped.apply();
             }
