@@ -4,8 +4,7 @@ DNS resolver setting tool for Android.
 
 TODO
 ===
-- Implement DNSMoniterService
-- Improve UX
+- Fix VPN and ndc mode
 
 How to build
 ===
