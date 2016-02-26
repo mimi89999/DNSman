@@ -34,7 +34,6 @@ public class MainActivity extends ListActivity {
 	private SharedPreferences sp;
 	private SharedPreferences.Editor sped;
     private String current_mode;
-    private Intent dnsWatchingServiceIntent;
 
     private ArrayList<Boolean> netSupportingList = new ArrayList<>();
     private ArrayList<Integer> netLabelList = new ArrayList<>();
@@ -93,7 +92,6 @@ public class MainActivity extends ListActivity {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sped = sp.edit();
-        dnsWatchingServiceIntent = new Intent(this, DNSMonitorService.class);
         context = this;
 
         ListView mainList = getListView();
@@ -167,8 +165,6 @@ public class MainActivity extends ListActivity {
 
         registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 
-        setDNSWatchingService();
-
         checkRoot();
         (new getDNSTask()).execute();
 	}
@@ -189,10 +185,6 @@ public class MainActivity extends ListActivity {
         if(current_mode.equals("IPTABLES") && !sp.getBoolean("iptables_first_enabled", false)) {
             sped.putBoolean("iptables_first_enabled", true);
             sped.apply();
-        }
-
-        if(!sp.getBoolean("pref_dns_monitor", true)){
-            stopService(dnsWatchingServiceIntent);
         }
 
         //no root
@@ -293,12 +285,6 @@ public class MainActivity extends ListActivity {
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DNSmanConstants.DEFAULT_LIST));
         sped.putStringSet("dnslist", toSavedDNS);
         sped.apply();
-    }
-
-    private void setDNSWatchingService(){
-        if(sp.getBoolean("pref_dns_monitor", true)) {
-            startService(dnsWatchingServiceIntent);
-        }
     }
 
     private class checkRootTask extends AsyncTask<Void, Void, Void> {

@@ -7,9 +7,6 @@
         <SwitchPreference android:key="pref_enable_full_keyboard"
             android:title="@string/pref_enable_full_keyboard"
             android:defaultValue="false"/>
-        <SwitchPreference android:key="pref_dns_monitor"
-            android:title="@string/pref_dns_monitor"
-            android:defaultValue="true"/>
         <PreferenceScreen android:title="@string/pref_mode">
             <ListPreference
                 android:key="mode"

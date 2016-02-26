@@ -61,10 +61,6 @@
         </activity>
 
         <service
-            android:name=".DNSMonitorService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".DNSVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
