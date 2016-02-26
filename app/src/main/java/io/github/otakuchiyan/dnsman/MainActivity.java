@@ -54,32 +54,32 @@ public class MainActivity extends ListActivity {
                 int result_code = i.getIntExtra("result_code", 0);
                 String dns1 = i.getStringExtra("dns1");
                 String dns2 = i.getStringExtra("dns2");
+
+                String dnsToast = sp.getString("toast", "0");
                 if(result){
                     //For MainActivity
                     new getDNSTask().execute();
 
                     //Toast
-                    String dnsToast = sp.getString("toast", "0");
-                    if (result) {
-                        if (dnsToast.equals("0")) {
-                            String str = context.getText(R.string.set_succeed).toString();
-                            str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
-                            str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
-                            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        if (!dnsToast.equals("2")) {
-                            String error_str = context.getText(R.string.set_failed).toString();
-                            switch(result_code){
-                                case DNSManager.ERROR_SETPROP_FAILED:
-                                    error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
-                                    break;
-                                default:
-                                    error_str += "\n" + context.getText(R.string.error_unknown).toString();
-                            }
-                            Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
-                        }
+                    if (dnsToast.equals("0")) {
+                        String str = context.getText(R.string.set_succeed).toString();
+                        str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                        str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    if (!dnsToast.equals("2")) {
+                        String error_str = context.getText(R.string.set_failed).toString();
+                        switch(result_code){
+                            case DNSManager.ERROR_SETPROP_FAILED:
+                                error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
+                                break;
+                            default:
+                                error_str += "\n" + context.getText(R.string.error_unknown).toString();
+                        }
+                        Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         }
@@ -183,16 +183,7 @@ public class MainActivity extends ListActivity {
         dnsEntryList.addAll(buildList());
         adapter.notifyDataSetChanged();
 
-        String last_mode = sp.getString("last_mode", "PROP");
         current_mode = sp.getString("mode", "PROP");
-
-        //Mode was changed
-		if(!current_mode.equals(last_mode)){
-            sped.putString("last_mode", current_mode);
-            sped.apply();
-            finish();
-            startActivity(getIntent());
-        }
 
         //If IPTABLES mode first enabled
         if(current_mode.equals("IPTABLES") && !sp.getBoolean("iptables_first_enabled", false)) {
