@@ -42,6 +42,7 @@ public class MainActivity extends ListActivity {
     private Menu menu;
     private Context context;
     private TextView currentDns;
+    private TextView defaultDns;
     private SimpleAdapter adapter;
     private List<Map<String, String>> dnsEntryList;
 
@@ -57,26 +58,16 @@ public class MainActivity extends ListActivity {
                 String dnsToast = sp.getString("toast", "0");
                 if(result){
                     //For MainActivity
-                    new getDNSTask().execute();
+                    setCurrentDns(dns1, dns2);
 
                     //Toast
                     if (dnsToast.equals("0")) {
-                        String str = context.getText(R.string.set_succeed).toString();
-                        str += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
-                        str += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
-                        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+                        showToastByCodeWithDns(result_code, dns1, dns2);
                     }
                 } else {
+                    //Not never show
                     if (!dnsToast.equals("2")) {
-                        String error_str = context.getText(R.string.set_failed).toString();
-                        switch(result_code){
-                            case DNSManager.ERROR_SETPROP_FAILED:
-                                error_str += "\n" + context.getText(R.string.error_setprop_failed).toString();
-                                break;
-                            default:
-                                error_str += "\n" + context.getText(R.string.error_unknown).toString();
-                        }
-                        Toast.makeText(context, error_str, Toast.LENGTH_SHORT).show();
+                        showToastByCode(result_code);
                     }
 
                 }
@@ -84,7 +75,36 @@ public class MainActivity extends ListActivity {
         }
     };
 
+    private void showToastByCode(int code){
+        showToastByCodeWithDns(code, "", "");
+    }
 
+    private void showToastByCodeWithDns(int code, String dns1, String dns2){
+        String toastString = "";
+
+        switch (code) {
+            case 0:
+                toastString = context.getText(R.string.set_succeed).toString();
+                toastString += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
+                toastString += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                break;
+            case DNSmanConstants.RESTORE_SUCCEED:
+                toastString = context.getText(R.string.toast_restored).toString();
+                break;
+            case DNSmanConstants.ERROR_NO_DNS:
+                toastString = context.getText(R.string.toast_no_dns_to_restore).toString();
+                break;
+            case DNSmanConstants.ERROR_SETPROP_FAILED:
+                toastString = context.getText(R.string.set_failed).toString();
+                toastString += "\n" + context.getText(R.string.error_setprop_failed).toString();
+                break;
+            default:
+                toastString = context.getText(R.string.set_failed).toString();
+                toastString += "\n" + context.getText(R.string.error_unknown).toString();
+        }
+
+        Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,8 +151,13 @@ public class MainActivity extends ListActivity {
         TextView currentDNSText = new TextView(this);
         currentDNSText.setText(R.string.cdnstext);
         currentDns = new TextView(this);
+        TextView defaultDnsText = new TextView(this);
+        defaultDnsText.setText(R.string.default_dns);
+        defaultDns = new TextView(this);
         headerLayout.addView(currentDNSText);
         headerLayout.addView(currentDns);
+        headerLayout.addView(defaultDnsText);
+        headerLayout.addView(defaultDns);
         if(sp.getBoolean("auto_setting", true)) {
             TextView priorityText = new TextView(this);
             priorityText.setText(R.string.priority_text);
@@ -153,7 +178,7 @@ public class MainActivity extends ListActivity {
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> data = (Map<String, String>) parent.getItemAtPosition(position);
+                Map<String, String> data = (HashMap<String, String>) parent.getItemAtPosition(position);
                 Intent i = new Intent(context, DNSEntryActivity.class);
                 i.putExtra("label", data.get("label"));
                 i.putExtra("dns1key", data.get("dns1key"));
@@ -166,7 +191,7 @@ public class MainActivity extends ListActivity {
         registerReceiver(dnsSetted, new IntentFilter(DNSmanConstants.ACTION_SETDNS_DONE));
 
         checkRoot();
-        (new getDNSTask()).execute();
+        setCurrentDns();
 	}
 
 	@Override
@@ -256,8 +281,8 @@ public class MainActivity extends ListActivity {
 			case R.id.resolv_edit:
 				startActivity(new Intent(this, DNSConfActivity.class));
 				break;
-            case R.id.delete_rule:
-                DNSBackgroundService.deleteLastRules(this);
+            case R.id.menu_restore:
+                DNSBackgroundService.restore(this);
                 break;
 			case R.id.settings:
 				startActivity(new Intent(this, SettingsActivity.class));
@@ -277,7 +302,7 @@ public class MainActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == DNSmanConstants.REFRESH_CURRENT_DNS_REQUEST){
-            new getDNSTask().execute();
+            setCurrentDns();
         }
     }
 
@@ -297,6 +322,34 @@ public class MainActivity extends ListActivity {
 
     private void checkRoot(){
         new checkRootTask().execute();
+    }
+
+    private void setCurrentDns(){
+        setCurrentDns("", "");
+    }
+
+    private void setCurrentDns(String dns1, String dns2){
+        //Not need AsyncTask
+        if(!dns1.equals("") || !dns2.equals("")){
+            List<String> dnsList = new ArrayList<>();
+            dnsList.add(dns1);
+            dnsList.add(dns2);
+            currentDns.setText(buildDnsText(dnsList));
+        }else{
+            new getDNSTask().execute();
+        }
+    }
+
+    private String buildDnsText(List<String> dnsData){
+        String dnsString = "";
+        for(int i = 0; i != dnsData.size(); i++){
+            dnsString += dnsData.get(i);
+            //not last line
+            if(i != dnsData.size() - 1){
+                dnsString += "\n";
+            }
+        }
+        return dnsString;
     }
 
     private class getDNSTask extends AsyncTask<Void, Void, List<String>>{
@@ -340,18 +393,15 @@ public class MainActivity extends ListActivity {
         }
 
         protected void onPostExecute(List<String> data){
-            String dnsString = "";
-            for(int i = 0; i != data.size(); i++){
-                dnsString += data.get(i) + "\n";
-            }
-            currentDns.setText(dnsString);
-            if(haveRules){
-                //Escaping crash when it faster than menu creates
-                if(menu != null) {
-                    MenuItem itemDelete = menu.findItem(R.id.delete_rule);
-                    itemDelete.setEnabled(true);
-                }
-            }
+            currentDns.setText(buildDnsText(data));
+
+            sp = PreferenceManager.getDefaultSharedPreferences(context);
+            List<String> defaultDnsList = new ArrayList<>();
+            String dns1 = sp.getString("defaultDns1", "");
+            String dns2 = sp.getString("defaultDns2", "");
+            defaultDnsList.add(dns1);
+            defaultDnsList.add(dns2);
+            defaultDns.setText(buildDnsText(defaultDnsList));
         }
 
     }

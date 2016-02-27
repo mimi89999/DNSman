@@ -29,7 +29,7 @@ public class DNSManager implements DNSmanConstants{
         Shell.SU.run(setCommands);
 
         if(checkProp){
-            List<String> result = Shell.SH.run(CHECKPROP_COMMANDS);
+            List<String> result = getCurrentPropDNS();
 
             //Check effect
             if(!result.get(0).equals(dns1) ||

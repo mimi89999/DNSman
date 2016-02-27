@@ -41,7 +41,9 @@ public interface DNSmanConstants{
     //0 is no error
     int ERROR_SETPROP_FAILED = 1;
     int ERROR_UNKNOWN = 9999;
+    int ERROR_NO_DNS = 2;
 
     int VPN_REQUEST = 0x01;
     int REFRESH_CURRENT_DNS_REQUEST = 0x02;
+    int RESTORE_SUCCEED = 0x03;
 }

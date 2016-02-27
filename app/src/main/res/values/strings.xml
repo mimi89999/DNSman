@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cdnstext">Current DNS:</string>
+    <string name="default_dns">Default DNS provided by network:</string>
     <string name="firewall_rules_available">FIREWALL RULES AVAILABLE, CURRENT SETTINGS WILL BE IGNORED</string>
     <string name="priority_text">When enabled auto setting, the current network is top priority, while global dns is low priority</string>
 
@@ -23,7 +24,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
-    <string name="action_delete_rules">Delete rules</string>
+    <string name="action_restore">Restore</string>
 
     <string name="button_apply_ignore">Apply(Ignore current network)</string>
     <string name="button_clear">Clear</string>
@@ -82,6 +83,8 @@
 
     <string name="toast_clear">Current entry data was cleared</string>
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>
+    <string name="toast_no_dns_to_restore">No DNS to restore</string>
+    <string name="toast_restored">DNS was restored</string>
 
     <string name="no_conf">resolv.conf was not found</string>
     <string name="hint_conf">System seems ignored this file above Android 4.3.\nThis function is provided to some binary and Linux chroot.</string>

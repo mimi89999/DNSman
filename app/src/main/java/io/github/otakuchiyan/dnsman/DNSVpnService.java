@@ -18,6 +18,7 @@ import java.util.Enumeration;
 public class DNSVpnService extends VpnService {
     private ParcelFileDescriptor fd;
     private Builder vpn = new Builder();
+    private static Thread vpnThread;
     private static String vdns1;
     private static String vdns2;
 
@@ -29,6 +30,14 @@ public class DNSVpnService extends VpnService {
         vdns1 = dns1;
         vdns2 = dns2;
         c.startService(i);
+    }
+
+    public static void disconnect(){
+        try {
+            vpnThread.join(1000);
+        }catch (InterruptedException e){
+            Log.e("VpnService", "OpenConnect thread did not exit");
+        }
     }
 
     private String getAddress(){
@@ -53,7 +62,7 @@ public class DNSVpnService extends VpnService {
 
     @Override
     public int onStartCommand(Intent i, int flags, int startId){
-        final Thread thread = new Thread(new Runnable() {
+        vpnThread = new Thread(new Runnable() {
             @Override
             public void run() {
             try {
@@ -106,7 +115,7 @@ public class DNSVpnService extends VpnService {
             }
         });
 
-        thread.start();
+        vpnThread.start();
         return START_STICKY;
     }
 }

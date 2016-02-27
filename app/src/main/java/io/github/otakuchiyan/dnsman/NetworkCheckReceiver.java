@@ -27,6 +27,7 @@ public class NetworkCheckReceiver extends BroadcastReceiver {
                 currentNet = cm.getActiveNetworkInfo();
                 if (currentNet != null) {
                     isFirstConnect = false;
+                    DNSBackgroundService.isDefaultDnsGetted = false;
                     Log.d("NCR", "Start set");
                     String dnsToast = sp.getString("toast", "0");
                     GetNetwork gn = new GetNetwork(context);

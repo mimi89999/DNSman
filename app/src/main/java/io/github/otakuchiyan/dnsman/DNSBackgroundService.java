@@ -18,6 +18,8 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class DNSBackgroundService extends IntentService{
+    public static boolean isDefaultDnsGetted = false;
+
     private static Context context;
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sped;
@@ -62,10 +64,37 @@ public class DNSBackgroundService extends IntentService{
         return true;
     }
 
-    public static void deleteLastRules(Context c){
+    //Always can be used, because delete rules and disconnect vpn needn't default dns
+    public static void restore(Context c){
         beforeSet(c);
-        mode = "DELETE_RULES";
+        boolean isNeedDns = true;
+
+        switch (mode) {
+            case "IPTABLES":
+                mode = "DELETE_RULES";
+                isNeedDns = false;
+                break;
+            case "VPN":
+                DNSVpnService.disconnect();
+                sendResult(true, DNSmanConstants.RESTORE_SUCCEED);
+                return;
+        }
+
+        if(isNeedDns) {
+            String dns1 = sp.getString("defaultDns1", "");
+            String dns2 = sp.getString("defaultDns2", "");
+
+            if(dns1.equals("") && dns2.equals("")) {
+                sendResult(false, DNSmanConstants.ERROR_NO_DNS);
+                return;
+            }
+            dnsList.clear();
+            dnsList.add(dns1);
+            dnsList.add(dns2);
+        }
+
         Intent i = new Intent(c, DNSBackgroundService.class);
+        i.putExtra("isRestore", true);
         c.startService(i);
     }
 
@@ -120,13 +149,22 @@ public class DNSBackgroundService extends IntentService{
         int result_code = 0;
         String dns1 = "";
         String dns2 = "";
+        sped = sp.edit();
+
         if(!mode.equals("DELETE_RULES")){
             dns1 = dnsList.get(0);
             dns2 = dnsList.get(1);
             Log.d("DNSBackgroundService", "onHandleIntent.dns1 = " + dns1);
             Log.d("DNSBackgroundService", "onHandleIntent.dns2 = " + dns2);
         }
-        sped = sp.edit();
+
+        //Backup default dns provided by network
+        if(!isDefaultDnsGetted){
+            List<String> defaultDns = DNSManager.getCurrentPropDNS();
+            sped.putString("defaultDns1", defaultDns.get(0));
+            sped.putString("defaultDns2", defaultDns.get(1));
+            isDefaultDnsGetted = true;
+        }
 
         switch(mode){
             case "PROP":
@@ -136,21 +174,18 @@ public class DNSBackgroundService extends IntentService{
             case "IPTABLES":
                 if(DNSManager.isRulesAlivable(dns1, dns2)) {
                     return;
-                    //IP was changed
-                }else if (!dns1.equals(lastHijackedDNS) &&
+                }else if (!dns1.equals(lastHijackedDNS) && //IP was changed
                         DNSManager.isRulesAlivable(lastHijackedDNS, lastHijackedPort)){
                     DNSManager.deleteRules(lastHijackedDNS, lastHijackedPort);
                 }
                 sped.putString("lastHijackedDNS", dns1);
                 sped.putString("lastHijackedPort", dns2);
-                sped.apply();
                 result_code = DNSManager.setDNSViaIPtables(dns1, dns2);
                 break;
             case "DELETE_RULES":
                 DNSManager.deleteRules(lastHijackedDNS, lastHijackedPort);
                 sped.putString("lastHijackedDNS", "");
                 sped.putString("lastHijackedPort", "");
-                sped.apply();
                 break;
             case "NDC":
                 result_code = DNSManager.setDNSViaNdc(current_netObj, dns1, dns2);
@@ -159,19 +194,33 @@ public class DNSBackgroundService extends IntentService{
                 DNSManager.setDNSViaVpn(context, dns1, dns2);
                 break;
         }
+        sped.apply();
 
         result = result_code == 0;
+
+        if(result && i.getBooleanExtra("isRestore", false)) {
+            result_code = DNSmanConstants.RESTORE_SUCCEED;
+        }
+
         if(result && sp.getBoolean("autoflush", true)) {
             AirplaneModeUtils.toggle(context, current_netObj);
         }
 
         //Send to MainActivity
+        sendResultWithDns(result, result_code, dns1, dns2);
+    }
+
+    private static void sendResult(boolean result, int result_code){
+        sendResultWithDns(result, result_code, "", "");
+    }
+
+    private static void sendResultWithDns(boolean result, int result_code, String dns1, String dns2){
         Intent result_intent = new Intent(DNSmanConstants.ACTION_SETDNS_DONE);
         result_intent.putExtra("result", result);
         result_intent.putExtra("result_code", result_code);
         result_intent.putExtra("dns1", dns1);
         result_intent.putExtra("dns2", dns2);
-        sendBroadcast(result_intent);
+        context.sendBroadcast(result_intent);
     }
 }
 
