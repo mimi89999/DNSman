@@ -16,8 +16,7 @@ import java.nio.channels.DatagramChannel;
 import java.util.Enumeration;
 
 public class DNSVpnService extends VpnService {
-    private ParcelFileDescriptor fd;
-    private Builder vpn = new Builder();
+    private static ParcelFileDescriptor fd;
     private static Thread vpnThread;
     private static String vdns1;
     private static String vdns2;
@@ -32,11 +31,13 @@ public class DNSVpnService extends VpnService {
         c.startService(i);
     }
 
-    public static void disconnect(){
+    //FIXME: cannot stop vpn
+    public void disconnect(){
         try {
             vpnThread.join(1000);
+            stopSelf();
         }catch (InterruptedException e){
-            Log.e("VpnService", "OpenConnect thread did not exit");
+            Log.e("VpnService", "vpnThread did not exit");
         }
     }
 
@@ -90,6 +91,7 @@ public class DNSVpnService extends VpnService {
                 tunnel.connect(new InetSocketAddress(addr, 8087));
                 tunnel.configureBlocking(false);
 
+                Builder vpn = new Builder();
                 vpn.setSession("DNSVpnService")
                         .addAddress(real_addr, 24);
                 if(!vdns1.equals("")) {
@@ -107,7 +109,9 @@ public class DNSVpnService extends VpnService {
                 e.printStackTrace();
             } finally {
                 try {
-                    fd.close();
+                    if(fd != null) {
+                        fd.close();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

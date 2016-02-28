@@ -33,7 +33,7 @@ public class DNSEditText extends AutoCompleteTextView{
         setSingleLine(true);
         int input_type;
         int max_length;
-        if(sp.getBoolean("enable_full_keyboard", false)) {
+        if(sp.getBoolean("pref_enable_full_keyboard", false)) {
             input_type = InputType.TYPE_CLASS_TEXT;
             max_length = 39;
         }else{

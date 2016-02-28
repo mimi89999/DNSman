@@ -64,6 +64,7 @@ public class DNSBackgroundService extends IntentService{
         return true;
     }
 
+    //Need completing
     //Always can be used, because delete rules and disconnect vpn needn't default dns
     public static void restore(Context c){
         beforeSet(c);
@@ -75,7 +76,7 @@ public class DNSBackgroundService extends IntentService{
                 isNeedDns = false;
                 break;
             case "VPN":
-                DNSVpnService.disconnect();
+                new DNSVpnService().disconnect();
                 sendResult(true, DNSmanConstants.RESTORE_SUCCEED);
                 return;
         }
