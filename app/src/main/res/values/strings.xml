@@ -1,1 +1,9 @@
-<resources></resources>
+<resources>
+    <string name="category_wifi">Wi-Fi</string>
+    <string name="category_mobile">Mobile network</string>
+    <string name="category_bluetooth">Bluetooth</string>
+    <string name="category_ethernet">Ethernet</string>
+    <string name="category_wimax">WiMax</string>
+
+    <string name="notify_no_dns">No DNS was available</string>
+</resources>
