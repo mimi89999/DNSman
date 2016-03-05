@@ -19,7 +19,7 @@ public class DnsStorage{
     /*
     Preference example:
       key       value
-      "WIFI" + "dnsXkey" => ["127.0.0.1", "127.0.0.2"]
+      "WIFI" + "dns1" => ["127.0.0.1", "127.0.0.2"]
       "*port" was not used
      */
 
@@ -70,20 +70,35 @@ public class DnsStorage{
         isInfo2resMapBuilded = true;
     }
 
-    //To compatible old version
+
     public String[] getDnsByNetInfo(NetworkInfo info){
+        return getDnsByKeyPrefix(info.getTypeName());
+    }
+
+    public String[] getGlobalDns(){
+        return getDnsByKeyPrefix("g");
+    }
+
+    //To compatible old version
+    public String[] getDnsByKeyPrefix(String keyPrefix){
         String[] dnsEntry = new String[2];
         for(int i = 0; i != 2; i++) {
-            dnsEntry[i] = preferences.getString(info.getTypeName() + "dns" + Integer.toString(i) + "key",
-                    "");
+            dnsEntry[i] = preferences.getString(keyPrefix + "dns" + Integer.toString(i), "");
         }
         return dnsEntry;
     }
 
-    public void putDns(Context c, NetworkInfo info, String[] dnsEntry){
-        preferenceEditor = preferences.edit();
+    public void putDns(NetworkInfo info, String[] dnsEntry){
+        putDnsByKeyPrefix(info.getTypeName(), dnsEntry);
+    }
+
+    public void putGlobalDns(String[] dnsEntry){
+        putDnsByKeyPrefix("g", dnsEntry);
+    }
+
+    private void putDnsByKeyPrefix(String keyPrefix, String[] dnsEntry){
         for(int i = 0; i != 2; i++){
-            preferenceEditor.putString(info.getTypeName() + "dns" + Integer.toString(i) + "key",
+            preferenceEditor.putString(keyPrefix + "dns" + Integer.toString(i),
                     dnsEntry[i]);
         }
         preferenceEditor.apply();
