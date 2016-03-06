@@ -14,6 +14,8 @@
     <string name="button_apply">Apply now</string>
     <string name="button_clear">Clear all</string>
 
+    <string name="toast_dns_cleared">All DNS was cleared</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

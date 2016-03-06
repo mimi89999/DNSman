@@ -48,6 +48,7 @@
             android:layout_gravity="left"
             android:layout_weight="1"
             android:text="@android:string/cancel"
+            android:onClick="onCancelButtonClick"
             android:maxLines="2"
             style="?android:attr/buttonBarButtonStyle"/>
 
@@ -59,6 +60,7 @@
             android:layout_weight="1"
             android:text="@android:string/ok"
             android:maxLines="2"
+            android:onClick="onOkButtonClick"
             style="?android:attr/buttonBarButtonStyle"/>
 
     </LinearLayout>
@@ -79,6 +81,7 @@
             android:layout_weight="1"
             android:text="@string/button_clear"
             android:maxLines="2"
+            android:onClick="onClearButtonClick"
             style="?android:attr/buttonBarButtonStyle"/>
 
         <Button

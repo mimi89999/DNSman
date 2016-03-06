@@ -88,15 +88,11 @@ public class DnsStorage{
         return dnsEntry;
     }
 
-    public void putDns(NetworkInfo info, String[] dnsEntry){
-        putDnsByKeyPrefix(info.getTypeName(), dnsEntry);
-    }
-
     public void putGlobalDns(String[] dnsEntry){
         putDnsByKeyPrefix("g", dnsEntry);
     }
 
-    private void putDnsByKeyPrefix(String keyPrefix, String[] dnsEntry){
+    public void putDnsByKeyPrefix(String keyPrefix, String[] dnsEntry){
         for(int i = 0; i != 2; i++){
             preferenceEditor.putString(keyPrefix + Integer.toString(i),
                     dnsEntry[i]);
