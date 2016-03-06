@@ -83,7 +83,7 @@ public class DnsStorage{
     public String[] getDnsByKeyPrefix(String keyPrefix){
         String[] dnsEntry = new String[2];
         for(int i = 0; i != 2; i++) {
-            dnsEntry[i] = preferences.getString(keyPrefix + "dns" + Integer.toString(i), "");
+            dnsEntry[i] = preferences.getString(keyPrefix + Integer.toString(i), "");
         }
         return dnsEntry;
     }
@@ -98,7 +98,7 @@ public class DnsStorage{
 
     private void putDnsByKeyPrefix(String keyPrefix, String[] dnsEntry){
         for(int i = 0; i != 2; i++){
-            preferenceEditor.putString(keyPrefix + "dns" + Integer.toString(i),
+            preferenceEditor.putString(keyPrefix + Integer.toString(i),
                     dnsEntry[i]);
         }
         preferenceEditor.apply();

@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DnsEditText extends AutoCompleteTextView{
-    private SharedPreferences sp;
+    private SharedPreferences mPreference;
 
     private Context context;
     private String key = "";
@@ -29,11 +29,13 @@ public class DnsEditText extends AutoCompleteTextView{
         super(c, attr);
 
         context = c;
-        sp = PreferenceManager.getDefaultSharedPreferences(c);
+        mPreference = PreferenceManager.getDefaultSharedPreferences(c);
+
         setSingleLine(true);
+
         int input_type;
         int max_length;
-        if(sp.getBoolean("pref_enable_full_keyboard", false)) {
+        if(mPreference.getBoolean(ValueConstants.KEY_PREF_FULL_KEYBOARD, false)) {
             input_type = InputType.TYPE_CLASS_TEXT;
             max_length = 43;
         }else{
@@ -43,6 +45,7 @@ public class DnsEditText extends AutoCompleteTextView{
         setRawInputType(input_type);
 
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(max_length)});
+        setThreshold(1);
 
         setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
@@ -64,7 +67,7 @@ public class DnsEditText extends AutoCompleteTextView{
     }
 
     private void setCompletingList(){
-        Set<String> dnslist = sp.getStringSet("dnslist", new HashSet<String>());
+        Set<String> dnslist = mPreference.getStringSet(ValueConstants.KEY_DNS_LIST, new HashSet<String>());
         ArrayAdapter<String> dnsListAdapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_dropdown_item_1line,
                 dnslist.toArray(new String[dnslist.size()]));

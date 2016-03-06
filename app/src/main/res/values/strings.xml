@@ -7,4 +7,16 @@
     <string name="category_global">Global</string>
 
     <string name="notify_no_dns">No DNS was available</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="button_apply">Apply now</string>
+    <string name="button_clear">Clear all</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_function">Function</string>
+
 </resources>

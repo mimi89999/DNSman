@@ -3,29 +3,49 @@ package io.github.otakuchiyan.dnsman;
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements ValueConstants {
     private DnsStorage dnsStorage;
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
+
+    private void initVariable(){
+        dnsStorage = new DnsStorage(this);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mPreferences.edit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dnsStorage = new DnsStorage(this);
+        initVariable();
+
+
+
+
+
 
         setTitle();
         firstBoot();
@@ -46,6 +66,22 @@ public class MainActivity extends ListActivity {
         }catch (PackageManager.NameNotFoundException e){
             throw new AssertionError(e);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //List part START
@@ -115,6 +151,10 @@ public class MainActivity extends ListActivity {
 
     private void firstBoot(){
         dnsStorage.initDnsMap(this);
+
+        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
+        mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
+        mEditor.apply();
     }
 }
 
