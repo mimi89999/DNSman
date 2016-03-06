@@ -21,4 +21,6 @@ public interface ValueConstants {
 
     String KEY_DNS_LIST = "dns_list";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
+
+    int REQUEST_DNS_CHANGE = 0x00;
 }

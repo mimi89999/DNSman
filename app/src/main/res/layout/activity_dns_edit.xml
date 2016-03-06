@@ -92,6 +92,7 @@
             android:layout_weight="1"
             android:text="@string/button_apply"
             android:maxLines="2"
+            android:onClick="onApplyButtonClick"
             style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 

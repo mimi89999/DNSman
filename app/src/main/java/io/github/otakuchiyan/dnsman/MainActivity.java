@@ -30,6 +30,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
 
+    private SimpleAdapter adapter;
+    private List<Map<String, String>> mDnsEntryList;
+
     private void initVariable(){
         dnsStorage = new DnsStorage(this);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -51,6 +54,16 @@ public class MainActivity extends ListActivity implements ValueConstants {
         firstBoot();
 
         setListView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_DNS_CHANGE || resultCode == RESULT_OK){
+            mDnsEntryList.clear();
+            mDnsEntryList.addAll(buildList());
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void setTitle(){
@@ -118,8 +131,8 @@ public class MainActivity extends ListActivity implements ValueConstants {
             isNoDns = true;
         }
         if(!isNoDns) {
-            if (dnsData[0].isEmpty()) {
-                dnsEntryString += dnsData[0] + '\t';
+            if (!dnsData[0].isEmpty()) {
+                dnsEntryString += dnsData[0] + ' ';
             }
             dnsEntryString += dnsData[1];
         }
@@ -129,7 +142,8 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     private void setListView(){
-        SimpleAdapter adapter = new SimpleAdapter(this, buildList(),
+        mDnsEntryList = buildList();
+        adapter = new SimpleAdapter(this, mDnsEntryList,
                 android.R.layout.simple_list_item_2,
                 new String[] {"label", "dnsText"},
                 new int[] {android.R.id.text1, android.R.id.text2});
@@ -143,7 +157,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 Intent i = new Intent(getApplicationContext(), DnsEditActivity.class);
                 i.putExtra("label", dnsEntry.get("label"));
                 i.putExtra("prefix", dnsEntry.get("prefix"));
-                startActivity(i);
+                startActivityForResult(i, ValueConstants.REQUEST_DNS_CHANGE);
             }
         });
     }

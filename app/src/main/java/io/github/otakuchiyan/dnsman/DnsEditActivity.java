@@ -36,12 +36,21 @@ public class DnsEditActivity extends Activity {
         dns2.setText(dnsEntry[1]);
     }
 
+    public void onApplyButtonClick(View v){
+        saveDnsEntry();
+    }
+
     public void onOkButtonClick(View v){
+        saveDnsEntry();
+        finish();
+    }
+
+    private void saveDnsEntry(){
         String[] dnsEntry = new String[2];
         dnsEntry[0] = dns1.getText().toString();
         dnsEntry[1] = dns2.getText().toString();
         dnsStorage.putDnsByKeyPrefix(mPrefix, dnsEntry);
-        finish();
+        setResult(RESULT_OK);
     }
 
     public void onClearButtonClick(View v){
@@ -52,6 +61,7 @@ public class DnsEditActivity extends Activity {
         dns2.setText("");
         dnsStorage.putDnsByKeyPrefix(mPrefix, dnsEntry);
         Toast.makeText(this, R.string.toast_dns_cleared, Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
     }
 
     public void onCancelButtonClick(View v){
