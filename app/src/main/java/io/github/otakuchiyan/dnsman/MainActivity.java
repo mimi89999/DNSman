@@ -102,10 +102,14 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
         List<Map<String, String>> dnsEntryList = new ArrayList<>();
 
-        for(NetworkInfo info : DnsStorage.supportedNetInfoList){
-            dnsEntryList.add(getNetworkDnsEntry(info));
-        }
         dnsEntryList.add(getGlobalDnsEntry());
+
+        if(mPreferences.getBoolean(KEY_PREF_INDIVIDUAL_MODE, false)) {
+            for (NetworkInfo info : DnsStorage.supportedNetInfoList) {
+                dnsEntryList.add(getNetworkDnsEntry(info));
+            }
+        }
+
         return dnsEntryList;
     }
 

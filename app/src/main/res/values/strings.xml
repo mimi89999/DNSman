@@ -19,6 +19,12 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_general_auto_setting">Auto setting</string>
+    <string name="pref_general_full_keyboard">Enable full keyboard</string>
+    <string name="pref_general_individual_mode">Allow set DNS by network</string>
+
     <string name="pref_header_function">Function</string>
 
 </resources>

@@ -1,4 +1,8 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <header android:title="@string/pref_header_function"/>
+    <header android:title="@string/pref_header_general"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:fragment="io.github.otakuchiyan.dnsman.SettingsActivity$GeneralFragment"/>
+
+
 </preference-headers>

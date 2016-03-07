@@ -20,7 +20,9 @@ public interface ValueConstants {
     };
 
     String KEY_DNS_LIST = "dns_list";
+    String KEY_PREF_AUTO_SETTING = "pref_auto_setting";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
+    String KEY_PREF_INDIVIDUAL_MODE = "pref_individual_mode";
 
     int REQUEST_DNS_CHANGE = 0x00;
 }
