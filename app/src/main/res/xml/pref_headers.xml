@@ -3,6 +3,14 @@
     <header android:title="@string/pref_header_general"
         android:icon="@android:drawable/ic_menu_info_details"
         android:fragment="io.github.otakuchiyan.dnsman.SettingsActivity$GeneralFragment"/>
-
+    <header android:title="@string/pref_header_method"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:fragment="io.github.otakuchiyan.dnsman.SettingsActivity$MethodFragment"/>
+    <header android:title="@string/pref_header_appearance"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:fragment="io.github.otakuchiyan.dnsman.SettingsActivity$AppearanceFragment"/>
+    <header android:title="@string/pref_header_about"
+        android:icon="@android:drawable/ic_menu_help"
+        android:fragment="io.github.otakuchiyan.dnsman.SettingsActivity$AboutFragment"/>
 
 </preference-headers>
