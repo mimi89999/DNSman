@@ -28,6 +28,14 @@
     <string name="pref_general_full_keyboard">Enable full keyboard</string>
     <string name="pref_general_individual_mode">Allow set DNS by network</string>
 
+    <string name="pref_method_setting_method">Set DNS method</string>
+    <string name="pref_method_vpn">Virtual private network</string>
+    <string name="pref_method_accessibility">Auto click</string>
+    <string name="pref_method_ndc">Daemon Connector</string>
+    <string name="pref_method_iptables">Firewall rules</string>
+    <string name="pref_method_module">Xposed module</string>
+    <string name="pref_method_setprop">System properties</string>
+
     <string name="pref_license">License</string>
     <string name="pref_license_summary">GNU GPLv3</string>
     <string name="pref_open_source">Open source</string>
