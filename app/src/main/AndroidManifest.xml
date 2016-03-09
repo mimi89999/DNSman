@@ -28,9 +28,19 @@
                 android:value="io.github.otakuchiyan.dnsman.MainActivity" />
         </activity>
 
+        <activity android:name=".VpnWrapperActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <service
             android:name=".ExecuteIntentService"
             android:exported="false"></service>
+        <service android:name=".DNSVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

@@ -16,24 +16,10 @@ import android.util.Log;
  * helper methods.
  */
 public class ExecuteIntentService extends IntentService implements ValueConstants{
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    
-    // TODO: Rename parameters
-    private static final String EXTRA_DNS1 = "extra.DNS1";
-    private static final String EXTRA_DNS2 = "extra.DNS2";
-
     public ExecuteIntentService() {
         super("ExecuteIntentService");
     }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
     public static void startActionByInfo(Context context, NetworkInfo info) {
         DnsStorage dnsStorage = new DnsStorage(context);
 
@@ -60,16 +46,33 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             Context context = getApplicationContext();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+
+            final String dns1 = intent.getStringExtra(EXTRA_DNS1);
+            final String dns2 = intent.getStringExtra(EXTRA_DNS2);
+
             switch(method){
                 case METHOD_VPN:
-                    final String dns1 = intent.getStringExtra(EXTRA_DNS1);
-                    final String dns2 = intent.getStringExtra(EXTRA_DNS2);
                     handleActionVpn(dns1, dns2);
+                    break;
+                case METHOD_ACCESSIBILITY:
+                    break;
+                case METHOD_NDC:
+                    break;
+                case METHOD_IPTABLES:
+                    break;
+                case METHOD_MODULE:
+                    break;
+                case METHOD_SETPROP:
                     break;
             }
         }
     }
 
     private void handleActionVpn(String dns1, String dns2) {
+        Intent i = new Intent(this, VpnWrapperActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra(EXTRA_DNS1, dns1);
+        i.putExtra(EXTRA_DNS2, dns2);
+        startActivity(i);
     }
 }

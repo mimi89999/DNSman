@@ -26,6 +26,15 @@ public interface ValueConstants {
 
     String KEY_PREF_METHOD = "pref_method";
     String METHOD_VPN = "vpn";
+    String METHOD_ACCESSIBILITY = "accessibility";
+    String METHOD_NDC = "ndc";
+    String METHOD_IPTABLES = "iptables";
+    String METHOD_MODULE = "module";
+    String METHOD_SETPROP = "setprop";
+
+    String EXTRA_DNS1 = "extra.DNS1";
+    String EXTRA_DNS2 = "extra.DNS2";
 
     int REQUEST_DNS_CHANGE = 0x00;
+    int REQUEST_VPN = 0x01;
 }
