@@ -38,6 +38,7 @@ public class DnsEditActivity extends Activity {
 
     public void onApplyButtonClick(View v){
         saveDnsEntry();
+        ExecuteIntentService.startActionByString(this, dnsStorage.getDnsByKeyPrefix(mPrefix));
     }
 
     public void onOkButtonClick(View v){

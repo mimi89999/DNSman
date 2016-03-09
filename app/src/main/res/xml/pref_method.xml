@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:key="mode"
+        android:key="pref_method"
         android:title="@string/pref_method_setting_method"
         android:defaultValue="vpn"
         android:entries="@array/method_strings"

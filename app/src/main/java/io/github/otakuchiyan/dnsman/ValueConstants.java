@@ -24,5 +24,8 @@ public interface ValueConstants {
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
     String KEY_PREF_INDIVIDUAL_MODE = "pref_individual_mode";
 
+    String KEY_PREF_METHOD = "pref_method";
+    String METHOD_VPN = "vpn";
+
     int REQUEST_DNS_CHANGE = 0x00;
 }
