@@ -27,20 +27,29 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.github.otakuchiyan.dnsman.MainActivity" />
         </activity>
-
-        <activity android:name=".VpnWrapperActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".VpnWrapperActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
             android:name=".ExecuteIntentService"
-            android:exported="false"></service>
-        <service android:name=".DNSVpnService"
+            android:exported="false" />
+        <service
+            android:name=".DNSVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
 
+        <receiver
+            android:name=".NetworkChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -20,7 +20,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
         super("ExecuteIntentService");
     }
 
-    public static void startActionByInfo(Context context, NetworkInfo info) {
+    public static boolean startActionByInfo(Context context, NetworkInfo info) {
         DnsStorage dnsStorage = new DnsStorage(context);
 
         String extra_dns[] = dnsStorage.getDnsByKeyPrefix(info.getTypeName());
@@ -30,7 +30,12 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             extra_dns = dnsStorage.getGlobalDns();
         }
 
+        if(extra_dns[0].equals("") && extra_dns[1].equals("")){
+            return false;
+        }
+
         startActionByString(context, extra_dns);
+        return true;
     }
 
     public static void startActionByString(Context c, String[] dnsEntry){
@@ -63,6 +68,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                 case METHOD_MODULE:
                     break;
                 case METHOD_SETPROP:
+                    NativeCommandUtils.setDNSViaSetprop(dns1, dns2);
                     break;
             }
         }
