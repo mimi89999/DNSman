@@ -8,6 +8,8 @@ package io.github.otakuchiyan.dnsman;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Build;
 import android.util.Log;
 
@@ -49,23 +51,33 @@ public final class NativeCommandUtils implements ValueConstants{
         return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
 
-    public static int setDNSViaNdc(String netObject, String dns1, String dns2){
-        // netObject contained netId and interface name
-        List<String> cmds = new ArrayList<>();
-
-        String setdns_cmd;
+    public static int setDNSViaNdc(Context c, String dns1, String dns2){
+        String cmd;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>=5.0
-            setdns_cmd = String.format(SETNETDNS_COMMAND, netObject, dns1, dns2);
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){ //>=4.3
-            setdns_cmd = String.format(SETIFDNS_COMMAND, netObject, dns1, dns2);
-        }else{ //<=4.2
-            setdns_cmd = String.format(SETIFDNS_COMMAND_BELOW_42, netObject, dns1, dns2);
+            String netId = "";
+            try{
+                ConnectivityManager manager =
+                        (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+                Network[] networks = manager.getAllNetworks();
+                for(Network i: networks){
+                    netId = i.getClass().getDeclaredField("netId").get(i).toString();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                return ERROR_GET_NETID_FAILED;
+            }
+
+            cmd = String.format(SETNETDNS_COMMAND, netId, dns1, dns2);
+        } else {
+            String interfaceName = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { //>=4.3
+                cmd = String.format(SETIFDNS_COMMAND, interfaceName, dns1, dns2);
+            } else { //<=4.2
+                cmd = String.format(SETIFDNS_COMMAND_BELOW_42, interfaceName, dns1, dns2);
+            }
         }
 
-        Log.d("DNSManaget.ndc", setdns_cmd);
-        cmds.add(setdns_cmd);
-
-        List<String> result = Shell.SU.run(cmds);
+        List<String> result = Shell.SU.run(cmd);
 
         return result.get(0).equals("") ? 0 : ERROR_UNKNOWN;
     }

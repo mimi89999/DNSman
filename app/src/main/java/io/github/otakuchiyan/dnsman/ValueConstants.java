@@ -58,10 +58,16 @@ public interface ValueConstants {
     String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
     String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif\n";
 
+    //Default interfaces name
+    String INTERFACE_WLAN0 = "wlan0";
+    String INTERFACE_RMNET0 = "rmnet0";
+    String INTERFACE_BT_PAN = "bt-pan";
+
     //0 is no error
     int ERROR_SETPROP_FAILED = 1;
     int ERROR_UNKNOWN = 9999;
     int ERROR_NO_DNS = 2;
+    int ERROR_GET_NETID_FAILED = 3;
 
     int REQUEST_DNS_CHANGE = 0x00;
     int REQUEST_VPN = 0x01;

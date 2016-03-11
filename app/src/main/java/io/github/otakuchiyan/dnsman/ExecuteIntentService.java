@@ -38,6 +38,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
         return true;
     }
 
+    //Array will be transform to two variable at here
     public static void startActionByString(Context c, String[] dnsEntry){
         Intent intent = new Intent(c, ExecuteIntentService.class);
         intent.putExtra(EXTRA_DNS1, dnsEntry[0]);
@@ -57,11 +58,17 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
 
             switch(method){
                 case METHOD_VPN:
-                    handleActionVpn(dns1, dns2);
+                    Intent i = new Intent(this, VpnWrapperActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(EXTRA_DNS1, dns1);
+                    i.putExtra(EXTRA_DNS2, dns2);
+                    startActivity(i);
+
                     break;
                 case METHOD_ACCESSIBILITY:
                     break;
                 case METHOD_NDC:
+                    NativeCommandUtils.setDNSViaNdc(context, dns1, dns2);
                     break;
                 case METHOD_IPTABLES:
                     break;
@@ -72,13 +79,5 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                     break;
             }
         }
-    }
-
-    private void handleActionVpn(String dns1, String dns2) {
-        Intent i = new Intent(this, VpnWrapperActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(EXTRA_DNS1, dns1);
-        i.putExtra(EXTRA_DNS2, dns2);
-        startActivity(i);
     }
 }
