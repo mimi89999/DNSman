@@ -10,9 +10,12 @@
     <string name="title_activity_settings">Settings</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_add">Add</string>
+    <string name="action_delete">Delete</string>
 
     <string name="button_apply">Apply now</string>
     <string name="button_clear">Clear all</string>
+
 
     <string name="toast_dns_cleared">All DNS was cleared</string>
 
@@ -35,6 +38,14 @@
     <string name="pref_method_iptables">Firewall rules</string>
     <string name="pref_method_module">Xposed module</string>
     <string name="pref_method_setprop">System properties</string>
+    
+    <string name="pref_ndc">Network interfaces name</string>
+    <string name="pref_ndc_wlan">Wi-Fi</string>
+    <string name="pref_ndc_rmnet">Mobile network</string>
+    <string name="pref_ndc_bt">Bluetooth</string>
+    <string name="pref_ndc_eth">Ethernet</string>
+    
+    <string name="pref_dns_list">DNS completing list</string>
 
     <string name="pref_license">License</string>
     <string name="pref_license_summary">GNU GPLv3</string>

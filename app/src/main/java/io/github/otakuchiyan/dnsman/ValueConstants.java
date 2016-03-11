@@ -1,5 +1,6 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.util.HashMap;
@@ -9,6 +10,36 @@ import java.lang.Integer;
  * Created by 西行寺幽玄 on 3/2/2016.
  */
 public interface ValueConstants {
+    int[] NET_TYPE_LIST = {
+            ConnectivityManager.TYPE_WIFI,
+            ConnectivityManager.TYPE_MOBILE,
+            ConnectivityManager.TYPE_BLUETOOTH,
+            ConnectivityManager.TYPE_ETHERNET,
+            ConnectivityManager.TYPE_WIMAX
+    };
+    int[] NET_TYPE_RESOURCES = {
+            R.string.category_wifi,
+            R.string.category_mobile,
+            R.string.category_bluetooth,
+            R.string.category_ethernet,
+            R.string.category_wimax
+    };
+
+    //Default interfaces name
+    String INTERFACE_WLAN0 = "wlan0";
+    String INTERFACE_RMNET0 = "rmnet0";
+    String INTERFACE_BT_PAN = "bt-pan";
+    String INTERFACE_ETH0 = "eth0";
+
+    //It suitable most devices
+    String[] NETWORK_INTERFACES = {
+            INTERFACE_WLAN0,
+            INTERFACE_RMNET0,
+            INTERFACE_BT_PAN,
+            INTERFACE_ETH0,
+            "" //TODO: Find out what is the interface name of WiMAX
+    };
+
     String[] DEFAULT_DNS_LIST = {
             "127.0.0.1",
             "192.168.0.1",
@@ -20,6 +51,10 @@ public interface ValueConstants {
     };
 
     String KEY_DNS_LIST = "dns_list";
+    String KEY_NETWORK_DNS1 = "network_dns1";
+    String KEY_NETWORK_DNS2 = "network_dns2";
+    String KEY_HIJACKED_LAST_DNS = "hijacked_last_dns";
+
     String KEY_PREF_AUTO_SETTING = "pref_auto_setting";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
     String KEY_PREF_INDIVIDUAL_MODE = "pref_individual_mode";
@@ -29,9 +64,11 @@ public interface ValueConstants {
     String METHOD_ACCESSIBILITY = "accessibility";
     String METHOD_NDC = "ndc";
     String METHOD_IPTABLES = "iptables";
+    String METHOD_DELETE_RULES = "delete_rules";
     String METHOD_MODULE = "module";
     String METHOD_SETPROP = "setprop";
 
+    String EXTRA_METHOD = "extra.method";
     String EXTRA_DNS1 = "extra.DNS1";
     String EXTRA_DNS2 = "extra.DNS2";
 
@@ -58,17 +95,17 @@ public interface ValueConstants {
     String FLUSHNET_COMMAND = NDC_COMMAND_PREFIX + " flushnet %s\n";
     String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif\n";
 
-    //Default interfaces name
-    String INTERFACE_WLAN0 = "wlan0";
-    String INTERFACE_RMNET0 = "rmnet0";
-    String INTERFACE_BT_PAN = "bt-pan";
+    String PACKAGE_NAME = "io.github.otakuchiyan.dnsman";
+    String ACTION_SET_DNS = PACKAGE_NAME + ".SET_DNS";
 
     //0 is no error
     int ERROR_SETPROP_FAILED = 1;
     int ERROR_UNKNOWN = 9999;
     int ERROR_NO_DNS = 2;
     int ERROR_GET_NETID_FAILED = 3;
+    int RESTORE_SUCCEED = 4;
 
     int REQUEST_DNS_CHANGE = 0x00;
     int REQUEST_VPN = 0x01;
+
 }

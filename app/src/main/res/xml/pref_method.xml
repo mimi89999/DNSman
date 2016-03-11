@@ -6,4 +6,19 @@
         android:defaultValue="vpn"
         android:entries="@array/method_strings"
         android:entryValues="@array/method_values" />
+        
+        <PreferenceScreen android:title="@string/pref_ndc">
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_wlan"
+                        android:title="@string/pref_ndc_wlan" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_rmnet"
+                        android:title="@string/pref_ndc_rmnet" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_bt"
+                        android:title="@string/pref_ndc_bt" />
+                    <io.github.otakuchiyan.dnsman.InterfacePreference
+                        android:key="pref_ndc_eth"
+                        android:title="@string/pref_ndc_eth" />
+                </PreferenceScreen>
 </PreferenceScreen>

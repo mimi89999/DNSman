@@ -26,7 +26,8 @@ public class DnsStorage{
     public static ArrayList<NetworkInfo> supportedNetInfoList = new ArrayList<>();
     public static boolean isSupportedNetInfoListBuilded = false;
     public static HashMap<NetworkInfo, Integer> info2resMap = new HashMap<>();
-    public static boolean isInfo2resMapBuilded = false;
+    public static HashMap<NetworkInfo, String> info2interfaceMap = new HashMap<>();
+    public static boolean isMapsBuilded = false;
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
@@ -38,25 +39,13 @@ public class DnsStorage{
 
     public void initDnsMap(Context c){
         ConnectivityManager manager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        int[] netTypeList = {
-                ConnectivityManager.TYPE_WIFI,
-                ConnectivityManager.TYPE_MOBILE,
-                ConnectivityManager.TYPE_BLUETOOTH,
-                ConnectivityManager.TYPE_ETHERNET,
-                ConnectivityManager.TYPE_WIMAX
-        };
-        int[] resources = {
-                R.string.category_wifi,
-                R.string.category_mobile,
-                R.string.category_bluetooth,
-                R.string.category_ethernet,
-                R.string.category_wimax
-        };
 
-        for(int i = 0; i != netTypeList.length; i++){
-            NetworkInfo info = manager.getNetworkInfo(netTypeList[i]);
-            if(!isInfo2resMapBuilded) {
-                info2resMap.put(info, resources[i]);
+
+        for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
+            NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
+            if(!isMapsBuilded) {
+                info2resMap.put(info, ValueConstants.NET_TYPE_RESOURCES[i]);
+                info2interfaceMap.put(info, ValueConstants.NETWORK_INTERFACES[i]);
             }
             if(info != null){
                 if(!isSupportedNetInfoListBuilded){
@@ -67,7 +56,7 @@ public class DnsStorage{
 
         //Keep build one time
         isSupportedNetInfoListBuilded = true;
-        isInfo2resMapBuilded = true;
+        isMapsBuilded = true;
     }
 
 
