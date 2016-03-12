@@ -3,4 +3,7 @@
     <item android:title="@string/action_settings"
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_preferences"/>
+    <item android:title="@string/action_restore"
+        android:id="@+id/action_restore"/>
+
 </menu>

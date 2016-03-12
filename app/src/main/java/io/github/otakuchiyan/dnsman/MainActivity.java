@@ -93,6 +93,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.action_restore:
+                ExecuteIntentService.restore(this);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
