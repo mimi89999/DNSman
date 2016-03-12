@@ -17,8 +17,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         ConnectivityManager cm;
         NetworkInfo currentNet;
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
-                context.getApplicationContext());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         if (isFirstConnect && sp.getBoolean(ValueConstants.KEY_PREF_AUTO_SETTING, true)) {
             //Not first boot
             if (!sp.getBoolean(ValueConstants.KEY_FIRST_BOOT, true)) {

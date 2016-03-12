@@ -56,6 +56,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         if (mPreferences.getBoolean(KEY_FIRST_BOOT, true)) {
             firstBoot();
             mEditor.putBoolean(KEY_FIRST_BOOT, false);
+            mEditor.apply();
         }
 
 

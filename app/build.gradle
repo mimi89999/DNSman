@@ -24,6 +24,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':libsuperuser')
 }

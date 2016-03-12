@@ -26,6 +26,8 @@
     <string name="toast_no_dns_to_restore">No DNS to restore</string>
     <string name="toast_restored">DNS was restored</string>
 
+    <string name="xposed_description">Make DNS man integrate with system</string>
+
 
     <!-- Strings related to Settings -->
 

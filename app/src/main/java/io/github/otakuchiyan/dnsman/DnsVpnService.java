@@ -16,31 +16,30 @@ import java.nio.channels.DatagramChannel;
 import java.util.Enumeration;
 
 public class DnsVpnService extends VpnService {
-    private static ParcelFileDescriptor fd;
-    private static Thread vpnThread;
-    private static String vdns1;
-    private static String vdns2;
+    private ParcelFileDescriptor fd;
+    private Thread vpnThread;
 
     public DnsVpnService() {
     }
 
     public static void perform(Context c, String dns1, String dns2){
         Intent i = new Intent(c, DnsVpnService.class);
-        vdns1 = dns1;
-        vdns2 = dns2;
+        i.putExtra(ValueConstants.EXTRA_DNS1, dns1);
+        i.putExtra(ValueConstants.EXTRA_DNS2, dns2);
         c.startService(i);
     }
 
     //FIXME: cannot stop vpn
     public int disconnect(){
         if(vpnThread != null) {
-            try {
-                vpnThread.join(1000);
+            //try {
+                //vpnThread.join(1000);
+                vpnThread.interrupt();
                 stopSelf();
                 return ValueConstants.RESTORE_SUCCEED;
-            } catch (InterruptedException e) {
-                Log.e("VpnService", "vpnThread did not exit");
-            }
+            //} catch (InterruptedException e) {
+              //  Log.e("VpnService", "vpnThread did not exit");
+            //}
         }
         return ValueConstants.ERROR_NULL_VPN;
     }
@@ -69,63 +68,70 @@ public class DnsVpnService extends VpnService {
 
     @Override
     public int onStartCommand(Intent i, int flags, int startId){
-        vpnThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-            try {
-                String addr = getAddress();
-                String real_addr = "";
+        final String dns1 = i.getStringExtra(ValueConstants.EXTRA_DNS1);
+        final String dns2 = i.getStringExtra(ValueConstants.EXTRA_DNS2);
 
-                //Escaping IPv6 address suffix - "<Real address>%wlan0"
-                for(int i = addr.length() - 1; i != 0; i--){
-                    if(addr.charAt(i) == '%'){
-                        real_addr = addr.substring(0, i);
-                    }
-                }
+        if(vpnThread == null) {
+            vpnThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String addr = getAddress();
+                        String real_addr = "";
 
-                //If no suffix
-                if(real_addr.equals("")){
-                    real_addr = addr;
-                }
+                        //Escaping IPv6 address suffix - "<Real address>%wlan0"
+                        for (int i = addr.length() - 1; i != 0; i--) {
+                            if (addr.charAt(i) == '%') {
+                                real_addr = addr.substring(0, i);
+                            }
+                        }
 
-                Log.d("DnsVpn", "addr = " + real_addr);
-                DatagramChannel tunnel = DatagramChannel.open();
+                        //If no suffix
+                        if (real_addr.equals("")) {
+                            real_addr = addr;
+                        }
 
+                        Log.d("DnsVpn", "addr = " + real_addr);
+                        DatagramChannel tunnel = DatagramChannel.open();
+
+
+                /*
                 if(!protect(tunnel.socket())) {
                     throw new IllegalStateException("Cannot protect the tunnel");
                 }
-                tunnel.connect(new InetSocketAddress(addr, 8087));
-                tunnel.configureBlocking(false);
+                */
+                        tunnel.connect(new InetSocketAddress(addr, 8087));
+                        tunnel.configureBlocking(false);
 
-                Builder vpn = new Builder();
-                vpn.setSession("DnsVpnService")
-                        .addAddress(real_addr, 24);
-                if(!vdns1.equals("")) {
-                    vpn.addDnsServer(vdns1);
-                }
-                if(!vdns2.equals("")) {
-                    vpn.addDnsServer(vdns2);
-                }
-                fd = vpn.establish();
+                        Builder vpn = new Builder();
+                        vpn.setSession("DnsVpnService")
+                                .addAddress(real_addr, 24);
+                        if (!dns1.equals("")) {
+                            vpn.addDnsServer(dns1);
+                        }
+                        if (!dns2.equals("")) {
+                            vpn.addDnsServer(dns2);
+                        }
+                        fd = vpn.establish();
 
-                while(true){
-                    Thread.sleep(1000);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if(fd != null) {
-                        fd.close();
+                        while (true) {
+                            Thread.sleep(10000);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (fd != null) {
+                                fd.close();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-            }
-        });
-
-        vpnThread.start();
+            });
+            vpnThread.start();
+        }
         return START_STICKY;
     }
 }

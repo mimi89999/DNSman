@@ -141,7 +141,9 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                 
             }
 
-            sendResultWithDns(context, resultCode, dns1, dns2);
+            if(method != METHOD_VPN) {
+                sendResultWithDns(context, resultCode, dns1, dns2);
+            }
         }
     }
 
@@ -153,7 +155,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
         Intent result_intent = new Intent(ACTION_SET_DNS);
         result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
         result_intent.putExtra(EXTRA_DNS1, dns1);
-        result_intent.putExtra(EXTRA_DNS1, dns2);
+        result_intent.putExtra(EXTRA_DNS2, dns2);
         c.sendBroadcast(result_intent);
     }
 }
