@@ -35,8 +35,10 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
     private void initVariable(){
         dnsStorage = new DnsStorage(this);
+        dnsStorage.initDnsMap(this);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mPreferences.edit();
+        BackupNetworkDnsTask.startAction(this);
     }
 
     @Override
@@ -51,7 +53,11 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
 
         setTitle();
-        firstBoot();
+        if (mPreferences.getBoolean(KEY_FIRST_BOOT, true)) {
+            firstBoot();
+            mEditor.putBoolean(KEY_FIRST_BOOT, false);
+        }
+
 
         setListView();
     }
@@ -171,8 +177,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
     //List part END
 
     private void firstBoot(){
-        dnsStorage.initDnsMap(this);
-
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
         mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
         mEditor.apply();

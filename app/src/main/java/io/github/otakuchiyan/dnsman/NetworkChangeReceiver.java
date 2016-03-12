@@ -20,17 +20,17 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(
                 context.getApplicationContext());
         if (isFirstConnect && sp.getBoolean(ValueConstants.KEY_PREF_AUTO_SETTING, true)) {
-            if (!sp.getBoolean("firstboot", false)) {
+            //Not first boot
+            if (!sp.getBoolean(ValueConstants.KEY_FIRST_BOOT, true)) {
 
                 //Workaround to deal with multiple broadcast
                 cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 currentNet = cm.getActiveNetworkInfo();
                 if (currentNet != null) {
                     isFirstConnect = false;
-    //                DNSBackgroundService.isDefaultDnsGetted = false;
                     Log.d("NCR", "Start set");
                     String dnsToast = sp.getString("toast", "0");
-  //                  GetNetwork gn = new GetNetwork(context);
+                    BackupNetworkDnsTask.startAction(context);
                     if (ExecuteIntentService.startActionByInfo(context, currentNet)) {
                         if (!dnsToast.equals("2")) {
 //                            Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
@@ -39,6 +39,5 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }
             }
         }
-
     }
 }

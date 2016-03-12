@@ -51,9 +51,11 @@ public interface ValueConstants {
     };
 
     String KEY_DNS_LIST = "dns_list";
+    String KEY_FIRST_BOOT = "first_boot";
+    String KEY_HIJACKED_LAST_DNS = "hijacked_last_dns";
     String KEY_NETWORK_DNS1 = "network_dns1";
     String KEY_NETWORK_DNS2 = "network_dns2";
-    String KEY_HIJACKED_LAST_DNS = "hijacked_last_dns";
+
 
     String KEY_PREF_AUTO_SETTING = "pref_auto_setting";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
