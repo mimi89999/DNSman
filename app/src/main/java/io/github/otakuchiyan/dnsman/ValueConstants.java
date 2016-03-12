@@ -100,12 +100,15 @@ public interface ValueConstants {
     String PACKAGE_NAME = "io.github.otakuchiyan.dnsman";
     String ACTION_SET_DNS = PACKAGE_NAME + ".SET_DNS";
 
-    //0 is no error
-    int ERROR_SETPROP_FAILED = 1;
-    int ERROR_UNKNOWN = 9999;
-    int ERROR_NO_DNS = 2;
-    int ERROR_GET_NETID_FAILED = 3;
+    //<=1000 is no error
     int RESTORE_SUCCEED = 4;
+
+    int ERROR_SETPROP_FAILED = 1001;
+    int ERROR_NO_DNS = 1002;
+    int ERROR_GET_NETID_FAILED = 1003;
+    int ERROR_NULL_VPN = 1004;
+
+    int ERROR_UNKNOWN = 9999;
 
     int REQUEST_DNS_CHANGE = 0x00;
     int REQUEST_VPN = 0x01;

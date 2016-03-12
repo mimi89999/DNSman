@@ -32,13 +32,17 @@ public class DNSVpnService extends VpnService {
     }
 
     //FIXME: cannot stop vpn
-    public void disconnect(){
-        try {
-            vpnThread.join(1000);
-            stopSelf();
-        }catch (InterruptedException e){
-            Log.e("VpnService", "vpnThread did not exit");
+    public int disconnect(){
+        if(vpnThread != null) {
+            try {
+                vpnThread.join(1000);
+                stopSelf();
+                return ValueConstants.RESTORE_SUCCEED;
+            } catch (InterruptedException e) {
+                Log.e("VpnService", "vpnThread did not exit");
+            }
         }
+        return ValueConstants.ERROR_NULL_VPN;
     }
 
     private String getAddress(){

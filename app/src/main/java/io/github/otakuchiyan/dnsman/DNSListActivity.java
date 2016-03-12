@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DNSListActivity extends ListActivity {
+public class DnsListActivity extends ListActivity {
     private SharedPreferences sp;
     private SharedPreferences.Editor sped;
     private ArrayList<String> dnsList;

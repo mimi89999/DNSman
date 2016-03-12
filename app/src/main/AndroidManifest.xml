@@ -27,6 +27,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.github.otakuchiyan.dnsman.MainActivity" />
         </activity>
+        <activity android:name=".DnsListActivity"
+            android:parentActivityName=".SettingsActivity"/>
+
         <activity
             android:name=".VpnWrapperActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

@@ -7,4 +7,9 @@
         android:key="pref_full_keyboard"/>
     <SwitchPreference android:title="@string/pref_general_individual_mode"
         android:key="pref_individual_mode"/>
+<Preference android:title="@string/pref_dns_list">
+            <intent android:action="io.github.otakuchiyan.dnsman.DnsListActivity"/>
+        </Preference>
+        
+
 </PreferenceScreen>
