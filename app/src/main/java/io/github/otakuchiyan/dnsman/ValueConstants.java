@@ -55,11 +55,13 @@ public interface ValueConstants {
     String KEY_HIJACKED_LAST_DNS = "hijacked_last_dns";
     String KEY_NETWORK_DNS1 = "network_dns1";
     String KEY_NETWORK_DNS2 = "network_dns2";
-
+    String KEY_IS_RESTORE = "is_restore";
 
     String KEY_PREF_AUTO_SETTING = "pref_auto_setting";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
     String KEY_PREF_INDIVIDUAL_MODE = "pref_individual_mode";
+    String KEY_PREF_AUTO_FLUSH = "pref_auto_flush";
+
 
     String KEY_PREF_METHOD = "pref_method";
     String METHOD_VPN = "vpn";
@@ -71,6 +73,7 @@ public interface ValueConstants {
     String METHOD_SETPROP = "setprop";
 
     String EXTRA_METHOD = "extra.method";
+    String EXTRA_RESULT_CODE = "extra.result_code";
     String EXTRA_DNS1 = "extra.DNS1";
     String EXTRA_DNS2 = "extra.DNS2";
 
@@ -98,12 +101,11 @@ public interface ValueConstants {
     String FLUSHDEFAULTIF_COMMAND = NDC_COMMAND_PREFIX + " flushdefaultif\n";
 
     String PACKAGE_NAME = "io.github.otakuchiyan.dnsman";
-    String ACTION_SET_DNS = PACKAGE_NAME + ".SET_DNS";
+    String ACTION_SET_DNS = PACKAGE_NAME + ".ACTION_SET_DNS";
 
     //<=1000 is no error
     int RESTORE_SUCCEED = 4;
 
-    int ERROR_SETPROP_FAILED = 1001;
     int ERROR_NO_DNS = 1002;
     int ERROR_GET_NETID_FAILED = 1003;
     int ERROR_NULL_VPN = 1004;

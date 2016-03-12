@@ -56,8 +56,8 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                 isNeedDns = false;
                 break;
             case METHOD_VPN:
-                int code = new DNSVpnService().disconnect();
-                sendResult(code);
+                int code = new DnsVpnService().disconnect();
+                sendResult(c, code);
                 return;
         }
 
@@ -70,7 +70,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             dns2 = preferences.getString(KEY_NETWORK_DNS2, "");
 
             if(dns1.equals("") && dns2.equals("")) {
-                sendResult(ValueConstants.ERROR_NO_DNS);
+                sendResult(c, ValueConstants.ERROR_NO_DNS);
                 return;
             }
         }
@@ -133,28 +133,27 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             editor.apply();
 
 
-            if(resultCode <= 1000 && intent.getBooleanExtra("isRestore", false)) {
+            if(resultCode <= 1000 && intent.getBooleanExtra(KEY_IS_RESTORE, false)) {
                 resultCode = ValueConstants.RESTORE_SUCCEED;
             }
 
-            if(resultCode <= 1000 && preferences.getBoolean("autoflush", true)) {
+            if(resultCode <= 1000 && preferences.getBoolean(KEY_PREF_AUTO_FLUSH, true)) {
                 
             }
 
-            sendResultWithDns(resultCode, dns1, dns2);
+            sendResultWithDns(context, resultCode, dns1, dns2);
         }
     }
 
-    private static void sendResult(int result_code){
-        sendResultWithDns(result_code, "", "");
+    private static void sendResult(Context c, int result_code){
+        sendResultWithDns(c, result_code, "", "");
     }
 
-    private static void sendResultWithDns(int result_code, String dns1, String dns2){
-        Intent result_intent = new Intent(ValueConstants.ACTION_SET_DNS);
-        result_intent.putExtra("result_code", result_code);
-        result_intent.putExtra("dns1", dns1);
-        result_intent.putExtra("dns2", dns2);
-
-
+    private static void sendResultWithDns(Context c, int result_code, String dns1, String dns2){
+        Intent result_intent = new Intent(ACTION_SET_DNS);
+        result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
+        result_intent.putExtra(EXTRA_DNS1, dns1);
+        result_intent.putExtra(EXTRA_DNS1, dns2);
+        c.sendBroadcast(result_intent);
     }
 }

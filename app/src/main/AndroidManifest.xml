@@ -27,9 +27,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.github.otakuchiyan.dnsman.MainActivity" />
         </activity>
-        <activity android:name=".DnsListActivity"
-            android:parentActivityName=".SettingsActivity"/>
-
+        <activity
+            android:name=".DnsListActivity"
+            android:parentActivityName=".SettingsActivity" />
         <activity
             android:name=".VpnWrapperActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -38,7 +38,7 @@
             android:name=".ExecuteIntentService"
             android:exported="false" />
         <service
-            android:name=".DNSVpnService"
+            android:name=".DnsVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
@@ -51,6 +51,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.github.otakuchiyan.dnsman.ACTION_SET_DNS"/>
             </intent-filter>
         </receiver>
     </application>

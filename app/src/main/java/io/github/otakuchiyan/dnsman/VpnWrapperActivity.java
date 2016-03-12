@@ -22,7 +22,7 @@ public class VpnWrapperActivity extends Activity {
         if (i != null) {
             startActivityForResult(i, ValueConstants.REQUEST_VPN);
         } else {
-            DNSVpnService.perform(this, dns1, dns2);
+            DnsVpnService.perform(this, dns1, dns2);
         }
         finish();
     }
@@ -30,7 +30,7 @@ public class VpnWrapperActivity extends Activity {
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent data){
         if(reqCode == ValueConstants.REQUEST_VPN || resCode == RESULT_OK){
-            DNSVpnService.perform(this, dns1, dns2);
+            DnsVpnService.perform(this, dns1, dns2);
         }
     }
 }

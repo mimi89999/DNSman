@@ -15,17 +15,17 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Enumeration;
 
-public class DNSVpnService extends VpnService {
+public class DnsVpnService extends VpnService {
     private static ParcelFileDescriptor fd;
     private static Thread vpnThread;
     private static String vdns1;
     private static String vdns2;
 
-    public DNSVpnService() {
+    public DnsVpnService() {
     }
 
     public static void perform(Context c, String dns1, String dns2){
-        Intent i = new Intent(c, DNSVpnService.class);
+        Intent i = new Intent(c, DnsVpnService.class);
         vdns1 = dns1;
         vdns2 = dns2;
         c.startService(i);
@@ -88,7 +88,7 @@ public class DNSVpnService extends VpnService {
                     real_addr = addr;
                 }
 
-                Log.d("DNSVpn", "addr = " + real_addr);
+                Log.d("DnsVpn", "addr = " + real_addr);
                 DatagramChannel tunnel = DatagramChannel.open();
 
                 if(!protect(tunnel.socket())) {
@@ -98,7 +98,7 @@ public class DNSVpnService extends VpnService {
                 tunnel.configureBlocking(false);
 
                 Builder vpn = new Builder();
-                vpn.setSession("DNSVpnService")
+                vpn.setSession("DnsVpnService")
                         .addAddress(real_addr, 24);
                 if(!vdns1.equals("")) {
                     vpn.addDnsServer(vdns1);
