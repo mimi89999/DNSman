@@ -29,7 +29,6 @@ public class InterfacePreference extends EditTextPreference {
         }
     }
     private static AutoCompleteEditText mEditText = null;
-    private Context context;
 
     public InterfacePreference(Context context) {
         super(context);
@@ -47,10 +46,9 @@ public class InterfacePreference extends EditTextPreference {
     }
 
     private void init(Context c, AttributeSet attrs, int defStyle) {
-        context = c;
         mEditText = new AutoCompleteEditText(c, attrs);
         mEditText.setSingleLine();
-        List<String> all_interface = getAlivableInterfaces();
+        List<String> all_interface = getAvailableInterfaces();
 
         ArrayAdapter<String> interfaces = new ArrayAdapter<>(c,
                 android.R.layout.simple_dropdown_item_1line,
@@ -58,17 +56,12 @@ public class InterfacePreference extends EditTextPreference {
         mEditText.setAdapter(interfaces);
     }
 
-    private List<String> getAlivableInterfaces(){
+    private List<String> getAvailableInterfaces(){
         List<String> system_interfaces = new ArrayList<>();
-        Collections.addAll(system_interfaces, ValueConstants.NETWORK_INTERFACES);
         try{
             for(Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();){
                 NetworkInterface i = ifaces.nextElement();
                 String interface_name = i.getName();
-                if(Arrays.asList(ValueConstants.NETWORK_INTERFACES).contains(interface_name)){
-                    system_interfaces.remove(interface_name);
-                    system_interfaces.add(0, interface_name);
-                }
                 system_interfaces.add(interface_name);
             }
             system_interfaces.remove("lo");

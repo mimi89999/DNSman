@@ -77,6 +77,19 @@ public interface ValueConstants {
     String METHOD_MODULE = "module";
     String METHOD_SETPROP = "setprop";
 
+    String KEY_NDC_WLAN = "pref_ndc_wlan";
+    String KEY_NDC_RMNET = "pref_ndc_rmnet";
+    String KEY_NDC_BT = "pref_ndc_bt";
+    String KEY_NDC_ETH = "pref_ndc_eth";
+
+    String[] KEY_CUSTOM_INTERFACES = {
+            KEY_NDC_WLAN,
+            KEY_NDC_RMNET,
+            KEY_NDC_BT,
+            KEY_NDC_ETH,
+            ""
+    };
+
     String EXTRA_METHOD = "extra.method";
     String EXTRA_RESULT_CODE = "extra.result_code";
     String EXTRA_DNS1 = "extra.DNS1";

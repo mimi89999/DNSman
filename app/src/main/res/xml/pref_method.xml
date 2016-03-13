@@ -10,15 +10,19 @@
         <PreferenceScreen android:title="@string/pref_ndc">
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_wlan"
+                android:defaultValue="wlan0"
                 android:title="@string/pref_ndc_wlan" />
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_rmnet"
+                android:defaultValue="rmnet0"
                 android:title="@string/pref_ndc_rmnet" />
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_bt"
+                android:defaultValue="bt-pan"
                 android:title="@string/pref_ndc_bt" />
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_eth"
+                android:defaultValue="eth0"
                 android:title="@string/pref_ndc_eth" />
         </PreferenceScreen>
 </PreferenceScreen>

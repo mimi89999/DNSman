@@ -79,6 +79,7 @@ public final class NativeCommandUtils implements ValueConstants{
         } else {
             String interfaceName;
             NetworkInfo currentNetworkInfo = manager.getActiveNetworkInfo();
+            new DnsStorage(c).refreshInfo2InterfaceMap();
             interfaceName = DnsStorage.info2interfaceMap.get(currentNetworkInfo);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { //>=4.3
                 cmd = String.format(SETIFDNS_COMMAND, interfaceName, dns1, dns2);

@@ -24,39 +24,45 @@ public class DnsStorage{
      */
 
     public static ArrayList<NetworkInfo> supportedNetInfoList = new ArrayList<>();
-    public static boolean isSupportedNetInfoListBuilded = false;
     public static HashMap<NetworkInfo, Integer> info2resMap = new HashMap<>();
     public static HashMap<NetworkInfo, String> info2interfaceMap = new HashMap<>();
-    public static boolean isMapsBuilded = false;
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
+    private Context context;
 
     public DnsStorage(Context c){
         preferences = PreferenceManager.getDefaultSharedPreferences(c);
         preferenceEditor = preferences.edit();
+        context = c;
     }
 
-    public void initDnsMap(Context c){
-        ConnectivityManager manager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+    public void refreshInfo2InterfaceMap(){
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
             NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
-            if(!isMapsBuilded) {
-                info2resMap.put(info, ValueConstants.NET_TYPE_RESOURCES[i]);
-                info2interfaceMap.put(info, ValueConstants.NETWORK_INTERFACES[i]);
-            }
+            info2interfaceMap.put(info,
+                    preferences.getString(
+                            ValueConstants.KEY_CUSTOM_INTERFACES[i],
+                            ValueConstants.NETWORK_INTERFACES[i]));
+        }
+
+    }
+
+    //Keep build one time
+    public void initDnsMap(){
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
+            NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
+            info2resMap.put(info, ValueConstants.NET_TYPE_RESOURCES[i]);
             if(info != null){
-                if(!isSupportedNetInfoListBuilded){
-                    supportedNetInfoList.add(info);
-                }
+                 supportedNetInfoList.add(info);
             }
         }
 
-        //Keep build one time
-        isSupportedNetInfoListBuilded = true;
-        isMapsBuilded = true;
+        refreshInfo2InterfaceMap();
     }
 
 

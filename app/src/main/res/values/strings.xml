@@ -54,7 +54,7 @@
     <string name="pref_method_module">Xposed module</string>
     <string name="pref_method_setprop">System properties</string>
     
-    <string name="pref_ndc">Network interfaces name</string>
+    <string name="pref_ndc">Custom Network interfaces name</string>
     <string name="pref_ndc_wlan">Wi-Fi</string>
     <string name="pref_ndc_rmnet">Mobile network</string>
     <string name="pref_ndc_bt">Bluetooth</string>

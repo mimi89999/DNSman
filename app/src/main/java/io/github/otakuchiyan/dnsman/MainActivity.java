@@ -41,7 +41,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
     private void initVariable(){
         dnsStorage = new DnsStorage(this);
-        dnsStorage.initDnsMap(this);
+        dnsStorage.initDnsMap();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mPreferences.edit();
         BackupNetworkDnsTask.startAction(this);
