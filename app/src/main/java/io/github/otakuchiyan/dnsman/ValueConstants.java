@@ -56,12 +56,17 @@ public interface ValueConstants {
     String KEY_NETWORK_DNS1 = "network_dns1";
     String KEY_NETWORK_DNS2 = "network_dns2";
     String KEY_IS_RESTORE = "is_restore";
+    String KEY_IS_ROOT = "is_root";
 
     String KEY_PREF_AUTO_SETTING = "pref_auto_setting";
     String KEY_PREF_FULL_KEYBOARD = "pref_full_keyboard";
     String KEY_PREF_INDIVIDUAL_MODE = "pref_individual_mode";
     String KEY_PREF_AUTO_FLUSH = "pref_auto_flush";
 
+    String KEY_PREF_TOAST = "pref_toast";
+    String TOAST_SHOW = "show";
+    String TOAST_ERROR = "error";
+    String TOAST_NEVER = "never";
 
     String KEY_PREF_METHOD = "pref_method";
     String METHOD_VPN = "vpn";

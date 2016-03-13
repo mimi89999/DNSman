@@ -1,12 +1,14 @@
 package io.github.otakuchiyan.dnsman;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -15,6 +17,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import static android.os.Build.VERSION;
+import static android.os.Build.VERSION_CODES;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +28,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import eu.chainfire.libsuperuser.Shell;
 
 public class MainActivity extends ListActivity implements ValueConstants {
     private DnsStorage dnsStorage;
@@ -39,17 +45,51 @@ public class MainActivity extends ListActivity implements ValueConstants {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mPreferences.edit();
         BackupNetworkDnsTask.startAction(this);
+
+        //Check root
+        mEditor.putBoolean(KEY_IS_ROOT, Shell.SU.available());
     }
+
+    private void firstBoot(){
+        choiceMode();
+        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
+        mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
+        mEditor.apply();
+    }
+
+    private void choiceMode(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.title_check_root)
+                .setMessage(R.string.message_check_root)
+                .setPositiveButton(android.R.string.ok, null);
+        builder.show();
+
+        boolean isRoot = Shell.SU.available();
+
+        if(isRoot){
+            switch (VERSION.SDK_INT){
+                default:
+                    mEditor.putString(KEY_PREF_METHOD, METHOD_NDC);
+                    break;
+            }
+        }else{
+            switch (VERSION.SDK_INT){
+                case VERSION_CODES.KITKAT: //Escape 4.4 kitkat bug
+                    mEditor.putString(KEY_PREF_METHOD, METHOD_ACCESSIBILITY);
+                    break;
+            }
+        }
+
+        mEditor.apply();
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initVariable();
-
-
-
-
 
 
         setTitle();
@@ -107,7 +147,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
         return super.onOptionsItemSelected(item);
     }
 
+
     //List part START
+
     private List<Map<String, String>> buildList(){
 
         List<Map<String, String>> dnsEntryList = new ArrayList<>();
@@ -141,10 +183,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
         boolean isNoDns = false;
 
         if(dnsData[0].isEmpty() && dnsData[1].isEmpty()){
-            dnsEntryString = getText(R.string.notify_no_dns).toString();
             isNoDns = true;
         }
-        if(!isNoDns) {
+        if (!isNoDns) {
             if (!dnsData[0].isEmpty()) {
                 dnsEntryString += dnsData[0] + ' ';
             }
@@ -160,7 +201,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         adapter = new SimpleAdapter(this, mDnsEntryList,
                 android.R.layout.simple_list_item_2,
                 new String[] {"label", "dnsText"},
-                new int[] {android.R.id.text1, android.R.id.text2});
+                new int[]{android.R.id.text1, android.R.id.text2});
         setListAdapter(adapter);
 
         ListView listView = getListView();
@@ -174,14 +215,10 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 startActivityForResult(i, ValueConstants.REQUEST_DNS_CHANGE);
             }
         });
-    }
-    //List part END
 
-    private void firstBoot(){
-        Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
-        mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
-        mEditor.apply();
     }
+
+    //List part END
 }
 
 

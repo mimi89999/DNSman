@@ -36,8 +36,6 @@ public class DnsListActivity extends ListActivity {
         sped = sp.edit();
         mListView = getListView();
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(R.string.pref_dns_list);
         dnsList = new ArrayList<>(sp.getStringSet("dnslist", new HashSet<String>()));
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dnsList);
         setListAdapter(adapter);

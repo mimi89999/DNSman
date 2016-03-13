@@ -35,14 +35,20 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="io.github.otakuchiyan.dnsman.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".DnsListActivity"
-            android:parentActivityName=".SettingsActivity" />
+            android:label="@string/pref_dns_list"
+            android:parentActivityName=".SettingsActivity">
+            <intent-filter>
+                <action android:name="io.github.otakuchiyan.dnsman.DnsListActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".VpnWrapperActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <service
             android:name=".ExecuteIntentService"

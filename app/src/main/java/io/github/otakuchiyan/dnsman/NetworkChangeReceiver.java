@@ -28,11 +28,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 if (currentNet != null) {
                     isFirstConnect = false;
                     Log.d("NCR", "Start set");
-                    String dnsToast = sp.getString("toast", "0");
+                    String dnsToast = sp.getString(ValueConstants.KEY_PREF_TOAST, ValueConstants.TOAST_SHOW);
                     BackupNetworkDnsTask.startAction(context);
-                    if (ExecuteIntentService.startActionByInfo(context, currentNet)) {
-                        if (!dnsToast.equals("2")) {
-//                            Toast.makeText(context, R.string.nodns_noti, Toast.LENGTH_LONG).show();
+                    if (!ExecuteIntentService.startActionByInfo(context, currentNet)) {
+                        if (!dnsToast.equals(ValueConstants.TOAST_NEVER)) {
+                            Toast.makeText(context, R.string.toast_no_dns, Toast.LENGTH_LONG).show();
                         }
                     }
                 }

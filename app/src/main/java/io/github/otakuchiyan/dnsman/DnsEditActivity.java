@@ -37,6 +37,15 @@ public class DnsEditActivity extends Activity {
     }
 
     public void onApplyButtonClick(View v){
+        String[] dnsEntry = new String[2];
+        dnsEntry[0] = dns1.getText().toString();
+        dnsEntry[1] = dns2.getText().toString();
+
+        if(dnsEntry[0].equals("") && dnsEntry[1].equals("")){
+            Toast.makeText(this, R.string.toast_no_dns, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         saveDnsEntry();
         ExecuteIntentService.startActionByString(this, dnsStorage.getDnsByKeyPrefix(mPrefix));
     }
