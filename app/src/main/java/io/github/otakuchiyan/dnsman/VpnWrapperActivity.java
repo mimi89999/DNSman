@@ -22,7 +22,6 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
             startActivityForResult(i, ValueConstants.REQUEST_VPN);
         } else {
             DnsVpnService.perform(this, dns1, dns2);
-            sendResult(0, dns1, dns2);
         }
         finish();
     }
@@ -31,15 +30,6 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
     protected void onActivityResult(int reqCode, int resCode, Intent data){
         if(reqCode == ValueConstants.REQUEST_VPN || resCode == RESULT_OK){
             DnsVpnService.perform(this, dns1, dns2);
-            sendResult(0, dns1, dns2);
         }
-    }
-
-    private void sendResult(int result_code, String dns1, String dns2){
-        Intent result_intent = new Intent(ACTION_SET_DNS);
-        result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
-        result_intent.putExtra(EXTRA_DNS1, dns1);
-        result_intent.putExtra(EXTRA_DNS2, dns2);
-        sendBroadcast(result_intent);
     }
 }

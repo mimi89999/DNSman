@@ -53,13 +53,13 @@
     <string name="pref_method_iptables">Firewall rules</string>
     <string name="pref_method_module">Xposed module</string>
     <string name="pref_method_setprop">System properties</string>
-    
+
     <string name="pref_ndc">Custom Network interfaces name</string>
     <string name="pref_ndc_wlan">Wi-Fi</string>
     <string name="pref_ndc_rmnet">Mobile network</string>
     <string name="pref_ndc_bt">Bluetooth</string>
     <string name="pref_ndc_eth">Ethernet</string>
-    
+
     <string name="pref_dns_list">DNS completing list</string>
 
     <string name="pref_toast">Toast</string>
@@ -74,5 +74,8 @@
     <string name="pref_open_source_summary">View project page on GitHub</string>
     <string name="pref_usage">Usage</string>
     <string name="pref_usage_summary">View usage on wiki</string>
+
+    <string name="control_notification_title">DNS man:</string>
+    <string name="control_notification_placeholder_text">DNS: %1$s %2$s</string>
 
 </resources>

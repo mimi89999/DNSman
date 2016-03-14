@@ -8,15 +8,15 @@
     <application
         android:allowBackup="true"
         android:label="DNS man">
-        <meta-data android:name="xposedmodule"
-            android:value="true"/>
-        <meta-data android:name="xposeddescription"
-            android:value="@string/xposed_description"/>
-        <meta-data android:name="xposedminversion"
-            android:value="20"/>
-
-
-
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="@string/xposed_description" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="20" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -43,12 +43,13 @@
             android:parentActivityName=".SettingsActivity">
             <intent-filter>
                 <action android:name="io.github.otakuchiyan.dnsman.DnsListActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".VpnWrapperActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
             android:name=".ExecuteIntentService"
@@ -70,11 +71,11 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".NotificationReceiver"
+            android:name=".ResultCodeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="io.github.otakuchiyan.dnsman.ACTION_SET_DNS"/>
+                <action android:name="io.github.otakuchiyan.dnsman.ACTION_SET_DNS" />
             </intent-filter>
         </receiver>
     </application>

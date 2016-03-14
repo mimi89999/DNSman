@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Enumeration;
 
-public class DnsVpnService extends VpnService {
+public class DnsVpnService extends VpnService implements ValueConstants{
     private ParcelFileDescriptor fd;
     private Thread vpnThread;
 
@@ -113,6 +113,7 @@ public class DnsVpnService extends VpnService {
                             vpn.addDnsServer(dns2);
                         }
                         fd = vpn.establish();
+                        sendResult(0, dns1, dns2);
 
                         while (true) {
                             Thread.sleep(10000);
@@ -133,5 +134,13 @@ public class DnsVpnService extends VpnService {
             vpnThread.start();
         }
         return START_STICKY;
+    }
+
+    private void sendResult(int result_code, String dns1, String dns2){
+        Intent result_intent = new Intent(ACTION_SET_DNS);
+        result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
+        result_intent.putExtra(EXTRA_DNS1, dns1);
+        result_intent.putExtra(EXTRA_DNS2, dns2);
+        sendBroadcast(result_intent);
     }
 }

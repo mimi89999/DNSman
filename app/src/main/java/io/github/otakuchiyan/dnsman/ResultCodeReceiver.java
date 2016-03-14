@@ -8,8 +8,8 @@ import android.net.VpnService;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-public class NotificationReceiver extends BroadcastReceiver implements ValueConstants{
-    public NotificationReceiver() {
+public class ResultCodeReceiver extends BroadcastReceiver implements ValueConstants{
+    public ResultCodeReceiver() {
     }
 
     @Override
@@ -20,16 +20,17 @@ public class NotificationReceiver extends BroadcastReceiver implements ValueCons
         String dns1 = intent.getStringExtra(EXTRA_DNS1);
         String dns2 = intent.getStringExtra(EXTRA_DNS2);
 
-        String dnsToast = preferences.getString("toast", "0");
+        String dnsToast = preferences.getString(KEY_PREF_TOAST, TOAST_SHOW);
         //Succeed
         if(result_code <= 1000){
             //Toast
-            if (dnsToast.equals("0")) {
+            if (dnsToast.equals(TOAST_SHOW)) {
                 showToastByCodeWithDns(context, result_code, dns1, dns2);
             }
+            ControlNotification.notify(context, dns1, dns2);
         } else {
             //Not never show
-            if (!dnsToast.equals("2")) {
+            if (!dnsToast.equals(TOAST_NEVER)) {
                 showToastByCode(context, result_code);
             }
 

@@ -48,6 +48,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
         //Check root
         mEditor.putBoolean(KEY_IS_ROOT, Shell.SU.available());
+
     }
 
     private void firstBoot(){
