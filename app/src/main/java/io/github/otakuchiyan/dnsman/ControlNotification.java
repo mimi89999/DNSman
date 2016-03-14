@@ -19,6 +19,8 @@ public class ControlNotification {
         final String text = res.getString(
                 R.string.control_notification_placeholder_text, dns1, dns2);
 
+        PendingIntent applyIntent = PendingIntent.getActivity(context, 0,
+                new Intent(context, MainActivity.class), 0);
 
         final Notification.Builder builder = new Notification.Builder(context)
                 .setSmallIcon(android.R.drawable.ic_menu_preferences)
@@ -31,16 +33,8 @@ public class ControlNotification {
                                 0,
                                 new Intent(context, MainActivity.class),
                                 PendingIntent.FLAG_ONE_SHOT))
-                .setStyle(new Notification.BigTextStyle()
-                        .bigText(text)
-                        .setBigContentTitle(title)
-                        .setSummaryText("Dummy summary text"))
-                        // Example additional actions for this notification. These will
-                        // only show on devices running Android 4.1 or later, so you
-                        // should ensure that the activity in this notification's
-                        // content intent provides access to the same actions in
-                        // another way.
-                .setAutoCancel(false);
+                .addAction(android.R.drawable.ic_menu_set_as, context.getText(R.string.button_apply), applyIntent)
+                .setOngoing(true);
 
         final NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);

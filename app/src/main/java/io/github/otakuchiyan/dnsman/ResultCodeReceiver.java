@@ -21,13 +21,18 @@ public class ResultCodeReceiver extends BroadcastReceiver implements ValueConsta
         String dns2 = intent.getStringExtra(EXTRA_DNS2);
 
         String dnsToast = preferences.getString(KEY_PREF_TOAST, TOAST_SHOW);
+        boolean isShowNotify = preferences.getBoolean(KEY_PREF_NOTIFICATION, true);
+
+
         //Succeed
         if(result_code <= 1000){
             //Toast
             if (dnsToast.equals(TOAST_SHOW)) {
                 showToastByCodeWithDns(context, result_code, dns1, dns2);
             }
-            ControlNotification.notify(context, dns1, dns2);
+            if(isShowNotify) {
+                ControlNotification.notify(context, dns1, dns2);
+            }
         } else {
             //Not never show
             if (!dnsToast.equals(TOAST_NEVER)) {

@@ -99,11 +99,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
 
             switch(method){
                 case METHOD_VPN:
-                    Intent i = new Intent(this, VpnWrapperActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(EXTRA_DNS1, dns1);
-                    i.putExtra(EXTRA_DNS2, dns2);
-                    startActivity(i);
+                    VpnWrapperActivity.perform(context, dns1, dns2);
                     break;
                 case METHOD_ACCESSIBILITY:
                     break;
@@ -141,7 +137,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                 
             }
 
-            if(method != METHOD_VPN) {
+            if(!method.equals(METHOD_VPN)) {
                 sendResultWithDns(context, resultCode, dns1, dns2);
             }
         }

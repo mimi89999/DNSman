@@ -52,13 +52,13 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     private void firstBoot(){
-        choiceMode();
+        choiceMethod();
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
         mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
         mEditor.apply();
     }
 
-    private void choiceMode(){
+    private void choiceMethod(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.title_check_root)
                 .setMessage(R.string.message_check_root)
@@ -216,7 +216,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 startActivityForResult(i, ValueConstants.REQUEST_DNS_CHANGE);
             }
         });
-
+        listView.addHeaderView(new CurrentStatusView(this));
     }
 
     //List part END

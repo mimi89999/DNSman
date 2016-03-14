@@ -67,6 +67,7 @@
     <string name="pref_toast_error">Except errors</string>
     <string name="pref_toast_never">Never</string>
 
+    <string name="pref_notification">Notification</string>
 
     <string name="pref_license">License</string>
     <string name="pref_license_summary">GNU GPLv3</string>

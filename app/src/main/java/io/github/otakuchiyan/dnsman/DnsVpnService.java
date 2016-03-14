@@ -71,68 +71,60 @@ public class DnsVpnService extends VpnService implements ValueConstants{
         final String dns1 = i.getStringExtra(ValueConstants.EXTRA_DNS1);
         final String dns2 = i.getStringExtra(ValueConstants.EXTRA_DNS2);
 
-        if(vpnThread == null) {
-            vpnThread = new Thread(new Runnable() {
+        vpnThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                try {
+                    String addr = getAddress();
+                    String real_addr = "";
+
+                    //Escaping IPv6 address suffix - "<Real address>%wlan0"
+                    for (int i = addr.length() - 1; i != 0; i--) {
+                        if (addr.charAt(i) == '%') {
+                            real_addr = addr.substring(0, i);
+                        }
+                    }
+
+                    //If no suffix
+                    if (real_addr.equals("")) {
+                        real_addr = addr;
+                    }
+
+                    Log.d("DnsVpn", "addr = " + real_addr);
+                    DatagramChannel tunnel = DatagramChannel.open();
+
+                    tunnel.connect(new InetSocketAddress(addr, 8087));
+                    tunnel.configureBlocking(false);
+
+                    Builder vpn = new Builder();
+                    vpn.setSession("DnsVpnService")
+                            .addAddress(real_addr, 24);
+                    if (!dns1.equals("")) {
+                        vpn.addDnsServer(dns1);
+                    }
+                    if (!dns2.equals("")) {
+                        vpn.addDnsServer(dns2);
+                    }
+                    fd = vpn.establish();
+                    sendResult(0, dns1, dns2);
+
+                    while (true) {
+                        Thread.sleep(10000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
                     try {
-                        String addr = getAddress();
-                        String real_addr = "";
-
-                        //Escaping IPv6 address suffix - "<Real address>%wlan0"
-                        for (int i = addr.length() - 1; i != 0; i--) {
-                            if (addr.charAt(i) == '%') {
-                                real_addr = addr.substring(0, i);
-                            }
-                        }
-
-                        //If no suffix
-                        if (real_addr.equals("")) {
-                            real_addr = addr;
-                        }
-
-                        Log.d("DnsVpn", "addr = " + real_addr);
-                        DatagramChannel tunnel = DatagramChannel.open();
-
-
-                /*
-                if(!protect(tunnel.socket())) {
-                    throw new IllegalStateException("Cannot protect the tunnel");
-                }
-                */
-                        tunnel.connect(new InetSocketAddress(addr, 8087));
-                        tunnel.configureBlocking(false);
-
-                        Builder vpn = new Builder();
-                        vpn.setSession("DnsVpnService")
-                                .addAddress(real_addr, 24);
-                        if (!dns1.equals("")) {
-                            vpn.addDnsServer(dns1);
-                        }
-                        if (!dns2.equals("")) {
-                            vpn.addDnsServer(dns2);
-                        }
-                        fd = vpn.establish();
-                        sendResult(0, dns1, dns2);
-
-                        while (true) {
-                            Thread.sleep(10000);
+                        if (fd != null) {
+                            fd.close();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    } finally {
-                        try {
-                            if (fd != null) {
-                                fd.close();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
-            });
-            vpnThread.start();
-        }
+            }
+        });
+        vpnThread.start();
         return START_STICKY;
     }
 

@@ -68,6 +68,8 @@ public interface ValueConstants {
     String TOAST_ERROR = "error";
     String TOAST_NEVER = "never";
 
+    String KEY_PREF_NOTIFICATION = "pref_notification";
+
     String KEY_PREF_METHOD = "pref_method";
     String METHOD_VPN = "vpn";
     String METHOD_ACCESSIBILITY = "accessibility";
