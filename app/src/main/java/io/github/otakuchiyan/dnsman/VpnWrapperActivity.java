@@ -15,7 +15,7 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
 
     public static void perform(Context c, String dns1, String dns2){
         Intent i = new Intent(c, VpnWrapperActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra(EXTRA_DNS1, dns1);
         i.putExtra(EXTRA_DNS2, dns2);
         c.startActivity(i);
@@ -46,7 +46,7 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
 
     private void launchServiceWithTimeDelay(final Context context, final String dns1, final String dns2){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final long delay = Long.valueOf(preferences.getString(KEY_VPN_DELAY, "5"));
+        final long delay = Long.valueOf(preferences.getString(KEY_VPN_DELAY, "0"));
 
         final Thread thread = new Thread(new Runnable() {
             @Override

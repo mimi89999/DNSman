@@ -2,9 +2,16 @@
 
 DNS resolver setting tool for Android.
 
-TODO
+#PLAN
 ===
-- Fix VPN and ndc mode
+0.10:
+- VPN mode
+
+0.11:
+- Control notification
+- Xposed, auto click method
+- Built-in DNS list
+- Network check service(e.g. To detect mobile network fallback to 3G from 4G, and Android 7 support)
 
 How to build
 ===

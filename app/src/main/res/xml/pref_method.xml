@@ -29,6 +29,6 @@
         android:title="@string/pref_vpn_delay"
         android:summary="@string/pref_vpn_delay_summary"
         android:key="pref_vpn_delay"
-        android:defaultValue="5"
+        android:defaultValue="0"
         android:inputType="number"/>
 </PreferenceScreen>

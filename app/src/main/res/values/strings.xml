@@ -1,4 +1,5 @@
 <resources>
+    <string name="text_current_method">Current method:</string>
     <string name="text_current_dns">Current DNS:</string>
     <string name="text_network_dns">Network provided DNS:</string>
 
