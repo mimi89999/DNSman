@@ -84,6 +84,8 @@ public interface ValueConstants {
     String KEY_NDC_BT = "pref_ndc_bt";
     String KEY_NDC_ETH = "pref_ndc_eth";
 
+    String KEY_VPN_DELAY = "pref_vpn_delay";
+
     String[] KEY_CUSTOM_INTERFACES = {
             KEY_NDC_WLAN,
             KEY_NDC_RMNET,

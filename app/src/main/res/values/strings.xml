@@ -1,4 +1,7 @@
 <resources>
+    <string name="text_current_dns">Current DNS:</string>
+    <string name="text_network_dns">Network provided DNS:</string>
+
     <string name="category_wifi">Wi-Fi</string>
     <string name="category_mobile">Mobile network</string>
     <string name="category_bluetooth">Bluetooth</string>
@@ -59,6 +62,9 @@
     <string name="pref_ndc_rmnet">Mobile network</string>
     <string name="pref_ndc_bt">Bluetooth</string>
     <string name="pref_ndc_eth">Ethernet</string>
+
+    <string name="pref_vpn_delay">Establish VPN delay</string>
+    <string name="pref_vpn_delay_summary">0 is no delay</string>
 
     <string name="pref_dns_list">DNS completing list</string>
 

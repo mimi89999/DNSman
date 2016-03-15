@@ -25,4 +25,10 @@
                 android:defaultValue="eth0"
                 android:title="@string/pref_ndc_eth" />
         </PreferenceScreen>
+    <EditTextPreference
+        android:title="@string/pref_vpn_delay"
+        android:summary="@string/pref_vpn_delay_summary"
+        android:key="pref_vpn_delay"
+        android:defaultValue="5"
+        android:inputType="number"/>
 </PreferenceScreen>
