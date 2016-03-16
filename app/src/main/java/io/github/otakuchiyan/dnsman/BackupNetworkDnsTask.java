@@ -17,7 +17,7 @@ public class BackupNetworkDnsTask extends AsyncTask<Context, Void, Void> impleme
         SharedPreferences.Editor editor = preferences.edit();
         List<String> networkDnsList = NativeCommandUtils.getCurrentPropDNS();
         editor.putString(KEY_NETWORK_DNS1, networkDnsList.get(0));
-        editor.putString(KEY_NETWORK_DNS1, networkDnsList.get(1));
+        editor.putString(KEY_NETWORK_DNS2, networkDnsList.get(1));
         editor.apply();
         return null;
     }

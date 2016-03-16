@@ -18,8 +18,6 @@ public class DnsEditText extends AutoCompleteTextView{
     private SharedPreferences mPreference;
 
     private Context context;
-    private String key = "";
-    private boolean isPort;
 
     public DnsEditText(Context c){
         this(c, null);
