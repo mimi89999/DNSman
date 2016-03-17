@@ -38,7 +38,7 @@ public class CurrentStatusView  implements ValueConstants {
 
     public void refreshCurrentMode(){
         String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
-        currentMethod.setText(method);
+        currentMethod.setText(DnsStorage.method2resMap.get(method));
     }
 
     public void refreshNetworkDns() {

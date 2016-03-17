@@ -33,6 +33,12 @@ public class ResultCodeReceiver extends BroadcastReceiver implements ValueConsta
             if(isShowNotify) {
                 ControlNotification.notify(context, dns1, dns2);
             }
+            if(preferences.getString(KEY_PREF_METHOD, METHOD_VPN).equals(METHOD_VPN)){
+                new CurrentStatusView(context).setCurrentDns(dns1, dns2);
+            }else{
+                new CurrentStatusView(context).setCurrentDns();
+            }
+
         } else {
             //Not never show
             if (!dnsToast.equals(TOAST_NEVER)) {
@@ -71,4 +77,6 @@ public class ResultCodeReceiver extends BroadcastReceiver implements ValueConsta
 
         Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
     }
+
+
 }

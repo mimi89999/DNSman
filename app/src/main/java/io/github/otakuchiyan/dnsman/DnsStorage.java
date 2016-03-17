@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DnsStorage{
+public class DnsStorage implements ValueConstants{
     /*
     Preference example:
       key       value
@@ -26,6 +26,7 @@ public class DnsStorage{
     public static ArrayList<NetworkInfo> supportedNetInfoList = new ArrayList<>();
     public static HashMap<NetworkInfo, Integer> info2resMap = new HashMap<>();
     public static HashMap<NetworkInfo, String> info2interfaceMap = new HashMap<>();
+    public static HashMap<String, Integer> method2resMap = new HashMap<>();
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
@@ -48,6 +49,12 @@ public class DnsStorage{
                             ValueConstants.NETWORK_INTERFACES[i]));
         }
 
+    }
+
+    public void initResourcesMap(){
+        for(int i = 0; i != METHODS.length; i++){
+            method2resMap.put(METHODS[i], METHOD_RESOURCES[i]);
+        }
     }
 
     //Keep build one time

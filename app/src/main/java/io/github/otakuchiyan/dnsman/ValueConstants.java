@@ -76,6 +76,24 @@ public interface ValueConstants {
     String METHOD_MODULE = "module";
     String METHOD_SETPROP = "setprop";
 
+    String[] METHODS = {
+            METHOD_VPN,
+            METHOD_ACCESSIBILITY,
+            METHOD_NDC,
+            METHOD_IPTABLES,
+            METHOD_MODULE,
+            METHOD_SETPROP
+    };
+
+    int[] METHOD_RESOURCES = {
+            R.string.pref_method_vpn,
+            R.string.pref_method_accessibility,
+            R.string.pref_method_ndc,
+            R.string.pref_method_iptables,
+            R.string.pref_method_module,
+            R.string.pref_method_setprop
+    };
+
     String KEY_NDC_WLAN = "pref_ndc_wlan";
     String KEY_NDC_RMNET = "pref_ndc_rmnet";
     String KEY_NDC_BT = "pref_ndc_bt";
