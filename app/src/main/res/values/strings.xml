@@ -28,6 +28,7 @@
 
     <string name="toast_set_succeed">Setting DNS succeed</string>
     <string name="toast_set_failed">Setting DNS failed</string>
+    <string name="toast_bad_address">Bad address, do you have connected network?</string>
     <string name="toast_unknown_error">Unknown error occurred, may be a bug</string>
     <string name="toast_dns_cleared">All DNS was cleared</string>
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>

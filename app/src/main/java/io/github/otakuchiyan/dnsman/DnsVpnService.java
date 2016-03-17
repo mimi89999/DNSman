@@ -112,7 +112,9 @@ public class DnsVpnService extends VpnService implements ValueConstants{
                         Thread.sleep(10000);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    if(e instanceof IllegalArgumentException){
+                        sendResult(ERROR_BAD_ADDRESS);
+                    }
                 } finally {
                     try {
                         if (fd != null) {
@@ -126,6 +128,10 @@ public class DnsVpnService extends VpnService implements ValueConstants{
         });
         vpnThread.start();
         return START_STICKY;
+    }
+
+    private void sendResult(int result_code){
+        sendResult(result_code, "", "");
     }
 
     private void sendResult(int result_code, String dns1, String dns2){

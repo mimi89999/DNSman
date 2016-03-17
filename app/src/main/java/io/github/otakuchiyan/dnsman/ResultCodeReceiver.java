@@ -52,14 +52,17 @@ public class ResultCodeReceiver extends BroadcastReceiver implements ValueConsta
         switch (code) {
             case 0:
                 toastString = context.getText(R.string.toast_set_succeed).toString();
-                toastString += !dns1.equals("") ? "\n DNS:\t" + dns1 : "";
-                toastString += !dns2.equals("") ? "\n DNS:\t" + dns2 : "";
+                toastString += !dns1.equals("") ? "\nDNS: " + dns1 : "";
+                toastString += !dns2.equals("") ? "\nDNS: " + dns2 : "";
                 break;
             case ValueConstants.RESTORE_SUCCEED:
                 toastString = context.getText(R.string.toast_restored).toString();
                 break;
             case ValueConstants.ERROR_NO_DNS:
                 toastString = context.getText(R.string.toast_no_dns_to_restore).toString();
+                break;
+            case ERROR_BAD_ADDRESS:
+                toastString = context.getString(R.string.toast_bad_address);
                 break;
             default:
                 toastString = context.getText(R.string.toast_set_failed).toString();

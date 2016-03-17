@@ -6,9 +6,6 @@ import android.net.NetworkInfo;
 import java.util.HashMap;
 import java.lang.Integer;
 
-/**
- * Created by 西行寺幽玄 on 3/2/2016.
- */
 public interface ValueConstants {
     int[] NET_TYPE_LIST = {
             ConnectivityManager.TYPE_WIFI,
@@ -131,6 +128,7 @@ public interface ValueConstants {
     int ERROR_NO_DNS = 1002;
     int ERROR_GET_NETID_FAILED = 1003;
     int ERROR_NULL_VPN = 1004;
+    int ERROR_BAD_ADDRESS = 1005;
 
     int ERROR_UNKNOWN = 9999;
 

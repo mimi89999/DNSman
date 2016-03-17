@@ -34,7 +34,6 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
         } else {
             launchServiceWithTimeDelay(this, dns1, dns2);
         }
-        finish();
     }
 
     @Override
@@ -60,5 +59,7 @@ public class VpnWrapperActivity extends Activity implements ValueConstants{
             }
         });
         thread.start();
+
+        finish();
     }
 }
