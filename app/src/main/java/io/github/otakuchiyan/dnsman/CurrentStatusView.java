@@ -12,45 +12,33 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurrentStatusView extends LinearLayout implements ValueConstants {
+public class CurrentStatusView  implements ValueConstants {
     private SharedPreferences preferences;
+    private Context context;
 
+    private LinearLayout linearLayout;
     private TextView currentMethod;
     private TextView currentDnsText1, currentDnsText2;
     private TextView networkDnsText1, networkDnsText2;
 
     public CurrentStatusView(Context context) {
-        super(context);
-        init(null, 0);
-    }
+        linearLayout = new LinearLayout(context);
+        linearLayout.inflate(context, R.layout.current_status_view, linearLayout);
 
-    public CurrentStatusView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(attrs, 0);
-    }
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.context = context;
 
-    public CurrentStatusView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(attrs, defStyle);
-    }
+        currentMethod = (TextView) linearLayout.findViewById(R.id.current_mode_text);
+        currentDnsText1 = (TextView) linearLayout.findViewById(R.id.currentDnsText1);
+        currentDnsText2 = (TextView) linearLayout.findViewById(R.id.currentDnsText2);
+        networkDnsText1 = (TextView) linearLayout.findViewById(R.id.networkDnsText1);
+        networkDnsText2 = (TextView) linearLayout.findViewById(R.id.networkDnsText2);
 
-    private void init(AttributeSet attrs, int defStyle) {
-        inflate(getContext(), R.layout.current_status_view, this);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        currentMethod = (TextView) findViewById(R.id.current_mode_text);
-        currentDnsText1 = (TextView) findViewById(R.id.currentDnsText1);
-        currentDnsText2 = (TextView) findViewById(R.id.currentDnsText2);
-        networkDnsText1 = (TextView) findViewById(R.id.networkDnsText1);
-        networkDnsText2 = (TextView) findViewById(R.id.networkDnsText2);
-
-        setWillNotDraw(true);
-        setOnClickListener(null);
     }
 
     public void refreshCurrentMode(){
-        this.currentMethod.setText(this.preferences.getString(KEY_PREF_METHOD, METHOD_VPN));
+        String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+        currentMethod.setText(method);
     }
 
     public void refreshNetworkDns() {
@@ -58,6 +46,10 @@ public class CurrentStatusView extends LinearLayout implements ValueConstants {
         String dns2 = preferences.getString(KEY_NETWORK_DNS2, "");
         networkDnsText1.setText(dns1);
         networkDnsText2.setText(dns2);
+    }
+
+    public LinearLayout getLayout(){
+        return linearLayout;
     }
 
     public void setCurrentDns(){
@@ -70,7 +62,7 @@ public class CurrentStatusView extends LinearLayout implements ValueConstants {
             currentDnsText1.setText(dns1);
             currentDnsText2.setText(dns2);
         }else{
-            new getDNSTask().execute(getContext());
+            new getDNSTask().execute(context);
         }
     }
 

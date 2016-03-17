@@ -205,6 +205,11 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 new int[]{android.R.id.text1, android.R.id.text2});
         setListAdapter(adapter);
 
+        CurrentStatusView currentStatusView = new CurrentStatusView(this);
+        currentStatusView.refreshCurrentMode();
+        currentStatusView.refreshNetworkDns();
+        currentStatusView.setCurrentDns();
+
         ListView listView = getListView();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -216,7 +221,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 startActivityForResult(i, ValueConstants.REQUEST_DNS_CHANGE);
             }
         });
-        listView.addHeaderView(new CurrentStatusView(this));
+        listView.addHeaderView(currentStatusView.getLayout());
     }
 
     //List part END
