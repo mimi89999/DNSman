@@ -7,7 +7,8 @@
         android:entries="@array/method_strings"
         android:entryValues="@array/method_values" />
         
-        <PreferenceScreen android:title="@string/pref_ndc">
+        <PreferenceCategory android:title="@string/pref_ndc"
+            android:key="pref_ndc_interface">
             <io.github.otakuchiyan.dnsman.InterfacePreference
                 android:key="pref_ndc_wlan"
                 android:defaultValue="wlan0"
@@ -24,11 +25,13 @@
                 android:key="pref_ndc_eth"
                 android:defaultValue="eth0"
                 android:title="@string/pref_ndc_eth" />
-        </PreferenceScreen>
+        </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_advanced_settings">
     <EditTextPreference
         android:title="@string/pref_vpn_delay"
         android:summary="@string/pref_vpn_delay_summary"
         android:key="pref_vpn_delay"
         android:defaultValue="0"
         android:inputType="number"/>
+    </PreferenceCategory>
 </PreferenceScreen>

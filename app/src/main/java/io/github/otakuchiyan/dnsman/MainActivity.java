@@ -126,10 +126,14 @@ public class MainActivity extends ListActivity implements ValueConstants {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_DNS_CHANGE || resultCode == RESULT_OK){
-            mDnsEntryList.clear();
-            mDnsEntryList.addAll(buildList());
-            adapter.notifyDataSetChanged();
+            refreshList();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshCurrentMode();
     }
 
     private void setTitle(){
@@ -168,6 +172,12 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
 
     //List part START
+
+    private void refreshList(){
+        mDnsEntryList.clear();
+        mDnsEntryList.addAll(buildList());
+        adapter.notifyDataSetChanged();
+    }
 
     private List<Map<String, String>> buildList(){
 
@@ -246,7 +256,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
     BroadcastReceiver resultCodeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             int result_code = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
             String dns1 = intent.getStringExtra(EXTRA_DNS1);

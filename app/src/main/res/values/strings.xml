@@ -31,6 +31,7 @@
     <string name="toast_bad_address">Bad address, do you have connected network?</string>
     <string name="toast_unknown_error">Unknown error occurred, may be a bug</string>
     <string name="toast_dns_cleared">All DNS was cleared</string>
+    <string name="toast_firewall_override">Firewall rules will override another settings until you clicked [restore]!</string>
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>
     <string name="toast_no_dns">No available DNS</string>
     <string name="toast_no_dns_to_restore">No DNS to restore</string>
@@ -46,6 +47,8 @@
     <string name="pref_header_method">Method</string>
     <string name="pref_header_appearance">Appearance</string>
     <string name="pref_header_about">About</string>
+
+    <string name="pref_advanced_settings">Advanced settings</string>
 
     <string name="pref_general_auto_setting">Auto setting</string>
     <string name="pref_general_full_keyboard">Enable full keyboard</string>

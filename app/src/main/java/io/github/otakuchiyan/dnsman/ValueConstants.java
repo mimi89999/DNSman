@@ -76,6 +76,8 @@ public interface ValueConstants {
     String METHOD_MODULE = "module";
     String METHOD_SETPROP = "setprop";
 
+    String KEY_PREF_NDC_INTERFACE = "pref_ndc_interface";
+
     String[] METHODS = {
             METHOD_VPN,
             METHOD_ACCESSIBILITY,
@@ -152,5 +154,5 @@ public interface ValueConstants {
 
     int REQUEST_DNS_CHANGE = 0x00;
     int REQUEST_VPN = 0x01;
-
+    int REQUEST_METHOD_CHANGE = 0x02;
 }
