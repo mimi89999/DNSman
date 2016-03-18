@@ -113,6 +113,7 @@ public class DnsVpnService extends VpnService implements ValueConstants{
                     }
                 } catch (Exception e) {
                     if(e instanceof IllegalArgumentException){
+                        e.printStackTrace();
                         sendResult(ERROR_BAD_ADDRESS);
                     }
                 } finally {

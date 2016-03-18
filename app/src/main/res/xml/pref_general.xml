@@ -7,9 +7,11 @@
         android:key="pref_full_keyboard"/>
     <SwitchPreference android:title="@string/pref_general_individual_mode"
         android:key="pref_individual_mode"/>
-    <Preference android:title="@string/pref_dns_list">
+    <SwitchPreference android:title="@string/pref_general_auto_flush"
+        android:key="pref_auto_flush"/>
+    <!--<Preference android:title="@string/pref_dns_list">
         <intent android:action=".DnsListActivity"/>
-    </Preference>
+    </Preference>-->
         
 
 </PreferenceScreen>

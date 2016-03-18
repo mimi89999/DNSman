@@ -2,18 +2,18 @@
 <resources>
     <string-array name="method_strings">
         <item>@string/pref_method_vpn</item>
-        <item>@string/pref_method_accessibility</item>
+<!--        <item>@string/pref_method_accessibility</item> -->
         <item>@string/pref_method_ndc</item>
         <item>@string/pref_method_iptables</item>
-        <item>@string/pref_method_module</item>
+        <!--<item>@string/pref_method_module</item>-->
         <item>@string/pref_method_setprop</item>
     </string-array>
     <string-array name="method_values">
         <item>vpn</item>
-        <item>accessibility</item>
+        <!--<item>accessibility</item>-->
         <item>ndc</item>
         <item>iptables</item>
-        <item>module</item>
+        <!--<item>module</item>-->
         <item>setprop</item>
     </string-array>
 

@@ -3,20 +3,29 @@ package io.github.otakuchiyan.dnsman;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import static android.os.Build.VERSION;
 import static android.os.Build.VERSION_CODES;
 
@@ -36,6 +45,13 @@ public class MainActivity extends ListActivity implements ValueConstants {
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
 
+    private LinearLayout currentDnsLayout;
+    private TextView currentMethod;
+    private TextView currentDnsText1, currentDnsText2;
+    private TextView networkDnsText1, networkDnsText2;
+
+
+
     private SimpleAdapter adapter;
     private List<Map<String, String>> mDnsEntryList;
 
@@ -50,6 +66,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         //Check root
         mEditor.putBoolean(KEY_IS_ROOT, Shell.SU.available());
 
+        registerReceiver(resultCodeReceiver, new IntentFilter(ACTION_SET_DNS));
     }
 
     private void firstBoot(){
@@ -74,13 +91,13 @@ public class MainActivity extends ListActivity implements ValueConstants {
                     mEditor.putString(KEY_PREF_METHOD, METHOD_NDC);
                     break;
             }
-        }else{
+        }/*else{
             switch (VERSION.SDK_INT){
                 case VERSION_CODES.KITKAT: //Escape 4.4 kitkat bug
                     mEditor.putString(KEY_PREF_METHOD, METHOD_ACCESSIBILITY);
                     break;
             }
-        }
+        }*/
 
         mEditor.apply();
     }
@@ -206,10 +223,10 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 new int[]{android.R.id.text1, android.R.id.text2});
         setListAdapter(adapter);
 
-        CurrentStatusView currentStatusView = new CurrentStatusView(this);
-        currentStatusView.refreshCurrentMode();
-        currentStatusView.refreshNetworkDns();
-        currentStatusView.setCurrentDns();
+        initCurrentStatusView(this);
+        refreshCurrentMode();
+        refreshNetworkDns();
+        setCurrentDns();
 
         ListView listView = getListView();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -222,10 +239,160 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 startActivityForResult(i, ValueConstants.REQUEST_DNS_CHANGE);
             }
         });
-        listView.addHeaderView(currentStatusView.getLayout());
+        listView.addHeaderView(currentDnsLayout);
     }
 
     //List part END
+    BroadcastReceiver resultCodeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+            int result_code = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
+            String dns1 = intent.getStringExtra(EXTRA_DNS1);
+            String dns2 = intent.getStringExtra(EXTRA_DNS2);
+
+            String dnsToast = mPreferences.getString(KEY_PREF_TOAST, TOAST_SHOW);
+            boolean isShowNotify = mPreferences.getBoolean(KEY_PREF_NOTIFICATION, true);
+
+
+            //Succeed
+            if(result_code <= 1000){
+                //Toast
+                if (dnsToast.equals(TOAST_SHOW)) {
+                    showToastByCodeWithDns(context, result_code, dns1, dns2);
+                }
+                /*if(isShowNotify) {
+                    ControlNotification.notify(context, dns1, dns2);
+                }*/
+                if(mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN).equals(METHOD_VPN)){
+                    setCurrentDns(dns1, dns2);
+                }else{
+                    setCurrentDns();
+                }
+
+            } else {
+                //Not never show
+                if (!dnsToast.equals(TOAST_NEVER)) {
+                    showToastByCode(context, result_code);
+                }
+
+            }
+
+        }
+
+        private void showToastByCode(Context c, int code){
+            showToastByCodeWithDns(c, code, "", "");
+        }
+
+        private void showToastByCodeWithDns(Context context, int code, String dns1, String dns2){
+            String toastString;
+
+            switch (code) {
+                case 0:
+                    toastString = context.getText(R.string.toast_set_succeed).toString();
+                    toastString += !dns1.equals("") ? "\nDNS: " + dns1 : "";
+                    toastString += !dns2.equals("") ? "\nDNS: " + dns2 : "";
+                    break;
+                case ValueConstants.RESTORE_SUCCEED:
+                    toastString = context.getText(R.string.toast_restored).toString();
+                    break;
+                case ValueConstants.ERROR_NO_DNS:
+                    toastString = context.getText(R.string.toast_no_dns_to_restore).toString();
+                    break;
+                case ERROR_BAD_ADDRESS:
+                    toastString = context.getString(R.string.toast_bad_address);
+                    break;
+                default:
+                    toastString = context.getText(R.string.toast_set_failed).toString();
+                    toastString += "\n" + context.getText(R.string.toast_unknown_error).toString();
+            }
+
+            Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
+        }
+
+
+    };
+
+    public void initCurrentStatusView(Context context) {
+        currentDnsLayout = new LinearLayout(context);
+        currentDnsLayout.inflate(context, R.layout.current_status_view, currentDnsLayout);
+        currentDnsLayout.setOnClickListener(null);
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        currentMethod = (TextView) currentDnsLayout.findViewById(R.id.current_mode_text);
+        currentDnsText1 = (TextView) currentDnsLayout.findViewById(R.id.currentDnsText1);
+        currentDnsText2 = (TextView) currentDnsLayout.findViewById(R.id.currentDnsText2);
+        networkDnsText1 = (TextView) currentDnsLayout.findViewById(R.id.networkDnsText1);
+        networkDnsText2 = (TextView) currentDnsLayout.findViewById(R.id.networkDnsText2);
+
+    }
+
+    public void refreshCurrentMode(){
+        String method = mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+        currentMethod.setText(DnsStorage.method2resMap.get(method));
+    }
+
+    public void refreshNetworkDns() {
+        String dns1 = mPreferences.getString(KEY_NETWORK_DNS1, "");
+        String dns2 = mPreferences.getString(KEY_NETWORK_DNS2, "");
+        networkDnsText1.setText(dns1);
+        networkDnsText2.setText(dns2);
+    }
+
+    public void setCurrentDns(){
+        setCurrentDns("", "");
+    }
+
+    public void setCurrentDns(String dns1, String dns2){
+        //Not need AsyncTask
+        if(!dns1.equals("") || !dns2.equals("")){
+            currentDnsText1.setText(dns1);
+            currentDnsText2.setText(dns2);
+        }else{
+            new getDNSTask().execute(this);
+        }
+    }
+
+    private class getDNSTask extends AsyncTask<Context, Void, List<String>> {
+        protected List<String> doInBackground(Context... contexts) {
+            List<String> currentDNSData = new ArrayList<>();
+            boolean haveRules = false;
+
+            mPreferences = PreferenceManager.getDefaultSharedPreferences(contexts[0]);
+
+            //Check firewall rules
+            String currentMethod = mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+            if(mPreferences.getBoolean(KEY_IS_ROOT, false)) {
+                String dns = mPreferences.getString(KEY_HIJACKED_LAST_DNS, "");
+                if (!dns.equals("") && NativeCommandUtils.isRulesAlivable(dns)) {
+                    haveRules = true;
+                    currentDNSData.add(dns);
+                }
+            }
+
+            //Check system properties
+            List<String> prop_dns = NativeCommandUtils.getCurrentPropDNS();
+            if (!prop_dns.isEmpty()) {
+                //ALERT USER
+                if (haveRules && !currentMethod.equals(METHOD_IPTABLES)) {
+                } else if (!haveRules) {
+                    currentDNSData.addAll(prop_dns);
+                }
+            }
+            for (int i = 0; i != currentDNSData.size(); i++) {
+                Log.d("MainActivity", "data = " + currentDNSData.get(i));
+            }
+            return currentDNSData;
+        }
+
+        protected void onPostExecute(List<String> data) {
+            currentDnsText1.setText(data.get(0));
+            currentDnsText2.setText(data.get(1));
+        }
+    }
+
 }
 
 

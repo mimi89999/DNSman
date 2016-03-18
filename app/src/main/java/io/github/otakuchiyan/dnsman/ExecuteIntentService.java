@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -96,6 +97,14 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             final String dns2 = intent.getStringExtra(EXTRA_DNS2);
             //4 firewall rules mode
             final String lastHijackedDns = preferences.getString(KEY_HIJACKED_LAST_DNS, "");
+            final boolean isAutoFlush = preferences.getBoolean(KEY_PREF_AUTO_FLUSH, false);
+            final boolean isRoot = preferences.getBoolean(KEY_IS_ROOT, false);
+
+            //Below 4.2
+            if(!isRoot && isAutoFlush && Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1){
+                NativeCommandUtils.flushDnsViaApi(context);
+            }
+
 
             switch(method){
                 case METHOD_VPN:
@@ -127,6 +136,10 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                     break;
             }
             editor.apply();
+
+            if(isRoot && isAutoFlush){
+                NativeCommandUtils.flushDnsViaNdc(context);
+            }
 
 
             if(resultCode <= 1000 && intent.getBooleanExtra(KEY_IS_RESTORE, false)) {

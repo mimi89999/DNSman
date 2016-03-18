@@ -50,6 +50,7 @@
     <string name="pref_general_auto_setting">Auto setting</string>
     <string name="pref_general_full_keyboard">Enable full keyboard</string>
     <string name="pref_general_individual_mode">Allow set DNS by network</string>
+    <string name="pref_general_auto_flush">Auto flush cache</string>
 
     <string name="pref_method_setting_method">Set DNS method</string>
     <string name="pref_method_vpn">Virtual private network</string>
