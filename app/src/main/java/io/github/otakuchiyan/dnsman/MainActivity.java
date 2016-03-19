@@ -122,7 +122,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_DNS_CHANGE || resultCode == RESULT_OK){
             refreshList();
-            setCurrentDns();
         }
     }
 
@@ -131,12 +130,14 @@ public class MainActivity extends ListActivity implements ValueConstants {
         super.onResume();
         refreshCurrentMode();
         updateListWhenIndividualChanged();
-        registerReceiver(resultCodeReceiver, new IntentFilter(ACTION_SET_DNS));
+        //this.registerReceiver(resultCodeReceiver, new IntentFilter(ACTION_SET_DNS));
+        this.registerReceiver(updateNetworkDnsReceiver, new IntentFilter(ACTION_NETWORK_CONNECTED));
     }
 
     @Override
     protected void onPause() {
-        unregisterReceiver(resultCodeReceiver);
+        //unregisterReceiver(resultCodeReceiver);
+        unregisterReceiver(updateNetworkDnsReceiver);
         super.onPause();
     }
 
@@ -268,7 +269,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
     //List part END
 
     //Used to update by another thread
-    BroadcastReceiver resultCodeReceiver = new BroadcastReceiver() {
+    public class ResultCodeReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -284,13 +285,14 @@ public class MainActivity extends ListActivity implements ValueConstants {
             if(result_code <= 1000){
                 //Toast
                 if (dnsToast.equals(TOAST_SHOW)) {
+
                     showToastByCodeWithDns(context, result_code, dns1, dns2);
                 }
                 /*if(isShowNotify) {
                     ControlNotification.notify(context, dns1, dns2);
                 }*/
                 if(mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN).equals(METHOD_VPN)){
-                     setCurrentDns(dns1, dns2);
+                    setCurrentDns(dns1, dns2);
                 }else{
                     setCurrentDns();
                 }
@@ -334,9 +336,15 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
             Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
         }
-
-
     };
+
+    BroadcastReceiver updateNetworkDnsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshNetworkDns();
+        }
+    };
+
 
     public void initCurrentStatusView(Context context) {
         currentDnsLayout = new LinearLayout(context);

@@ -72,15 +72,10 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-<!--
-        <receiver android:name=".MainActivity$ResultCodeReceiver"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name=".MainActivity$ResultCodeReceiver">
             <intent-filter>
                 <action android:name="io.github.otakuchiyan.dnsman.ACTION_SET_DNS"/>
             </intent-filter>
         </receiver>
-       -->
-    </application>
-
+     </application>
 </manifest>

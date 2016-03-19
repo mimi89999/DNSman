@@ -92,7 +92,7 @@ public final class NativeCommandUtils implements ValueConstants{
 
         List<String> result = Shell.SU.run(cmd);
 
-        return result.get(0).equals("") ? 0 : ERROR_UNKNOWN;
+        return result.get(0).substring(0, 3).equals("200") ? 0 : ERROR_UNKNOWN;
     }
 
     public static int flushDnsViaNdc(Context c){
