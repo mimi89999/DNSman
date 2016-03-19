@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class ExecuteIntentService extends IntentService implements ValueConstants{
     public ExecuteIntentService() {
@@ -15,13 +14,13 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
     }
 
     public static boolean startActionByInfo(Context context, NetworkInfo info) {
-        DnsStorage dnsStorage = new DnsStorage(context);
+        DnsmanCore dnsmanCore = new DnsmanCore(context);
 
-        String extra_dns[] = dnsStorage.getDnsByKeyPrefix(info.getTypeName());
+        String extra_dns[] = dnsmanCore.getDnsByKeyPrefix(info.getTypeName());
 
         //Fallback to global
         if(extra_dns[0].equals("") && extra_dns[1].equals("")) {
-            extra_dns = dnsStorage.getGlobalDns();
+            extra_dns = dnsmanCore.getGlobalDns();
         }
 
         if(extra_dns[0].equals("") && extra_dns[1].equals("")){
@@ -141,13 +140,8 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                 NativeCommandUtils.flushDnsViaNdc(context);
             }
 
-
             if(resultCode <= 1000 && intent.getBooleanExtra(KEY_IS_RESTORE, false)) {
                 resultCode = ValueConstants.RESTORE_SUCCEED;
-            }
-
-            if(resultCode <= 1000 && preferences.getBoolean(KEY_PREF_AUTO_FLUSH, true)) {
-                
             }
 
             if(!method.equals(METHOD_VPN)) {

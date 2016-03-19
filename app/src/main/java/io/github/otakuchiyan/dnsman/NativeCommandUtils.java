@@ -6,6 +6,7 @@
 
 package io.github.otakuchiyan.dnsman;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -49,6 +50,7 @@ public final class NativeCommandUtils implements ValueConstants{
         return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private static String getNetId(Context c){
         String netId = "";
         ConnectivityManager manager =
@@ -79,8 +81,8 @@ public final class NativeCommandUtils implements ValueConstants{
         } else {
             String interfaceName;
             NetworkInfo currentNetworkInfo = manager.getActiveNetworkInfo();
-            new DnsStorage(c).refreshInfo2InterfaceMap();
-            interfaceName = DnsStorage.info2interfaceMap.get(currentNetworkInfo);
+            DnsmanCore.refreshInfo2InterfaceMap(c);
+            interfaceName = DnsmanCore.info2interfaceMap.get(currentNetworkInfo.getTypeName());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { //>=4.3
                 cmd = String.format(SETIFDNS_COMMAND, interfaceName, dns1, dns2);
             } else { //<=4.2

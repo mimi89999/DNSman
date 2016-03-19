@@ -2,6 +2,7 @@
     <string name="text_current_method">Current method:</string>
     <string name="text_current_dns">Current DNS:</string>
     <string name="text_network_dns">Network provided DNS:</string>
+    <string name="text_firewall_override">Firewall rules have override another settings, clicked [restore] to delete firewall rules</string>
 
     <string name="category_wifi">Wi-Fi</string>
     <string name="category_mobile">Mobile network</string>
@@ -25,13 +26,13 @@
     <string name="button_apply">Apply now</string>
     <string name="button_clear">Clear all</string>
 
+    <string name="hint_no_available">No available</string>
 
     <string name="toast_set_succeed">Setting DNS succeed</string>
     <string name="toast_set_failed">Setting DNS failed</string>
     <string name="toast_bad_address">Bad address, do you have connected network?</string>
     <string name="toast_unknown_error">Unknown error occurred, may be a bug</string>
     <string name="toast_dns_cleared">All DNS was cleared</string>
-    <string name="toast_firewall_override">Firewall rules will override another settings until you clicked [restore]!</string>
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>
     <string name="toast_no_dns">No available DNS</string>
     <string name="toast_no_dns_to_restore">No DNS to restore</string>

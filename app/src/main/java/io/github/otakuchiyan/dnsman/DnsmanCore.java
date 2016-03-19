@@ -1,9 +1,11 @@
 package io.github.otakuchiyan.dnsman;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import android.util.Log;
@@ -15,61 +17,59 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DnsStorage implements ValueConstants{
-    /*
-    Preference example:
-      key       value
-      "WIFI" + "dns1" => ["127.0.0.1", "127.0.0.2"]
-      "*port" was not used
-     */
-
+public class DnsmanCore implements ValueConstants{
     public static ArrayList<NetworkInfo> supportedNetInfoList = new ArrayList<>();
-    public static HashMap<NetworkInfo, Integer> info2resMap = new HashMap<>();
-    public static HashMap<NetworkInfo, String> info2interfaceMap = new HashMap<>();
+
+    //Don't use NetworkInfo as key because it's complex structure
+    public static HashMap<String, Integer> info2resMap = new HashMap<>();
+    public static HashMap<String, String> info2interfaceMap = new HashMap<>();
     public static HashMap<String, Integer> method2resMap = new HashMap<>();
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
     private Context context;
 
-    public DnsStorage(Context c){
+    public DnsmanCore(Context c){
         preferences = PreferenceManager.getDefaultSharedPreferences(c);
         preferenceEditor = preferences.edit();
         context = c;
     }
 
-    public void refreshInfo2InterfaceMap(){
+    public static void refreshInfo2InterfaceMap(Context context){
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
             NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
-            info2interfaceMap.put(info,
-                    preferences.getString(
-                            ValueConstants.KEY_CUSTOM_INTERFACES[i],
-                            ValueConstants.NETWORK_INTERFACES[i]));
+            if(info != null) {
+                info2interfaceMap.put(info.getTypeName(),
+                        preferences.getString(
+                                ValueConstants.KEY_CUSTOM_INTERFACES[i],
+                                ValueConstants.NETWORK_INTERFACES[i]));
+            }
         }
 
     }
 
-    public void initResourcesMap(){
+    public static void initResourcesMap(){
         for(int i = 0; i != METHODS.length; i++){
             method2resMap.put(METHODS[i], METHOD_RESOURCES[i]);
         }
     }
 
     //Keep build one time
-    public void initDnsMap(){
+    public static void initDnsMap(Context context){
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
             NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
-            info2resMap.put(info, ValueConstants.NET_TYPE_RESOURCES[i]);
             if(info != null){
-                 supportedNetInfoList.add(info);
+                info2resMap.put(info.getTypeName(), ValueConstants.NET_TYPE_RESOURCES[i]);
+                supportedNetInfoList.add(info);
             }
         }
 
-        refreshInfo2InterfaceMap();
+        refreshInfo2InterfaceMap(context);
     }
 
 

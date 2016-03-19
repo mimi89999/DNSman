@@ -161,10 +161,6 @@ public class SettingsActivity extends PreferenceActivity implements ValueConstan
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(KEY_PREF_METHOD, METHOD_VPN);
                     editor.apply();
-                }else if(preferences.getBoolean(KEY_IS_ROOT, false)){
-                    if(summary.equals(getText(R.string.pref_method_iptables))) {
-                        Toast.makeText(getActivity(), R.string.toast_firewall_override, Toast.LENGTH_LONG).show();
-                    }
                 }
             }
         }

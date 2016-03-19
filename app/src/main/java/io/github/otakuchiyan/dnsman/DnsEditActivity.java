@@ -3,11 +3,12 @@ package io.github.otakuchiyan.dnsman;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
 public class DnsEditActivity extends Activity {
-    private DnsStorage dnsStorage;
+    private DnsmanCore dnsmanCore;
     private DnsEditText dns1;
     private DnsEditText dns2;
     private String mPrefix;
@@ -18,7 +19,7 @@ public class DnsEditActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_dns_edit);
 
-        dnsStorage = new DnsStorage(this);
+        dnsmanCore = new DnsmanCore(this);
 
         Intent i = getIntent();
         mPrefix = i.getStringExtra("prefix");
@@ -30,10 +31,18 @@ public class DnsEditActivity extends Activity {
         dns1 = (DnsEditText) findViewById(R.id.dnsEditText1);
         dns2 = (DnsEditText) findViewById(R.id.dnsEditText2);
 
-        String[] dnsEntry = dnsStorage.getDnsByKeyPrefix(prefix);
+        String[] dnsEntry = dnsmanCore.getDnsByKeyPrefix(prefix);
 
         dns1.setText(dnsEntry[0]);
-        dns2.setText(dnsEntry[1]);
+
+        if(PreferenceManager.getDefaultSharedPreferences(this).
+                getString(ValueConstants.KEY_PREF_METHOD, ValueConstants.METHOD_VPN)
+                .equals(ValueConstants.METHOD_IPTABLES)){
+            dns2.setHint(R.string.hint_no_available);
+            dns2.setEnabled(false);
+        }else{
+            dns2.setText(dnsEntry[1]);
+        }
     }
 
     public void onApplyButtonClick(View v){
@@ -47,7 +56,7 @@ public class DnsEditActivity extends Activity {
         }
 
         saveDnsEntry();
-        ExecuteIntentService.startActionByString(this, dnsStorage.getDnsByKeyPrefix(mPrefix));
+        ExecuteIntentService.startActionByString(this, dnsmanCore.getDnsByKeyPrefix(mPrefix));
     }
 
     public void onOkButtonClick(View v){
@@ -59,7 +68,7 @@ public class DnsEditActivity extends Activity {
         String[] dnsEntry = new String[2];
         dnsEntry[0] = dns1.getText().toString();
         dnsEntry[1] = dns2.getText().toString();
-        dnsStorage.putDnsByKeyPrefix(mPrefix, dnsEntry);
+        dnsmanCore.putDnsByKeyPrefix(mPrefix, dnsEntry);
         setResult(RESULT_OK);
     }
 
@@ -69,7 +78,7 @@ public class DnsEditActivity extends Activity {
         dnsEntry[1] = "";
         dns1.setText("");
         dns2.setText("");
-        dnsStorage.putDnsByKeyPrefix(mPrefix, dnsEntry);
+        dnsmanCore.putDnsByKeyPrefix(mPrefix, dnsEntry);
         Toast.makeText(this, R.string.toast_dns_cleared, Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
     }

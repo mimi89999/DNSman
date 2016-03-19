@@ -12,7 +12,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -27,13 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.os.Build.VERSION;
-import static android.os.Build.VERSION_CODES;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +38,7 @@ import java.util.Set;
 import eu.chainfire.libsuperuser.Shell;
 
 public class MainActivity extends ListActivity implements ValueConstants {
-    private DnsStorage dnsStorage;
+    private DnsmanCore dnsmanCore;
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
 
@@ -49,24 +46,22 @@ public class MainActivity extends ListActivity implements ValueConstants {
     private TextView currentMethod;
     private TextView currentDnsText1, currentDnsText2;
     private TextView networkDnsText1, networkDnsText2;
-
+    private TextView alertText;
 
 
     private SimpleAdapter adapter;
     private List<Map<String, String>> mDnsEntryList;
 
     private void initVariable(){
-        dnsStorage = new DnsStorage(this);
-        dnsStorage.initDnsMap();
-        dnsStorage.initResourcesMap();
+        dnsmanCore = new DnsmanCore(this);
+        DnsmanCore.initDnsMap(this);
+        DnsmanCore.initResourcesMap();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mPreferences.edit();
         BackupNetworkDnsTask.startAction(this);
 
         //Check root
         mEditor.putBoolean(KEY_IS_ROOT, Shell.SU.available());
-
-        registerReceiver(resultCodeReceiver, new IntentFilter(ACTION_SET_DNS));
     }
 
     private void firstBoot(){
@@ -127,6 +122,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_DNS_CHANGE || resultCode == RESULT_OK){
             refreshList();
+            setCurrentDns();
         }
     }
 
@@ -134,6 +130,14 @@ public class MainActivity extends ListActivity implements ValueConstants {
     protected void onResume() {
         super.onResume();
         refreshCurrentMode();
+        updateListWhenIndividualChanged();
+        registerReceiver(resultCodeReceiver, new IntentFilter(ACTION_SET_DNS));
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(resultCodeReceiver);
+        super.onPause();
     }
 
     private void setTitle(){
@@ -173,6 +177,15 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
     //List part START
 
+    private boolean lastStatus = false;
+    private void updateListWhenIndividualChanged(){
+        boolean isEnabled = mPreferences.getBoolean(KEY_PREF_INDIVIDUAL_MODE, false);
+        if(isEnabled != lastStatus){
+            refreshList();
+            lastStatus = isEnabled;
+        }
+    }
+
     private void refreshList(){
         mDnsEntryList.clear();
         mDnsEntryList.addAll(buildList());
@@ -186,7 +199,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         dnsEntryList.add(getGlobalDnsEntry());
 
         if(mPreferences.getBoolean(KEY_PREF_INDIVIDUAL_MODE, false)) {
-            for (NetworkInfo info : DnsStorage.supportedNetInfoList) {
+            for (NetworkInfo info : DnsmanCore.supportedNetInfoList) {
                 dnsEntryList.add(getNetworkDnsEntry(info));
             }
         }
@@ -195,7 +208,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     private Map<String, String> getNetworkDnsEntry(NetworkInfo info){
-        return getDnsEntry(info.getTypeName(), DnsStorage.info2resMap.get(info));
+        return getDnsEntry(info.getTypeName(), DnsmanCore.info2resMap.get(info.getTypeName()));
     }
 
     private Map<String, String> getGlobalDnsEntry(){
@@ -207,7 +220,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         dnsEntry.put("prefix", prefix);
         dnsEntry.put("label", getText(resource).toString());
 
-        String[] dnsData = dnsStorage.getDnsByKeyPrefix(prefix);
+        String[] dnsData = dnsmanCore.getDnsByKeyPrefix(prefix);
         String dnsEntryString = "";
         boolean isNoDns = false;
 
@@ -253,9 +266,12 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     //List part END
+
+    //Used to update by another thread
     BroadcastReceiver resultCodeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             int result_code = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
             String dns1 = intent.getStringExtra(EXTRA_DNS1);
@@ -263,7 +279,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
             String dnsToast = mPreferences.getString(KEY_PREF_TOAST, TOAST_SHOW);
             boolean isShowNotify = mPreferences.getBoolean(KEY_PREF_NOTIFICATION, true);
-
 
             //Succeed
             if(result_code <= 1000){
@@ -275,7 +290,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
                     ControlNotification.notify(context, dns1, dns2);
                 }*/
                 if(mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN).equals(METHOD_VPN)){
-                    setCurrentDns(dns1, dns2);
+                     setCurrentDns(dns1, dns2);
                 }else{
                     setCurrentDns();
                 }
@@ -325,7 +340,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
     public void initCurrentStatusView(Context context) {
         currentDnsLayout = new LinearLayout(context);
-        currentDnsLayout.inflate(context, R.layout.current_status_view, currentDnsLayout);
+        LinearLayout.inflate(context, R.layout.current_status_view, currentDnsLayout);
         currentDnsLayout.setOnClickListener(null);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -335,12 +350,20 @@ public class MainActivity extends ListActivity implements ValueConstants {
         currentDnsText2 = (TextView) currentDnsLayout.findViewById(R.id.currentDnsText2);
         networkDnsText1 = (TextView) currentDnsLayout.findViewById(R.id.networkDnsText1);
         networkDnsText2 = (TextView) currentDnsLayout.findViewById(R.id.networkDnsText2);
+        alertText = (TextView) currentDnsLayout.findViewById(R.id.alertText);
+    }
 
+    private void setFirewallRulesAlert(boolean isEnable){
+        if(isEnable) {
+            alertText.setText(R.string.text_firewall_override);
+        }else{
+            alertText.setText("");
+        }
     }
 
     public void refreshCurrentMode(){
         String method = mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN);
-        currentMethod.setText(DnsStorage.method2resMap.get(method));
+        currentMethod.setText(DnsmanCore.method2resMap.get(method));
     }
 
     public void refreshNetworkDns() {
@@ -365,9 +388,10 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     private class getDNSTask extends AsyncTask<Context, Void, List<String>> {
+        boolean haveRules = false;
         protected List<String> doInBackground(Context... contexts) {
             List<String> currentDNSData = new ArrayList<>();
-            boolean haveRules = false;
+
 
             mPreferences = PreferenceManager.getDefaultSharedPreferences(contexts[0]);
 
@@ -378,17 +402,15 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 if (!dns.equals("") && NativeCommandUtils.isRulesAlivable(dns)) {
                     haveRules = true;
                     currentDNSData.add(dns);
+                    currentDNSData.add("");//Fill
+                    return currentDNSData;
                 }
             }
 
             //Check system properties
             List<String> prop_dns = NativeCommandUtils.getCurrentPropDNS();
             if (!prop_dns.isEmpty()) {
-                //ALERT USER
-                if (haveRules && !currentMethod.equals(METHOD_IPTABLES)) {
-                } else if (!haveRules) {
-                    currentDNSData.addAll(prop_dns);
-                }
+                currentDNSData.addAll(prop_dns);
             }
             for (int i = 0; i != currentDNSData.size(); i++) {
                 Log.d("MainActivity", "data = " + currentDNSData.get(i));
@@ -399,6 +421,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         protected void onPostExecute(List<String> data) {
             currentDnsText1.setText(data.get(0));
             currentDnsText2.setText(data.get(1));
+            setFirewallRulesAlert(haveRules);
         }
     }
 
