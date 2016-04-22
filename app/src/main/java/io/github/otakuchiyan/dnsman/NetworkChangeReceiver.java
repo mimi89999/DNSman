@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver implements ValueCon
                     Log.d("NCR", "Start set");
                     String dnsToast = sp.getString(ValueConstants.KEY_PREF_TOAST, ValueConstants.TOAST_SHOW);
                     BackupNetworkDnsTask.startAction(context);
-                    context.sendBroadcast(new Intent(ACTION_NETWORK_CONNECTED));
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ACTION_NETWORK_CONNECTED));
                     if (!ExecuteIntentService.startActionByInfo(context, currentNet)) {
                         if (!dnsToast.equals(ValueConstants.TOAST_NEVER)) {
                             Toast.makeText(context, R.string.toast_no_dns, Toast.LENGTH_LONG).show();

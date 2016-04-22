@@ -25,13 +25,33 @@ public final class NativeCommandUtils implements ValueConstants{
     private NativeCommandUtils(){
     }
 
-	public static int setDnsViaSetprop(String dns1, String dns2) {
+    private static List<String> runWithLog(String command){
+        Log.d("NativeCommand", "-> " + command);
+        return Shell.SU.run(command);
+    }
+
+    private static List<String> runWithLog(List<String> command){
+        for(String s: command) {
+            Log.d("NativeCommand", "-> " + s);
+        }
+        return Shell.SU.run(command);
+    }
+
+    private static List<String> runWithLog(String[] command){
+        for(String s: command) {
+            Log.d("NativeCommand", "-> " + s);
+        }
+        return Shell.SU.run(command);
+    }
+
+
+    public static int setDnsViaSetprop(String dns1, String dns2) {
 		String[] setCommands = {
             SETPROP_COMMAND_PREFIX + "1 \"" + dns1 + '\"',
             SETPROP_COMMAND_PREFIX + "2 \"" + dns2 + '\"'
         };
 
-        Shell.SU.run(setCommands);
+        runWithLog(setCommands);
         return 0;
     }
 
@@ -47,7 +67,7 @@ public final class NativeCommandUtils implements ValueConstants{
         Log.d("DNSManager.rules", cmd1);
         Log.d("DNSManager.rules", cmd2);
 
-        return Shell.SU.run(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
+        return runWithLog(cmds).isEmpty() ? 0 : ERROR_UNKNOWN;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -90,7 +110,7 @@ public final class NativeCommandUtils implements ValueConstants{
             }
         }
 
-        List<String> result = Shell.SU.run(cmd);
+        List<String> result = runWithLog(cmd);
 
         return result.get(0).substring(0, 3).equals("200") ? 0 : ERROR_UNKNOWN;
     }
@@ -107,7 +127,7 @@ public final class NativeCommandUtils implements ValueConstants{
             flushdns_cmd = ValueConstants.FLUSHDEFAULTIF_COMMAND;
         }
 
-        Shell.SU.run(flushdns_cmd);
+        runWithLog(flushdns_cmd);
         return 0;
     }
 
@@ -117,7 +137,7 @@ public final class NativeCommandUtils implements ValueConstants{
         cmds.add("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true");
         cmds.add("settings put global airplane_mode_on 0");
         cmds.add("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false");
-        Shell.SU.run(cmds);
+        runWithLog(cmds);
         return 0;
     }
 
@@ -148,7 +168,7 @@ public final class NativeCommandUtils implements ValueConstants{
 		String cmd = CHECKRULE_COMMAND_PREFIX + dns;
 
         Log.d("DNSManager[CMD]", cmd);
-		return !Shell.SU.run(cmd).isEmpty();
+		return !runWithLog(cmd).isEmpty();
 	}
 
     public static List<String> deleteRules(String dns){
@@ -161,7 +181,7 @@ public final class NativeCommandUtils implements ValueConstants{
 
         Log.d("DNSManager.deleteRules", cmd1);
         Log.d("DNSManager.deleteRules", cmd2);
-        return Shell.SU.run(cmds);
+        return runWithLog(cmds);
     }
 	
 	public static List<String> getCurrentPropDNS(){

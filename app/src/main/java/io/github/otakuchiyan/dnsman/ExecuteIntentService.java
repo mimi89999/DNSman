@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class ExecuteIntentService extends IntentService implements ValueConstants{
     public ExecuteIntentService() {
@@ -159,6 +160,6 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
         result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
         result_intent.putExtra(EXTRA_DNS1, dns1);
         result_intent.putExtra(EXTRA_DNS2, dns2);
-        c.sendBroadcast(result_intent);
+        LocalBroadcastManager.getInstance(c).sendBroadcast(result_intent);
     }
 }

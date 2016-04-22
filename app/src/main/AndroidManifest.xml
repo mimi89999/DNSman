@@ -27,10 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".DnsEditActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -39,23 +41,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity
-            android:name=".DnsListActivity"
-            android:label="@string/pref_dns_list"
-            android:parentActivityName=".SettingsActivity">
-            <intent-filter>
-                <action android:name="io.github.otakuchiyan.dnsman.DnsListActivity" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".VpnWrapperActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+
+
         <service
             android:name=".ExecuteIntentService"
             android:exported="false" />
+
         <service
             android:name=".DnsVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
@@ -63,6 +59,8 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
+
+
 
         <receiver
             android:name=".NetworkChangeReceiver"
@@ -72,10 +70,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".MainActivity$ResultCodeReceiver">
-            <intent-filter>
-                <action android:name="io.github.otakuchiyan.dnsman.ACTION_SET_DNS"/>
-            </intent-filter>
-        </receiver>
+
      </application>
 </manifest>

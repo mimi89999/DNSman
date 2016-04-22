@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.VpnService;
 import android.os.ParcelFileDescriptor;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -140,6 +141,6 @@ public class DnsVpnService extends VpnService implements ValueConstants{
         result_intent.putExtra(EXTRA_RESULT_CODE, result_code);
         result_intent.putExtra(EXTRA_DNS1, dns1);
         result_intent.putExtra(EXTRA_DNS2, dns2);
-        sendBroadcast(result_intent);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(result_intent);
     }
 }

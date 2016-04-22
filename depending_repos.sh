@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPILESDK_VER="22"
+COMPILESDK_VER="23"
 BUILDTOOLS_VER="23.0.1"
 
 if [ ! -e 'libsuperuser' ]; then
