@@ -48,6 +48,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
     private TextView currentDnsText1, currentDnsText2;
     private TextView networkDnsText1, networkDnsText2;
     private TextView alertText;
+    private String showDns1 = "", showDns2 = "";
 
 
     private SimpleAdapter adapter;
@@ -57,7 +58,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
     private BroadcastReceiver resultCodeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("MA", "received");
             SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             int result_code = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
@@ -74,13 +74,20 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
                     showToastByCodeWithDns(context, result_code, dns1, dns2);
                 }
-                /*if(isShowNotify) {
+                if(isShowNotify) {
                     ControlNotification.notify(context, dns1, dns2);
-                }*/
-                if(mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN).equals(METHOD_VPN)){
-                    setCurrentDns(dns1, dns2);
-                }else{
-                    setCurrentDns();
+                }
+
+                String currentMethod = mPreferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+
+
+                switch (currentMethod){
+                    case METHOD_VPN:
+                    case METHOD_NDC: //Prevent net.dnsX was not changed
+                        setCurrentDns(dns1, dns2);
+                        break;
+                    default:
+                        setCurrentDns();
                 }
 
             } else {
@@ -127,7 +134,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
     BroadcastReceiver updateNetworkDnsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("MA", "reciverd s");
             refreshNetworkDns();
         }
     };
@@ -212,6 +218,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         super.onResume();
         refreshCurrentMode();
         updateListWhenIndividualChanged();
+        refreshCurrentDns();
 
         LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(this);
         broadcastManager.registerReceiver(updateNetworkDnsReceiver,
@@ -229,7 +236,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
         final PackageManager pm = getPackageManager();
         try{
             final PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
-            String label = "DNS man" + info.versionName;
+            String label = "DNS man " + info.versionName;
 
             ActionBar actionBar = getActionBar();
             if(actionBar != null){
@@ -334,7 +341,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
         initCurrentStatusView(this);
         refreshCurrentMode();
         refreshNetworkDns();
-        setCurrentDns();
 
         ListView listView = getListView();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -388,18 +394,22 @@ public class MainActivity extends ListActivity implements ValueConstants {
         networkDnsText2.setText(dns2);
     }
 
+    private void refreshCurrentDns(){
+        if (!showDns1.equals("") || !showDns2.equals("")) {
+            currentDnsText1.setText(showDns1);
+            currentDnsText2.setText(showDns2);
+        } else {
+            new getDNSTask().execute(this);
+        }
+    }
+
     public void setCurrentDns(){
         setCurrentDns("", "");
     }
 
     public void setCurrentDns(String dns1, String dns2){
-        //Not need AsyncTask
-        if(!dns1.equals("") || !dns2.equals("")){
-            currentDnsText1.setText(dns1);
-            currentDnsText2.setText(dns2);
-        }else{
-            new getDNSTask().execute(this);
-        }
+        showDns1 = dns1;
+        showDns2 = dns2;
     }
 
     private class getDNSTask extends AsyncTask<Context, Void, List<String>> {
