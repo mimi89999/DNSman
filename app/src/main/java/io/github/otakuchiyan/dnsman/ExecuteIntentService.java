@@ -35,13 +35,35 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
     //Array will be transform to two variable at here
     public static void startActionByString(Context c, String[] dnsEntry){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor editor = preferences.edit();
         String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+
+        editor.putString(KEY_LAST_DNS1, dnsEntry[0]);
+        editor.putString(KEY_LAST_DNS2, dnsEntry[1]);
+        editor.apply();
+
         Intent intent = new Intent(c, ExecuteIntentService.class);
         intent.putExtra(EXTRA_METHOD, method);
         intent.putExtra(EXTRA_DNS1, dnsEntry[0]);
         intent.putExtra(EXTRA_DNS2, dnsEntry[1]);
         c.startService(intent);
     }
+
+    public static Intent setWithLastDnsIntent(Context c){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+        Intent intent = new Intent(c, ExecuteIntentService.class);
+        intent.putExtra(EXTRA_METHOD, method);
+        intent.putExtra(EXTRA_DNS1, preferences.getString(KEY_LAST_DNS1, ""));
+        intent.putExtra(EXTRA_DNS2, preferences.getString(KEY_LAST_DNS2, ""));
+        return intent;
+    }
+
+    public static void setWithLastDns(Context c){
+        Intent i = setWithLastDnsIntent(c);
+        c.startService(i);
+    }
+
 
 //Need completing
     //Always can be used, because delete rules and disconnect vpn needn't default dns
@@ -142,6 +164,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
                     resultCode = NativeCommandUtils.setDnsViaSetprop(dns1, dns2);
                     break;
             }
+
             editor.apply();
 
             if(isRoot && isAutoFlush){

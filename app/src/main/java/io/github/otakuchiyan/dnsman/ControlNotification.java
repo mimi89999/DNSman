@@ -20,7 +20,7 @@ public class ControlNotification {
                 R.string.control_notification_placeholder_text, dns1, dns2);
 
         PendingIntent applyIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, MainActivity.class), 0);
+                ExecuteIntentService.setWithLastDnsIntent(context), 0);
         PendingIntent restoreIntent = PendingIntent.getService(context, 0,
                 ExecuteIntentService.restoreIntent(context), 0);
 
@@ -36,7 +36,7 @@ public class ControlNotification {
                                 new Intent(context, MainActivity.class),
                                 PendingIntent.FLAG_ONE_SHOT))
                 .addAction(android.R.drawable.ic_menu_set_as,
-                        context.getText(R.string.button_apply), applyIntent)
+                        context.getText(R.string.action_set_with_last_dns), applyIntent)
                 .addAction(android.R.drawable.ic_menu_close_clear_cancel,
                         context.getText(R.string.action_restore), restoreIntent)
                 .setOngoing(true);

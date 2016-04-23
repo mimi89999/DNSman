@@ -89,6 +89,7 @@ public class MainActivity extends ListActivity implements ValueConstants {
                     default:
                         setCurrentDns();
                 }
+                refreshCurrentDns();
 
             } else {
                 //Not never show
@@ -256,12 +257,16 @@ public class MainActivity extends ListActivity implements ValueConstants {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+            case R.id.action_set_with_last_dns:
+                ExecuteIntentService.setWithLastDns(this);
                 break;
             case R.id.action_restore:
                 ExecuteIntentService.restore(this);
                 break;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

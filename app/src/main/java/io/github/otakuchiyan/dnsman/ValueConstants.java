@@ -52,6 +52,8 @@ public interface ValueConstants {
     String KEY_HIJACKED_LAST_DNS = "hijacked_last_dns";
     String KEY_NETWORK_DNS1 = "network_dns1";
     String KEY_NETWORK_DNS2 = "network_dns2";
+    String KEY_LAST_DNS1 = "last_dns1";
+    String KEY_LAST_DNS2 = "last_dns2";
     String KEY_IS_RESTORE = "is_restore";
     String KEY_IS_ROOT = "is_root";
 
@@ -111,10 +113,13 @@ public interface ValueConstants {
             ""
     };
 
+
+    //EXTRAs
     String EXTRA_METHOD = "extra.method";
     String EXTRA_RESULT_CODE = "extra.result_code";
     String EXTRA_DNS1 = "extra.DNS1";
     String EXTRA_DNS2 = "extra.DNS2";
+
 
     //prop
     String SETPROP_COMMAND_PREFIX = "setprop net.dns";
