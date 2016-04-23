@@ -2,6 +2,7 @@ package io.github.otakuchiyan.dnsman;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -120,6 +122,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 case ValueConstants.ERROR_NO_DNS:
                     toastString = context.getText(R.string.toast_no_dns_to_restore).toString();
                     break;
+                case ERROR_GET_NETID_FAILED:
+                    toastString = getString(R.string.toast_get_netid_failed);
+                    break;
                 case ERROR_BAD_ADDRESS:
                     toastString = context.getString(R.string.toast_bad_address);
                     break;
@@ -154,19 +159,28 @@ public class MainActivity extends ListActivity implements ValueConstants {
     }
 
     private void firstBoot(){
+        showNoticeDialog();
         choiceMethod();
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
         mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
         mEditor.apply();
     }
 
-    private void choiceMethod(){
+    private void showNoticeDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(getText(R.string.notice_dialog_title))
+                .setMessage(getText(R.string.notice_dialog_message))
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.title_check_root)
                 .setMessage(R.string.message_check_root)
                 .setPositiveButton(android.R.string.ok, null);
         builder.show();
+    }
 
+    private void choiceMethod(){
         boolean isRoot = Shell.SU.available();
 
         if(isRoot){
@@ -191,6 +205,8 @@ public class MainActivity extends ListActivity implements ValueConstants {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         initVariable();
 

@@ -18,4 +18,9 @@
             android:data="https://github.com/otakuchiyan/DNSman/wiki"
             />
     </Preference>
+    <Preference android:title="@string/pref_hint_chinese_phone">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/otakuchiyan/DNSman/wiki/hint_for_chinese_phone"
+            />
+    </Preference>
 </PreferenceScreen>

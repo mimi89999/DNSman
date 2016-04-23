@@ -146,7 +146,7 @@ public interface ValueConstants {
 
     String PACKAGE_NAME = "io.github.otakuchiyan.dnsman";
     String ACTION_SET_DNS = PACKAGE_NAME + ".ACTION_SET_DNS";
-
+    String ACTION_CHANGE_AUTO_SETTING = PACKAGE_NAME + ".CHANGE_AUTO_SETTING";
     String ACTION_NETWORK_CONNECTED = PACKAGE_NAME + ".NETWORK_CONNECTED";
 
     //<=1000 is no error

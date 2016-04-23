@@ -1,4 +1,8 @@
 <resources>
+    <string name="notice_dialog_title">Notice of DNS man 0.10</string>
+    <string name="notice_dialog_message">I have made my best to work.
+        So don\'t blame me for release new version slowly.</string>
+
     <string name="text_current_method">Current method:</string>
     <string name="text_current_dns">Current DNS:</string>
     <string name="text_network_dns">Network provided DNS:</string>
@@ -22,6 +26,7 @@
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
     <string name="action_set_with_last_dns">Set with last dns</string>
+    <string name="action_change_auto_setting">Change auto setting</string>
     <string name="action_restore">Restore</string>
 
     <string name="button_apply">Apply now</string>
@@ -31,7 +36,12 @@
 
     <string name="toast_set_succeed">Setting DNS succeed</string>
     <string name="toast_set_failed">Setting DNS failed</string>
-    <string name="toast_bad_address">Bad address, do you have connected network?</string>
+
+    <string name="toast_auto_setting_enabled">Auto setting was enabled</string>
+    <string name="toast_auto_setting_disabled">Auto setting was disabled</string>
+
+    <string name="toast_get_netid_failed">Get network ID failed, do you connected network?</string>
+    <string name="toast_bad_address">Bad address, do you connected network?</string>
     <string name="toast_unknown_error">Unknown error occurred, may be a bug</string>
     <string name="toast_dns_cleared">All DNS was cleared</string>
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>
@@ -89,6 +99,7 @@
     <string name="pref_open_source_summary">View project page on GitHub</string>
     <string name="pref_usage">Usage</string>
     <string name="pref_usage_summary">View usage on wiki</string>
+    <string name="pref_hint_chinese_phone">Hint for Chinese phone</string>
 
     <string name="control_notification_title">DNS man:</string>
     <string name="control_notification_placeholder_text">DNS: %1$s %2$s</string>
