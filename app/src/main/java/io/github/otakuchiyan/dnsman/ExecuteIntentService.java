@@ -45,7 +45,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
 
 //Need completing
     //Always can be used, because delete rules and disconnect vpn needn't default dns
-    public static void restore(Context c){
+    public static Intent restoreIntent(Context c){
         boolean isNeedDns = true;
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
@@ -59,7 +59,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             case METHOD_VPN:
                 int code = new DnsVpnService().disconnect();
                 sendResult(c, code);
-                return;
+                return null;
         }
 
 
@@ -72,7 +72,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
 
             if(dns1.equals("") && dns2.equals("")) {
                 sendResult(c, ValueConstants.ERROR_NO_DNS);
-                return;
+                return null;
             }
         }
 
@@ -80,7 +80,14 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
         intent.putExtra(EXTRA_METHOD, method);
         intent.putExtra(EXTRA_DNS1, dns1);
         intent.putExtra(EXTRA_DNS2, dns2);
-        c.startService(intent);
+        return intent;
+    }
+
+    public static void restore(Context c){
+        Intent intent = restoreIntent(c);
+        if(intent != null) {
+            c.startService(intent);
+        }
     }
 
     @Override

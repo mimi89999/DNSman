@@ -21,6 +21,8 @@ public class ControlNotification {
 
         PendingIntent applyIntent = PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class), 0);
+        PendingIntent restoreIntent = PendingIntent.getService(context, 0,
+                ExecuteIntentService.restoreIntent(context), 0);
 
         final Notification.Builder builder = new Notification.Builder(context)
                 .setSmallIcon(android.R.drawable.ic_menu_preferences)
@@ -33,7 +35,10 @@ public class ControlNotification {
                                 0,
                                 new Intent(context, MainActivity.class),
                                 PendingIntent.FLAG_ONE_SHOT))
-                .addAction(android.R.drawable.ic_menu_set_as, context.getText(R.string.button_apply), applyIntent)
+                .addAction(android.R.drawable.ic_menu_set_as,
+                        context.getText(R.string.button_apply), applyIntent)
+                .addAction(android.R.drawable.ic_menu_close_clear_cancel,
+                        context.getText(R.string.action_restore), restoreIntent)
                 .setOngoing(true);
 
         final NotificationManager nm = (NotificationManager) context
