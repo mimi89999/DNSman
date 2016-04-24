@@ -18,9 +18,9 @@ android {
         }
     }
     //workaround
-    /*lintOptions {
+    lintOptions {
         abortOnError false
-    }*/
+    }
 }
 
 dependencies {
