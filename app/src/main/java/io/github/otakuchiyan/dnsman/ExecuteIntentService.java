@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 public class ExecuteIntentService extends IntentService implements ValueConstants{
     public ExecuteIntentService() {
@@ -52,15 +54,30 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
     public static Intent setWithLastDnsIntent(Context c){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
         String method = preferences.getString(KEY_PREF_METHOD, METHOD_VPN);
+
+        String lastDns1 = preferences.getString(KEY_LAST_DNS1, "");
+        String lastDns2 = preferences.getString(KEY_LAST_DNS2, "");
+
+        if(lastDns1.equals("") && lastDns2.equals("")){
+            return null;
+        }
+
         Intent intent = new Intent(c, ExecuteIntentService.class);
+
+        Log.d("LASTDNS", lastDns1 + "  " + lastDns2);
+
         intent.putExtra(EXTRA_METHOD, method);
-        intent.putExtra(EXTRA_DNS1, preferences.getString(KEY_LAST_DNS1, ""));
-        intent.putExtra(EXTRA_DNS2, preferences.getString(KEY_LAST_DNS2, ""));
+        intent.putExtra(EXTRA_DNS1, lastDns1);
+        intent.putExtra(EXTRA_DNS2, lastDns2);
         return intent;
     }
 
     public static void setWithLastDns(Context c){
         Intent i = setWithLastDnsIntent(c);
+        if(i == null){
+            Toast.makeText(c, R.string.toast_no_last_dns, Toast.LENGTH_SHORT).show();
+            return;
+        }
         c.startService(i);
     }
 
@@ -124,7 +141,8 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
             final String method = intent.getStringExtra(EXTRA_METHOD);
             final String dns1 = intent.getStringExtra(EXTRA_DNS1);
             final String dns2 = intent.getStringExtra(EXTRA_DNS2);
-            //4 firewall rules mode
+
+            //For firewall rules mode
             final String lastHijackedDns = preferences.getString(KEY_HIJACKED_LAST_DNS, "");
             final boolean isAutoFlush = preferences.getBoolean(KEY_PREF_AUTO_FLUSH, false);
             final boolean isRoot = preferences.getBoolean(KEY_IS_ROOT, false);

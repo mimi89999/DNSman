@@ -28,7 +28,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver implements ValueCon
                 currentNet = cm.getActiveNetworkInfo();
                 if (currentNet != null) {
                     isFirstConnect = false;
-                    Log.d("NCR", "Start set");
                     String dnsToast = sp.getString(ValueConstants.KEY_PREF_TOAST, ValueConstants.TOAST_SHOW);
                     BackupNetworkDnsTask.startAction(context);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ACTION_NETWORK_CONNECTED));

@@ -24,7 +24,9 @@ public class ControlNotification implements ValueConstants{
         final String text = res.getString(
                 R.string.control_notification_placeholder_text, dns1, dns2);
 
-        PendingIntent applyIntent = PendingIntent.getActivity(context, 0,
+        final Context appContext = context.getApplicationContext();
+
+        PendingIntent applyIntent = PendingIntent.getService(appContext, 0,
                 ExecuteIntentService.setWithLastDnsIntent(context), 0);
         PendingIntent restoreIntent = PendingIntent.getService(context, 0,
                 ExecuteIntentService.restoreIntent(context), 0);
@@ -53,10 +55,10 @@ public class ControlNotification implements ValueConstants{
         final NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(NOTIFICATION_TAG, 0, builder.build());
-    }
+        }
 
 
-    private class ChangeAutoSettingService extends IntentService{
+    public static class ChangeAutoSettingService extends IntentService{
         public ChangeAutoSettingService() {
             super("ChangeAutoSettingService");
         }
@@ -66,7 +68,6 @@ public class ControlNotification implements ValueConstants{
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = preferences.edit();
 
-            if(intent.getAction().equals(ACTION_CHANGE_AUTO_SETTING)){
                 boolean value = preferences.getBoolean(KEY_PREF_AUTO_SETTING, true);
                 editor.putBoolean(KEY_PREF_AUTO_SETTING, !value);
                 editor.apply();
@@ -75,7 +76,6 @@ public class ControlNotification implements ValueConstants{
                     toastString = getString(R.string.toast_auto_setting_disabled);
                 }
                 Toast.makeText(getApplicationContext(), toastString, Toast.LENGTH_SHORT).show();
-            }
         }
     }
 }

@@ -125,6 +125,9 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 case ERROR_GET_NETID_FAILED:
                     toastString = getString(R.string.toast_get_netid_failed);
                     break;
+                case ERROR_GET_CURRENT_NETWORK_FAILED:
+                    toastString = getString(R.string.toast_get_current_network_failed);
+                    break;
                 case ERROR_BAD_ADDRESS:
                     toastString = context.getString(R.string.toast_bad_address);
                     break;
@@ -146,21 +149,22 @@ public class MainActivity extends ListActivity implements ValueConstants {
 
 
 
-    private void initVariable(){
+    private void initVariable() {
         dnsmanCore = new DnsmanCore(this);
         DnsmanCore.initDnsMap(this);
         DnsmanCore.initResourcesMap();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mPreferences.edit();
         BackupNetworkDnsTask.startAction(this);
-
-        //Check root
         mEditor.putBoolean(KEY_IS_ROOT, Shell.SU.available());
+        mEditor.putBoolean(KEY_PREF_NOTIFICATION, false);
     }
 
     private void firstBoot(){
         showNoticeDialog();
         choiceMethod();
+
+
         Set<String> toSavedDNS = new HashSet<>(Arrays.asList(DEFAULT_DNS_LIST));
         mEditor.putStringSet(KEY_DNS_LIST, toSavedDNS);
         mEditor.apply();
@@ -172,12 +176,6 @@ public class MainActivity extends ListActivity implements ValueConstants {
                 .setMessage(getText(R.string.notice_dialog_message))
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(R.string.title_check_root)
-                .setMessage(R.string.message_check_root)
-                .setPositiveButton(android.R.string.ok, null);
-        builder.show();
     }
 
     private void choiceMethod(){

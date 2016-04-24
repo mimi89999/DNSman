@@ -156,6 +156,7 @@ public interface ValueConstants {
     int ERROR_GET_NETID_FAILED = 1003;
     int ERROR_NULL_VPN = 1004;
     int ERROR_BAD_ADDRESS = 1005;
+    int ERROR_GET_CURRENT_NETWORK_FAILED = 1006;
 
     int ERROR_UNKNOWN = 9999;
 

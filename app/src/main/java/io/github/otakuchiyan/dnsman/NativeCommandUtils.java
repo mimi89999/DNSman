@@ -101,6 +101,9 @@ public final class NativeCommandUtils implements ValueConstants{
         } else {
             String interfaceName;
             NetworkInfo currentNetworkInfo = manager.getActiveNetworkInfo();
+            if(currentNetworkInfo == null){
+                return ERROR_GET_CURRENT_NETWORK_FAILED;
+            }
             DnsmanCore.refreshInfo2InterfaceMap(c);
             interfaceName = DnsmanCore.info2interfaceMap.get(currentNetworkInfo.getTypeName());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) { //>=4.3

@@ -1,5 +1,5 @@
 <resources>
-    <string name="notice_dialog_title">Notice of DNS man 0.10</string>
+    <string name="notice_dialog_title">Notice</string>
     <string name="notice_dialog_message">I have made my best to work.
         So don\'t blame me for release new version slowly.</string>
 
@@ -14,11 +14,6 @@
     <string name="category_ethernet">Ethernet</string>
     <string name="category_wimax">WiMax</string>
     <string name="category_global">Global</string>
-
-    <string name="title_check_root">Check root permission</string>
-    <string name="message_check_root">
-        DNS man will check root permission of the device,
-        this permission is used to choice DNS setting method for you</string>
 
     <string name="title_activity_settings">Settings</string>
 
@@ -40,6 +35,7 @@
     <string name="toast_auto_setting_enabled">Auto setting was enabled</string>
     <string name="toast_auto_setting_disabled">Auto setting was disabled</string>
 
+    <string name="toast_get_current_network_failed">Get current network failed, do you connected network?</string>
     <string name="toast_get_netid_failed">Get network ID failed, do you connected network?</string>
     <string name="toast_bad_address">Bad address, do you connected network?</string>
     <string name="toast_unknown_error">Unknown error occurred, may be a bug</string>
@@ -47,6 +43,8 @@
     <string name="toast_no_root">Device was not rooted, only VPN mode available</string>
     <string name="toast_no_dns">No available DNS</string>
     <string name="toast_no_dns_to_restore">No DNS to restore</string>
+    <string name="toast_no_last_dns">No last DNS</string>
+
     <string name="toast_restored">DNS was restored</string>
 
     <string name="xposed_description">Make DNS man integrate with system</string>

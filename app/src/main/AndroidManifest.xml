@@ -60,7 +60,7 @@
             </intent-filter>
         </service>
 
-
+        <service android:name=".ControlNotification$ChangeAutoSettingService"/>
 
         <receiver
             android:name=".NetworkChangeReceiver"
