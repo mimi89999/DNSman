@@ -12,8 +12,7 @@
             android:data="https://github.com/otakuchiyan/DNSman"
             />
     </Preference>
-    <Preference android:title="@string/pref_usage"
-        android:summary="@string/pref_usage_summary">
+    <Preference android:title="@string/pref_usage">
         <intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/otakuchiyan/DNSman/wiki"
             />
