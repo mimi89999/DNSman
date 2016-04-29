@@ -15,9 +15,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import eu.chainfire.libsuperuser.Shell;
 
@@ -115,7 +117,15 @@ public final class NativeCommandUtils implements ValueConstants{
 
         List<String> result = runWithLog(cmd);
 
-        return result.get(0).substring(0, 3).equals("200") ? 0 : ERROR_UNKNOWN;
+        String resultString = result.get(0);
+        try{
+            if(!resultString.substring(0, 3).equals("200")){
+                return ERROR_UNKNOWN;
+            }
+        }catch (Exception e){
+            Toast.makeText(c, "Error occured.\n" + e.toString(), Toast.LENGTH_LONG).show();
+        }
+        return 0;
     }
 
     public static int flushDnsViaNdc(Context c){

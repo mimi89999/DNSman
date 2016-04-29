@@ -7,7 +7,9 @@
 
     <application
         android:allowBackup="true"
-        android:label="DNS man">
+        android:label="DNS man"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme">
         <!--
         <meta-data
             android:name="xposedmodule"

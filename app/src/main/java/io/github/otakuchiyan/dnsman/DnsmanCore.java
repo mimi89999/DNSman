@@ -57,19 +57,22 @@ public class DnsmanCore implements ValueConstants{
         }
     }
 
-    //Keep build one time
+
     public static void initDnsMap(Context context){
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Keep build one time
+        if(supportedNetInfoList.size() == 0) {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        for(int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++){
-            NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
-            if(info != null){
-                info2resMap.put(info.getTypeName(), ValueConstants.NET_TYPE_RESOURCES[i]);
-                supportedNetInfoList.add(info);
+            for (int i = 0; i != ValueConstants.NET_TYPE_LIST.length; i++) {
+                NetworkInfo info = manager.getNetworkInfo(ValueConstants.NET_TYPE_LIST[i]);
+                if (info != null) {
+                    info2resMap.put(info.getTypeName(), ValueConstants.NET_TYPE_RESOURCES[i]);
+                    supportedNetInfoList.add(info);
+                }
             }
-        }
 
-        refreshInfo2InterfaceMap(context);
+            refreshInfo2InterfaceMap(context);
+        }
     }
 
 
