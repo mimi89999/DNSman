@@ -24,15 +24,14 @@ public class DnsmanCore implements ValueConstants{
     public static HashMap<String, Integer> info2resMap = new HashMap<>();
     public static HashMap<String, String> info2interfaceMap = new HashMap<>();
     public static HashMap<String, Integer> method2resMap = new HashMap<>();
+    public static HashMap<Integer, Integer> code2resMap = new HashMap<>();
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
-    private Context context;
 
     public DnsmanCore(Context c){
         preferences = PreferenceManager.getDefaultSharedPreferences(c);
         preferenceEditor = preferences.edit();
-        context = c;
     }
 
     public static void refreshInfo2InterfaceMap(Context context){
@@ -54,6 +53,9 @@ public class DnsmanCore implements ValueConstants{
     public static void initResourcesMap(){
         for(int i = 0; i != METHODS.length; i++){
             method2resMap.put(METHODS[i], METHOD_RESOURCES[i]);
+        }
+        for(int i = 0; i != RESPONSE_CODES.length; i++){
+            code2resMap.put(RESPONSE_CODES[i], RESPONSE_RESOURCES[i]);
         }
     }
 

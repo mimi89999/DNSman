@@ -110,30 +110,12 @@ public class MainActivity extends ListActivity implements ValueConstants {
         private void showToastByCodeWithDns(Context context, int code, String dns1, String dns2){
             String toastString;
 
-            switch (code) {
-                case 0:
-                    toastString = context.getText(R.string.toast_set_succeed).toString();
-                    toastString += !dns1.equals("") ? "\nDNS: " + dns1 : "";
-                    toastString += !dns2.equals("") ? "\nDNS: " + dns2 : "";
-                    break;
-                case ValueConstants.RESTORE_SUCCEED:
-                    toastString = context.getText(R.string.toast_restored).toString();
-                    break;
-                case ValueConstants.ERROR_NO_DNS:
-                    toastString = context.getText(R.string.toast_no_dns_to_restore).toString();
-                    break;
-                case ERROR_GET_NETID_FAILED:
-                    toastString = getString(R.string.toast_get_netid_failed);
-                    break;
-                case ERROR_GET_CURRENT_NETWORK_FAILED:
-                    toastString = getString(R.string.toast_get_current_network_failed);
-                    break;
-                case ERROR_BAD_ADDRESS:
-                    toastString = context.getString(R.string.toast_bad_address);
-                    break;
-                default:
-                    toastString = context.getText(R.string.toast_set_failed).toString();
-                    toastString += "\n" + context.getText(R.string.toast_unknown_error).toString();
+            if(code == 0) {
+                toastString = getString(R.string.toast_set_succeed);
+                toastString += !dns1.equals("") ? "\nDNS: " + dns1 : "";
+                toastString += !dns2.equals("") ? "\nDNS: " + dns2 : "";
+            }else{
+                toastString = getString(DnsmanCore.code2resMap.get(code));
             }
 
             Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();

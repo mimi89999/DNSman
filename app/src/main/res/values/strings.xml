@@ -48,6 +48,7 @@
     <string name="toast_no_dns">No available DNS</string>
     <string name="toast_no_dns_to_restore">No DNS to restore</string>
     <string name="toast_no_last_dns">No last DNS</string>
+    <string name="toast_ndc_no_output">NDC is no response. Try this method at another time.</string>
 
     <string name="toast_restored">DNS was restored</string>
 

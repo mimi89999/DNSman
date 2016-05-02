@@ -157,8 +157,28 @@ public interface ValueConstants {
     int ERROR_NULL_VPN = 1004;
     int ERROR_BAD_ADDRESS = 1005;
     int ERROR_GET_CURRENT_NETWORK_FAILED = 1006;
+    int ERROR_NDC_NO_OUTPUT = 1007;
 
     int ERROR_UNKNOWN = 9999;
+
+    int[] RESPONSE_CODES = {
+            RESTORE_SUCCEED,
+            ERROR_NO_DNS,
+            ERROR_GET_NETID_FAILED,
+            ERROR_BAD_ADDRESS,
+            ERROR_GET_CURRENT_NETWORK_FAILED,
+            ERROR_NDC_NO_OUTPUT
+    };
+
+    int[] RESPONSE_RESOURCES = {
+            R.string.toast_restored,
+            R.string.toast_no_dns,
+            R.string.toast_get_netid_failed,
+            R.string.toast_bad_address,
+            R.string.toast_get_current_network_failed,
+            R.string.toast_ndc_no_output
+    };
+
 
     int REQUEST_DNS_CHANGE = 0x00;
     int REQUEST_VPN = 0x01;

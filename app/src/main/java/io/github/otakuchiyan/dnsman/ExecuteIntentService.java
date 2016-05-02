@@ -117,6 +117,7 @@ public class ExecuteIntentService extends IntentService implements ValueConstant
 
         Intent intent = new Intent(c, ExecuteIntentService.class);
         intent.putExtra(EXTRA_METHOD, method);
+        intent.putExtra(KEY_IS_RESTORE, true);
         intent.putExtra(EXTRA_DNS1, dns1);
         intent.putExtra(EXTRA_DNS2, dns2);
         return intent;

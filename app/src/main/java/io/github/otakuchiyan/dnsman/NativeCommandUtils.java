@@ -117,14 +117,16 @@ public final class NativeCommandUtils implements ValueConstants{
 
         List<String> result = runWithLog(cmd);
 
-        String resultString = result.get(0);
-        try{
-            if(!resultString.substring(0, 3).equals("200")){
-                return ERROR_UNKNOWN;
-            }
-        }catch (Exception e){
-            Toast.makeText(c, "Error occured.\n" + e.toString(), Toast.LENGTH_LONG).show();
+        //NDC not prepared?
+        if(result.isEmpty()) {
+            return ERROR_NDC_NO_OUTPUT;
         }
+
+        String resultString = result.get(0);
+        if(!resultString.substring(0, 3).equals("200")){
+            return ERROR_UNKNOWN;
+        }
+
         return 0;
     }
 
