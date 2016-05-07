@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class DnsEditActivity extends Activity {
@@ -25,6 +28,28 @@ public class DnsEditActivity extends Activity {
         mPrefix = i.getStringExtra("prefix");
         setTitle(i.getStringExtra("label"));
         setEditText(mPrefix);
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.server_strings, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                CharSequence key = (CharSequence) adapterView.getItemAtPosition(i);
+                String[] ips = DnsmanCore.server2ipMap.get(key.toString());
+                dns1 = (DnsEditText) findViewById(R.id.dnsEditText1);
+                dns2 = (DnsEditText) findViewById(R.id.dnsEditText2);
+                dns1.setText(ips[0]);
+                dns2.setText(ips[1]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void setEditText(String prefix){

@@ -28,4 +28,13 @@
         <item>never</item>
     </string-array>
 
+    <string-array name="server_strings">
+        <item>Google</item>
+        <item>114</item>
+    </string-array>
+    <string-array name="server_values">
+        <item>8.8.8.8|8.8.4.4</item>
+        <item>114.114.114.114|114.114.115.115</item>
+    </string-array>
+
 </resources>

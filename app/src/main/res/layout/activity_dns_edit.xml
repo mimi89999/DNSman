@@ -18,6 +18,12 @@
         android:layout_alignParentStart="true">
 
 
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:spinnerMode="dropdown" />
+
         <io.github.otakuchiyan.dnsman.DnsEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

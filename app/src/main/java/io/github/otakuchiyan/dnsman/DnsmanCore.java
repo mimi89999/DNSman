@@ -25,6 +25,7 @@ public class DnsmanCore implements ValueConstants{
     public static HashMap<String, String> info2interfaceMap = new HashMap<>();
     public static HashMap<String, Integer> method2resMap = new HashMap<>();
     public static HashMap<Integer, Integer> code2resMap = new HashMap<>();
+    public static HashMap<String, String[]> server2ipMap = new HashMap<>();
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor preferenceEditor;
@@ -59,6 +60,15 @@ public class DnsmanCore implements ValueConstants{
         }
     }
 
+    private static void initServerMap(Context c){
+        String[] serverNames = c.getResources().getStringArray(R.array.server_strings);
+        String[] serverIp = c.getResources().getStringArray(R.array.server_values);
+        for(int i = 0; i != serverNames.length; i++){
+            String[] ips = serverIp[i].split("\\|", 2);
+            server2ipMap.put(serverNames[i], ips);
+        }
+    }
+
 
     public static void initDnsMap(Context context){
         //Keep build one time
@@ -72,7 +82,7 @@ public class DnsmanCore implements ValueConstants{
                     supportedNetInfoList.add(info);
                 }
             }
-
+            initServerMap(context);
             refreshInfo2InterfaceMap(context);
         }
     }
